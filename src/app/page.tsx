@@ -1,5 +1,5 @@
-import WorkSureDashboard from "../components/WorkSureDashboard";
+import LandingPage from "@/components/landing/LandingPage";
 
 export default function Home() {
-  return <WorkSureDashboard />;
+  return <LandingPage />;
 }

@@ -1,32 +1,114 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch } from "@/proxy";
-import type { Job } from "@/types";
+import { proxyFetch, proxyFetchRaw } from "@/proxy";
+import type { ApiPagination, Job, JobStatus, UserRole } from "@/types";
 
-export function useJobs() {
-  return useQuery<Job[], Error, Job[]>(
-    ["jobs", "open"],
-    () => proxyFetch<{ jobs: Job[] }>("/jobs?status=OPEN&limit=50").then((x) => x.jobs),
-    {
-      staleTime: 1000 * 30,
-    },
-  );
+export type JobsQuery = {
+  status?: JobStatus | string;
+  clientId?: string;
+  artisanId?: string;
+  category?: string;
+  search?: string;
+  page?: number;
+  limit?: number;
+};
+
+export type JobsResponse = {
+  jobs: Job[];
+  pagination: ApiPagination;
+};
+
+function buildJobsQuery(params: JobsQuery = {}) {
+  const search = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      search.set(key, String(value));
+    }
+  });
+
+  return search.toString();
+}
+
+export function useJobs(params: JobsQuery = {}) {
+  return useQuery<Job[]>({
+    queryKey: ["jobs", params],
+    queryFn: () =>
+      proxyFetchRaw<JobsResponse>(`/jobs${buildJobsQuery(params) ? `?${buildJobsQuery(params)}` : ""}`).then(
+        (response) => response.jobs,
+      ),
+    staleTime: 1000 * 30,
+  });
+}
+
+export function useRoleScopedJobs({
+  role,
+  userId,
+}: {
+  role?: UserRole;
+  userId?: string;
+}) {
+  const params: JobsQuery =
+    role === "CLIENT" && userId
+      ? { clientId: userId, limit: 50 }
+      : role === "ARTISAN" && userId
+        ? { status: "OPEN", limit: 50 }
+        : { limit: 50 };
+
+  return useJobs(params);
+}
+
+export function useJob(jobId?: string) {
+  return useQuery<Job>({
+    queryKey: ["jobs", "detail", jobId],
+    queryFn: () => proxyFetch<Job>(`/jobs/${jobId}`),
+    enabled: Boolean(jobId),
+  });
 }
 
 export function useCreateJob() {
   const qc = useQueryClient();
 
   return useMutation<Job, Error, { title: string; description: string; budget: number; category: string }>(
-    (data) =>
-      proxyFetch<Job>("/jobs", {
-        method: "POST",
-        body: JSON.stringify(data),
-      }),
     {
+      mutationFn: (data) =>
+        proxyFetch<Job>("/jobs", {
+          method: "POST",
+          body: JSON.stringify(data),
+        }),
       onSuccess() {
-        qc.invalidateQueries(["jobs", "open"]);
+        qc.invalidateQueries({ queryKey: ["jobs"] });
       },
     },
   );
+}
+
+export function useUpdateJob() {
+  const qc = useQueryClient();
+
+  return useMutation<Job, Error, { jobId: string; input: Partial<Job> }>({
+    mutationFn: ({ jobId, input }) =>
+      proxyFetch<Job>(`/jobs/${jobId}`, {
+        method: "PATCH",
+        body: JSON.stringify(input),
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
+}
+
+export function useDeleteJob() {
+  const qc = useQueryClient();
+
+  return useMutation<{ message: string }, Error, string>({
+    mutationFn: (jobId) =>
+      proxyFetch(`/jobs/${jobId}`, {
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ["jobs"] });
+    },
+  });
 }

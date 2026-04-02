@@ -24,7 +24,7 @@
       "@/components/*": ["./src/components/*"],
       "@/provider/*": ["./src/provider/*"],
       "@/proxy": ["./src/proxy.ts"],
-      "@/types": ["./src/types.ts"]
+      "@/types": ["./src/types/index.ts"]
     }
   },
   "include": [

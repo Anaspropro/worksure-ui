@@ -1,21 +1,30 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import {
+  Inter,
+  JetBrains_Mono,
+} from "next/font/google";
 import "./globals.css";
-import { Providers } from "../provider/providers";
+import QueryProvider from "@/provider/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const bodyFont = Inter({
+  variable: "--font-body",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const headingFont = Inter({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const monoFont = JetBrains_Mono({
+  variable: "--font-mono-ui",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "WorkSure - Escrow Marketplace",
-  description: "WorkSure front-end using React Query and shadcn UI components",
+  title: "WorkSure",
+  description:
+    "Escrow-backed artisan marketplace for trusted jobs, contracts, and completion.",
 };
 
 export default function RootLayout({
@@ -26,10 +35,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Providers>{children}</Providers>
+      <body className="min-h-full font-sans flex flex-col bg-background text-foreground">
+        <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
   );
