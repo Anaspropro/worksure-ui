@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,6 +10,8 @@ import { useUser } from "@/hooks/useAuth";
 import {
   useAddFunds,
   useCreateWallet,
+  usePaystackInit,
+  usePaystackVerify,
   useWalletBalance,
   useWalletSummary,
   useWalletTransactions,
@@ -26,7 +28,37 @@ export default function WalletWorkspace() {
   const createWalletMutation = useCreateWallet();
   const addFundsMutation = useAddFunds();
   const withdrawFundsMutation = useWithdrawFunds();
+  const paystackInitMutation = usePaystackInit();
+  const paystackVerifyMutation = usePaystackVerify();
   const [amount, setAmount] = useState(0);
+  const [paystackAmount, setPaystackAmount] = useState(0);
+  const paystackProcessedRef = useRef(false);
+  const [paystackStatusMessage, setPaystackStatusMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const reference = searchParams.get("reference");
+    const status = searchParams.get("status");
+
+    if (reference && status === "success" && !paystackProcessedRef.current) {
+      paystackProcessedRef.current = true;
+      paystackVerifyMutation.mutate(
+        { reference },
+        {
+          onSuccess: () => {
+            setPaystackStatusMessage("Paystack deposit verified and wallet updated.");
+            window.history.replaceState({}, "", window.location.pathname);
+          },          onError: (error: Error) => {
+            setPaystackStatusMessage(error.message || "Paystack verification failed");
+          },
+        },
+      );
+    }
+  }, [paystackVerifyMutation]);
 
   if (!user) {
     return null;
@@ -114,6 +146,42 @@ export default function WalletWorkspace() {
                   Withdraw
                 </Button>
               </div>
+
+              <div className="mt-4 rounded-2xl border border-border bg-surface-muted/60 p-4">
+                <label className="block text-sm text-muted-foreground" htmlFor="paystackAmount">
+                  Paystack top-up amount
+                </label>
+                <input
+                  id="paystackAmount"
+                  type="number"
+                  min={1}
+                  value={paystackAmount}
+                  onChange={(event) => setPaystackAmount(Number(event.target.value))}
+                  className="mt-1 w-full rounded-md border p-2"
+                />
+                <div className="mt-2 flex items-center gap-2">
+                  <Button
+                    disabled={paystackAmount <= 0 || paystackInitMutation.status === 'pending'}
+                    onClick={async () => {
+                      if (!user?.email) return;
+                      const result = await paystackInitMutation.mutateAsync({
+                        amount: paystackAmount,
+                        email: user.email,
+                        callbackUrl: `${window.location.origin}/wallet`,
+                      });
+
+                      window.location.href = result.authorizationUrl;
+                    }}
+                  >
+                    Deposit with Paystack
+                  </Button>
+                </div>
+
+                {paystackStatusMessage && (
+                  <p className="mt-2 text-sm text-foreground">{paystackStatusMessage}</p>
+                )}
+              </div>
+
               <div className="rounded-2xl border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
                 Recent transactions: {summary?.recentTransactions.length ?? 0}
               </div>

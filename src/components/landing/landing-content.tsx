@@ -1,3 +1,6 @@
+"use client";
+
+import { motion, Variants } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -7,7 +10,6 @@ import {
   CreditCard,
   Landmark,
   ShieldCheck,
-  Sparkles,
   Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -53,10 +55,6 @@ const trustCards = [
     title: "For artisans",
     description: "Take on real funded work and track payout progress without guesswork.",
   },
-  {
-    title: "For admins",
-    description: "Keep marketplace trust visible with verification and dispute resolution tools.",
-  },
 ];
 
 const footerLinks = [
@@ -65,36 +63,38 @@ const footerLinks = [
   { href: "/dashboard", label: "Workspace" },
 ];
 
+const fadeInUp: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
+
+const container: Variants = {
+  hidden: {},
+  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
+};
+
 export function LandingHeader() {
   return (
-    <header className="sticky top-0 rounded-[28px] border border-emerald-300 bg-white/85 px-6 py-4 shadow-[0_18px_40px_-30px_rgba(16,185,129,0.35)] backdrop-blur">
+    <header className="py-2 shadow-[0_18px_40px_-30px_rgba(16,185,129,0.35)] backdrop-blur">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#10b981,#059669)] text-xs font-bold text-white">
             WS
           </div>
           <div>
-            <p className="text-xl font-italic font-semibold text-foreground">WorkSure</p>
+            <p className="text-xl font-italic font-semibold text-foreground">
+              WorkSure
+            </p>
           </div>
         </div>
 
-        {/* <nav className="hidden items-center gap-5 text-xs font-medium text-text-secondary md:flex">
-          <Link href="/" className="transition hover:text-primary-dark">
-            Home
-          </Link>
-          <a href="#about" className="transition hover:text-primary-dark">
-            About
-          </a>
-          <a href="#trust" className="transition hover:text-primary-dark">
-            Trust
-          </a>
-          <a href="#community" className="transition hover:text-primary-dark">
-            Community
-          </a>
-        </nav> */}
-
         <div className="flex items-center gap-2">
-          <Button asChild size="lg" variant="ghost" className="hidden sm:inline-flex">
+          <Button
+            asChild
+            size="lg"
+            variant="ghost"
+            className="hidden sm:inline-flex"
+          >
             <Link href="/auth/login">Login</Link>
           </Button>
           <Button asChild size="lg" className="rounded-full px-4">
@@ -108,9 +108,20 @@ export function LandingHeader() {
 
 export function LandingHeroSection() {
   return (
-    <section className="relative overflow-hidden bg-[linear-gradient(180deg,#eafcf3_0%,#f6fffa_46%,#ffffff_100%)]">
+    <motion.section
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      variants={fadeInUp}
+      className="relative overflow-hidden bg-[linear-gradient(180deg,#eafcf3_0%,#f6fffa_46%,#ffffff_100%)]"
+    >
       <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.18),transparent_42%),radial-gradient(circle_at_top_right,rgba(110,231,183,0.18),transparent_36%)]" />
-      <div className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
+      <motion.div
+        className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-5 sm:px-6 lg:px-8 lg:py-8"
+        variants={container}
+        initial="hidden"
+        animate="visible"
+      >
         <LandingHeader />
 
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.9fr]">
@@ -142,7 +153,7 @@ export function LandingHeroSection() {
             </div>
           </div>
 
-          <Card className="border-emerald-200/80 bg-white/90 py-0 shadow-[0_24px_70px_-34px_rgba(16,185,129,0.28)]">
+          {/* <Card className="border-emerald-200/80 bg-white/90 py-0 shadow-[0_24px_70px_-34px_rgba(16,185,129,0.28)]">
             <CardContent className="p-4 sm:p-5">
               <div className="rounded-[28px] bg-[linear-gradient(135deg,#0f172a_0%,#065f46_45%,#10b981_100%)] p-5 text-white">
                 <div className="flex items-start justify-between gap-3">
@@ -175,26 +186,33 @@ export function LandingHeroSection() {
                 </div>
               </div>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
 
-        <div className="grid gap-3 sm:grid-cols-3">
+        <motion.div
+          className="grid gap-3 sm:grid-cols-3"
+          variants={container}
+          initial="hidden"
+          animate="visible"
+        >
           {statCards.map(({ value, label, icon: Icon }) => (
-            <Card key={label} className="border-emerald-200/70 bg-white/88 py-0 shadow-[0_16px_36px_-28px_rgba(16,185,129,0.3)]">
-              <CardContent className="flex items-center gap-3 p-4">
-                <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft">
-                  <Icon className="size-5 text-primary-dark" />
-                </div>
-                <div>
-                  <p className="text-lg font-semibold text-foreground">{value}</p>
-                  <p className="text-xs text-text-secondary">{label}</p>
-                </div>
-              </CardContent>
-            </Card>
+            <motion.div key={label} variants={fadeInUp}>
+              <Card className="border-emerald-200/80 bg-white/88 py-0 shadow-[0_16px_36px_-28px_rgba(16,185,129,0.3)]">
+                <CardContent className="flex items-center gap-3 p-4">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft">
+                    <Icon className="size-5 text-primary-dark" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-foreground">{value}</p>
+                    <p className="text-xs text-text-secondary">{label}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
-        </div>
-      </div>
-    </section>
+        </motion.div>
+      </motion.div>
+    </motion.section>
   );
 }
 
@@ -242,19 +260,25 @@ export function LandingPromiseSection() {
   );
 }
 
-export function LandingHowItWorksSection() {
+export function LandingAudienceSection() {
   return (
-    <section id="trust" className="bg-[linear-gradient(180deg,#ebfdf4_0%,#dcfce7_100%)] py-24">
+    <section
+      id="trust"
+      className="bg-[linear-gradient(180deg,#ebfdf4_0%,#dcfce7_100%)] py-24"
+    >
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 text-center lg:px-8">
-        <h2 className="text-emerald-950">Loved by families, clients, and skilled workers</h2>
+        <h2 className="text-emerald-950">Loved by customers and artisans</h2>
         <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
-          The experience is built to feel approachable and reliable, even for users who are not
-          deeply technical.
+          The experience is built to feel approachable and reliable, even for
+          users who are not deeply technical.
         </p>
 
-        <div className="mt-12 grid w-full gap-5 md:grid-cols-3">
+        <div className="mt-12 grid w-full gap-5 md:grid-cols-2">
           {trustCards.map((item) => (
-            <Card key={item.title} className="border-emerald-200/70 bg-white/88 py-0 text-left shadow-[0_18px_40px_-30px_rgba(16,185,129,0.2)]">
+            <Card
+              key={item.title}
+              className="border-emerald-200/70 bg-white/88 py-0 text-left shadow-[0_18px_40px_-30px_rgba(16,185,129,0.2)]"
+            >
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-soft">
@@ -262,7 +286,9 @@ export function LandingHowItWorksSection() {
                   </div>
                   <p className="font-semibold text-foreground">{item.title}</p>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-text-secondary">{item.description}</p>
+                <p className="mt-4 text-sm leading-6 text-text-secondary">
+                  {item.description}
+                </p>
               </CardContent>
             </Card>
           ))}
@@ -272,7 +298,7 @@ export function LandingHowItWorksSection() {
   );
 }
 
-export function LandingAudienceSection() {
+export function LandingHowItWorksSection() {
   return (
     <section className="bg-white py-24">
       <div className="mx-auto w-full max-w-5xl px-6 lg:px-8">

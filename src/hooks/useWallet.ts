@@ -71,3 +71,44 @@ export function useWithdrawFunds() {
     },
   });
 }
+
+type PaystackInitInput = {
+  amount: number;
+  email: string;
+  callbackUrl?: string;
+};
+
+type PaystackInitResponse = {
+  authorizationUrl: string;
+  accessCode: string;
+  reference: string;
+};
+
+type PaystackVerifyInput = {
+  reference: string;
+};
+
+export function usePaystackInit() {
+  return useMutation<PaystackInitResponse, Error, PaystackInitInput>({
+    mutationFn: (input) =>
+      proxyFetch("/payments/paystack/init", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
+  });
+}
+
+export function usePaystackVerify() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: PaystackVerifyInput) =>
+      proxyFetch("/payments/paystack/verify", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["wallet"] });
+    },
+  });
+}

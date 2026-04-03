@@ -9,7 +9,7 @@ import {
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-background text-foreground">
+    <main className="min-h-screen  text-foreground">
       <LandingHeroSection />
       <LandingPromiseSection />
       <LandingHowItWorksSection />
