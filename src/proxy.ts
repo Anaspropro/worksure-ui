@@ -175,7 +175,7 @@ export async function proxyFetchRaw<T>(
   const url = `${INTERNAL_API_PREFIX}${path.startsWith("/") ? "" : "/"}${path}`;
   const headers = new Headers(init.headers as HeadersInit);
 
-  if (init.body && !headers.has("Content-Type")) {
+  if (init.body && !(init.body instanceof FormData) && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 

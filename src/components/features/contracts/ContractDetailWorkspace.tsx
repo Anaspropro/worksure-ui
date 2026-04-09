@@ -6,6 +6,7 @@ import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
+import ContractChatPanel from "@/components/features/contracts/ContractChatPanel";
 import { useUser } from "@/hooks/useAuth";
 import {
   useConfirmCompletion,
@@ -175,6 +176,8 @@ export default function ContractDetailWorkspace({
                 ) : null}
               </CardContent>
             </Card>
+
+            <ContractChatPanel contract={contract} user={user} />
           </>
         )}
       </main>

@@ -55,7 +55,7 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     body:
       request.method === "GET" || request.method === "HEAD"
         ? undefined
-        : await request.text(),
+        : Buffer.from(await request.arrayBuffer()),
     cache: "no-store",
   });
 

@@ -134,6 +134,41 @@ export interface Contract {
   escrowReleasedAt?: string | null;
 }
 
+export type ChatMessageType = "TEXT" | "IMAGE" | "VIDEO" | "AUDIO" | "FILE";
+
+export interface ChatConversation {
+  id: string;
+  contractId: string;
+  clientId: string;
+  artisanId: string;
+  createdAt: string;
+  updatedAt: string;
+  contract?: {
+    id: string;
+    status: string;
+    amount: number;
+    job: Job;
+    client: Pick<User, "id" | "name" | "email">;
+    artisan: Pick<User, "id" | "name" | "email">;
+  };
+  lastMessage?: ChatMessage | null;
+}
+
+export interface ChatMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  content?: string | null;
+  type: ChatMessageType;
+  fileUrl?: string | null;
+  fileType?: string | null;
+  fileName?: string | null;
+  fileSize?: number | null;
+  createdAt: string;
+  contractId?: string;
+  jobTitle?: string;
+}
+
 export interface WalletBalance {
   exists?: boolean;
   balance: number;
