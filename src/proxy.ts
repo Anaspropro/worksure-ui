@@ -17,6 +17,9 @@ const ADMIN_PREFIX = "/admin";
 const API_URL =
   process.env.API_URL?.replace(/\/$/, "") ??
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+const INTERNAL_API_PREFIX = "/api/proxy";
+const SESSION_HINT_KEY = "auth_present";
+const SESSION_HINT_VALUE = "1";
 
 function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
@@ -99,40 +102,32 @@ export async function proxy(request: NextRequest) {
   return NextResponse.next();
 }
 
-const TOKEN_KEY = "token";
-
-export function getToken(): string | null {
+export function hasSessionHint(): boolean {
   if (typeof window === "undefined") {
-    return null;
+    return false;
   }
 
   const match = document.cookie
     .split("; ")
-    .find((entry) => entry.startsWith(`${TOKEN_KEY}=`));
+    .find((entry) => entry.startsWith(`${SESSION_HINT_KEY}=`));
 
-  if (match) {
-    return decodeURIComponent(match.split("=")[1] || "");
-  }
-
-  return localStorage.getItem(TOKEN_KEY);
+  return match?.split("=")[1] === SESSION_HINT_VALUE;
 }
 
-export function setToken(token: string): void {
+export function markSessionHint(): void {
   if (typeof window === "undefined") {
     return;
   }
 
-  document.cookie = `${TOKEN_KEY}=${encodeURIComponent(token)}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
-  localStorage.setItem(TOKEN_KEY, token);
+  document.cookie = `${SESSION_HINT_KEY}=${SESSION_HINT_VALUE}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
 }
 
-export function clearToken(): void {
+export function clearSessionHint(): void {
   if (typeof window === "undefined") {
     return;
   }
 
-  document.cookie = `${TOKEN_KEY}=; path=/; max-age=0; samesite=lax`;
-  localStorage.removeItem(TOKEN_KEY);
+  document.cookie = `${SESSION_HINT_KEY}=; path=/; max-age=0; samesite=lax`;
 }
 
 function getPayloadData<T>(value: unknown): T {
@@ -177,25 +172,17 @@ export async function proxyFetchRaw<T>(
   path: string,
   init: RequestInit = {},
 ): Promise<T> {
-  if (!API_URL) {
-    throw new Error("API_URL environment variable is not configured");
-  }
-
-  const url = `${API_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+  const url = `${INTERNAL_API_PREFIX}${path.startsWith("/") ? "" : "/"}${path}`;
   const headers = new Headers(init.headers as HeadersInit);
 
   if (init.body && !headers.has("Content-Type")) {
     headers.set("Content-Type", "application/json");
   }
 
-  const token = getToken();
-  if (token) {
-    headers.set("Authorization", `Bearer ${token}`);
-  }
-
   const response = await fetch(url, {
     ...init,
     headers,
+    cache: "no-store",
   });
 
   const payload = (await response.json().catch(() => null)) as unknown;

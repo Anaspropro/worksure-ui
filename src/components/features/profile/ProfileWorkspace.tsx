@@ -19,7 +19,8 @@ import { useReviewStats } from "@/hooks/useReviews";
 export default function ProfileWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const profileQuery = useProfile();
+  const canLoadProtectedData = Boolean(user);
+  const profileQuery = useProfile({ enabled: canLoadProtectedData });
   const artisanProfileQuery = useArtisanProfile(user?.role === "ARTISAN");
   const reviewStatsQuery = useReviewStats(user?.role === "ARTISAN" ? user.id : undefined);
   const updateProfileMutation = useUpdateProfile();

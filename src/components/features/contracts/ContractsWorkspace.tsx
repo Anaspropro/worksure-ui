@@ -19,7 +19,7 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 export default function ContractsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const contractsQuery = useContracts();
+  const contractsQuery = useContracts(undefined, { enabled: Boolean(user) });
   const fundContractMutation = useFundContract();
   const confirmCompletionMutation = useConfirmCompletion();
   const releaseEscrowMutation = useReleaseEscrow();

@@ -48,21 +48,22 @@ function buildProposalQuery({
   return query.toString();
 }
 
-export function useProposals(params: ProposalsQuery = {}) {
+export function useProposals(params: ProposalsQuery = {}, options: { enabled?: boolean } = {}) {
   return useQuery<Proposal[]>({
     queryKey: ["proposals", params],
     queryFn: () =>
       proxyFetchRaw<ProposalsResponse>(`/proposals?${buildProposalQuery(params)}`).then(
         (response) => response.proposals,
       ),
+    enabled: options.enabled,
   });
 }
 
-export function useProposal(proposalId?: string) {
+export function useProposal(proposalId?: string, options: { enabled?: boolean } = {}) {
   return useQuery<Proposal>({
     queryKey: ["proposals", "detail", proposalId],
     queryFn: () => proxyFetch<Proposal>(`/proposals/${proposalId}`),
-    enabled: Boolean(proposalId),
+    enabled: Boolean(proposalId) && (options.enabled ?? true),
   });
 }
 

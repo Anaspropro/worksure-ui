@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,14 +19,43 @@ export default function CreateJobWorkspace() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [budget, setBudget] = useState(0);
+  const [budgetInput, setBudgetInput] = useState("");
   const [category, setCategory] = useState("general");
   const [location, setLocation] = useState("");
   const [requirements, setRequirements] = useState("");
+  const budget = Number(budgetInput || 0);
 
   if (!user) {
     return null;
   }
+
+  const handleCreateJob = () => {
+    const toastId = toast.loading("Publishing job...");
+    createJobMutation.mutate(
+      {
+        title: title.trim(),
+        description: [description, location ? `Location: ${location}` : "", requirements]
+          .filter(Boolean)
+          .join("\n\n"),
+        budget,
+        category: category.trim() || "general",
+      },
+      {
+        onSuccess: () => {
+          toast.success("Job published successfully.", { id: toastId });
+          setTitle("");
+          setDescription("");
+          setBudgetInput("");
+          setCategory("general");
+          setLocation("");
+          setRequirements("");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Unable to publish job.", { id: toastId });
+        },
+      },
+    );
+  };
 
   return (
     <AppShell user={user}>
@@ -64,8 +94,8 @@ export default function CreateJobWorkspace() {
                 <Input
                   type="number"
                   placeholder="Budget"
-                  value={budget}
-                  onChange={(event) => setBudget(Number(event.target.value))}
+                  value={budgetInput}
+                  onChange={(event) => setBudgetInput(event.target.value)}
                 />
                 <Input
                   placeholder="Category"
@@ -85,16 +115,7 @@ export default function CreateJobWorkspace() {
               />
               <Button
                 disabled={!title.trim() || !description.trim() || budget <= 0 || createJobMutation.status === "pending"}
-                onClick={() =>
-                  createJobMutation.mutate({
-                    title,
-                    description: [description, location ? `Location: ${location}` : "", requirements]
-                      .filter(Boolean)
-                      .join("\n\n"),
-                    budget,
-                    category: category || "general",
-                  })
-                }
+                onClick={handleCreateJob}
               >
                 Publish job
               </Button>

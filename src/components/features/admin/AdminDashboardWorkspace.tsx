@@ -7,16 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { useAdminDisputes, useAdminReports, useAdminUsers } from "@/hooks/useAdmin";
 import { useUser } from "@/hooks/useAuth";
 
-function metricValue(source: unknown, fallback: number) {
-  return typeof source === "number" ? source : fallback;
-}
-
 export default function AdminDashboardWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const usersQuery = useAdminUsers();
-  const disputesQuery = useAdminDisputes();
-  const reportsQuery = useAdminReports();
+  const canLoadProtectedData = Boolean(user);
+  const usersQuery = useAdminUsers({ enabled: canLoadProtectedData });
+  const disputesQuery = useAdminDisputes({ enabled: canLoadProtectedData });
+  const reportsQuery = useAdminReports("overview", { enabled: canLoadProtectedData });
 
   if (!user) {
     return null;
@@ -24,7 +21,7 @@ export default function AdminDashboardWorkspace() {
 
   const users = usersQuery.data?.data ?? [];
   const disputes = disputesQuery.data?.data ?? [];
-  const report = reportsQuery.data ?? {};
+  const report = reportsQuery.data;
 
   return (
     <AppShell user={user}>
@@ -63,9 +60,9 @@ export default function AdminDashboardWorkspace() {
           </Card>
           <Card size="sm">
             <CardContent className="space-y-1 py-2">
-              <p className="text-sm text-muted-foreground">Report volume</p>
+              <p className="text-sm text-muted-foreground">Flagged jobs</p>
               <p className="text-3xl font-semibold text-foreground">
-                {metricValue((report as { totalTransactions?: number }).totalTransactions, 0)}
+                {report?.totals.flaggedJobs ?? 0}
               </p>
             </CardContent>
           </Card>
@@ -104,16 +101,30 @@ export default function AdminDashboardWorkspace() {
           <Card className="border-border/80 bg-white">
             <CardHeader>
               <CardTitle>Platform snapshot</CardTitle>
-              <CardDescription>Raw report values stay visible instead of buried inside a generic dashboard.</CardDescription>
+              <CardDescription>
+                High-level platform metrics are summarized here without exposing raw report payloads.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm text-muted-foreground">
-              {Object.keys(report).length ? (
-                Object.entries(report).map(([key, value]) => (
-                  <div key={key} className="rounded-2xl border border-border bg-surface-muted/60 p-3">
-                    <p className="font-medium capitalize text-foreground">{key.replace(/([A-Z])/g, " $1").trim()}</p>
-                    <p className="mt-1">{typeof value === "object" ? JSON.stringify(value) : String(value)}</p>
+            <CardContent className="grid gap-3 text-sm text-muted-foreground">
+              {report ? (
+                <>
+                  <div className="rounded-2xl border border-border bg-surface-muted/60 p-3">
+                    <p className="font-medium text-foreground">Users</p>
+                    <p className="mt-1">{report.totals.users}</p>
                   </div>
-                ))
+                  <div className="rounded-2xl border border-border bg-surface-muted/60 p-3">
+                    <p className="font-medium text-foreground">Active jobs</p>
+                    <p className="mt-1">{report.totals.activeJobs}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-surface-muted/60 p-3">
+                    <p className="font-medium text-foreground">Open disputes</p>
+                    <p className="mt-1">{report.totals.openDisputes}</p>
+                  </div>
+                  <div className="rounded-2xl border border-border bg-surface-muted/60 p-3">
+                    <p className="font-medium text-foreground">Platform fees</p>
+                    <p className="mt-1">NGN {report.totals.platformFees.toLocaleString()}</p>
+                  </div>
+                </>
               ) : (
                 <p>No admin report payload is available yet.</p>
               )}

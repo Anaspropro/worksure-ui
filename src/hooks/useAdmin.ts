@@ -2,26 +2,37 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch, proxyFetchRaw } from "@/proxy";
-import type { AdminCollection, AdminDisputeRecord, AdminUserRecord } from "@/types";
+import type { AdminCollection, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord } from "@/types";
 
-export function useAdminUsers() {
+export function useAdminUsers(options: { enabled?: boolean } = {}) {
   return useQuery<AdminCollection<AdminUserRecord>>({
     queryKey: ["admin", "users"],
     queryFn: () => proxyFetchRaw<AdminCollection<AdminUserRecord>>("/admin/users"),
+    enabled: options.enabled,
   });
 }
 
-export function useAdminDisputes() {
+export function useAdminDisputes(options: { enabled?: boolean } = {}) {
   return useQuery<AdminCollection<AdminDisputeRecord>>({
     queryKey: ["admin", "disputes"],
     queryFn: () => proxyFetchRaw<AdminCollection<AdminDisputeRecord>>("/admin/disputes"),
+    enabled: options.enabled,
   });
 }
 
-export function useAdminReports(reportType = "overview") {
-  return useQuery<Record<string, unknown>>({
+export function useAdminReports(reportType = "overview", options: { enabled?: boolean } = {}) {
+  return useQuery<AdminOverviewReport>({
     queryKey: ["admin", "reports", reportType],
-    queryFn: () => proxyFetchRaw<Record<string, unknown>>(`/admin/reports?reportType=${reportType}`),
+    queryFn: () => proxyFetch<AdminOverviewReport>(`/admin/reports?reportType=${reportType}`),
+    enabled: options.enabled,
+  });
+}
+
+export function useAdminUserDetail(userId?: string, options: { enabled?: boolean } = {}) {
+  return useQuery<{ data: AdminUserDetail }>({
+    queryKey: ["admin", "users", userId],
+    queryFn: () => proxyFetchRaw<{ data: AdminUserDetail }>(`/admin/users/${userId}`),
+    enabled: Boolean(userId) && (options.enabled ?? true),
   });
 }
 

@@ -23,7 +23,7 @@ export default function ContractDetailWorkspace({
 }) {
   const userQuery = useUser();
   const user = userQuery.data;
-  const contractQuery = useContract(contractId);
+  const contractQuery = useContract(contractId, { enabled: Boolean(user) });
   const fundContractMutation = useFundContract();
   const confirmCompletionMutation = useConfirmCompletion();
   const releaseEscrowMutation = useReleaseEscrow();

@@ -31,13 +31,14 @@ function buildJobsQuery(params: JobsQuery = {}) {
   return search.toString();
 }
 
-export function useJobs(params: JobsQuery = {}) {
+export function useJobs(params: JobsQuery = {}, options: { enabled?: boolean } = {}) {
   return useQuery<Job[]>({
     queryKey: ["jobs", params],
     queryFn: () =>
       proxyFetchRaw<JobsResponse>(`/jobs${buildJobsQuery(params) ? `?${buildJobsQuery(params)}` : ""}`).then(
         (response) => response.jobs,
       ),
+    enabled: options.enabled,
     staleTime: 1000 * 30,
   });
 }
@@ -48,7 +49,7 @@ export function useRoleScopedJobs({
 }: {
   role?: UserRole;
   userId?: string;
-}) {
+}, options: { enabled?: boolean } = {}) {
   const params: JobsQuery =
     role === "CLIENT" && userId
       ? { clientId: userId, limit: 50 }
@@ -56,14 +57,14 @@ export function useRoleScopedJobs({
         ? { status: "OPEN", limit: 50 }
         : { limit: 50 };
 
-  return useJobs(params);
+  return useJobs(params, options);
 }
 
-export function useJob(jobId?: string) {
+export function useJob(jobId?: string, options: { enabled?: boolean } = {}) {
   return useQuery<Job>({
     queryKey: ["jobs", "detail", jobId],
     queryFn: () => proxyFetch<Job>(`/jobs/${jobId}`),
-    enabled: Boolean(jobId),
+    enabled: Boolean(jobId) && (options.enabled ?? true),
   });
 }
 

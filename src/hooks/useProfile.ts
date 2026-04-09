@@ -34,10 +34,11 @@ type ArtisanProfileInput = Partial<{
   portfolio: string[];
 }>;
 
-export function useProfile() {
+export function useProfile(options: { enabled?: boolean } = {}) {
   return useQuery<User>({
     queryKey: ["profile"],
     queryFn: () => proxyFetch<User>("/users/me"),
+    enabled: options.enabled,
   });
 }
 

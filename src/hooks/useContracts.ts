@@ -4,18 +4,19 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch } from "@/proxy";
 import type { Contract, ContractStatus } from "@/types";
 
-export function useContracts(status?: ContractStatus | string) {
+export function useContracts(status?: ContractStatus | string, options: { enabled?: boolean } = {}) {
   return useQuery<Contract[]>({
     queryKey: ["contracts", status],
     queryFn: () => proxyFetch<Contract[]>(`/contracts${status ? `?status=${status}` : ""}`),
+    enabled: options.enabled,
   });
 }
 
-export function useContract(contractId?: string) {
+export function useContract(contractId?: string, options: { enabled?: boolean } = {}) {
   return useQuery<Contract>({
     queryKey: ["contracts", "detail", contractId],
     queryFn: () => proxyFetch<Contract>(`/contracts/${contractId}`),
-    enabled: Boolean(contractId),
+    enabled: Boolean(contractId) && (options.enabled ?? true),
   });
 }
 

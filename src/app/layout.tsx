@@ -5,6 +5,8 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import QueryProvider from "@/provider/providers";
+import AnimatedPage from "@/components/AnimatedPage";
+import { Toaster } from "@/components/ui/sonner";
 
 const bodyFont = Inter({
   variable: "--font-body",
@@ -38,7 +40,10 @@ export default function RootLayout({
       className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans flex flex-col bg-background text-foreground">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <AnimatedPage>{children}</AnimatedPage>
+          <Toaster richColors position="top-right" />
+        </QueryProvider>
       </body>
     </html>
   );

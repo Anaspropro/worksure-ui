@@ -15,16 +15,21 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 export default function ReviewsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const contractsQuery = useContracts("COMPLETED");
-  const myReviewsQuery = useMyReviews();
+  const canLoadProtectedData = Boolean(user);
+  const contractsQuery = useContracts("COMPLETED", { enabled: canLoadProtectedData });
+  const myReviewsQuery = useMyReviews({
+    enabled: canLoadProtectedData && user?.role !== "ARTISAN",
+  });
   const reviewsQuery = useReviews(
     user?.role === "ARTISAN" ? { artisanId: user.id } : { clientId: user?.id },
+    { enabled: canLoadProtectedData && user?.role === "ARTISAN" },
   );
   const createReviewMutation = useCreateReview();
 
   const [contractId, setContractId] = useState("");
-  const [rating, setRating] = useState(5);
+  const [ratingInput, setRatingInput] = useState("5");
   const [comment, setComment] = useState("");
+  const rating = Number(ratingInput || 0);
 
   const availableContracts = useMemo(
     () =>
@@ -76,8 +81,8 @@ export default function ReviewsWorkspace() {
                   type="number"
                   min={1}
                   max={5}
-                  value={rating}
-                  onChange={(event) => setRating(Number(event.target.value))}
+                  value={ratingInput}
+                  onChange={(event) => setRatingInput(event.target.value)}
                   placeholder="Rating from 1 to 5"
                 />
                 <Textarea

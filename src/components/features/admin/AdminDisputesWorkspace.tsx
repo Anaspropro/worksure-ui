@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { toast } from "sonner";
 import AppShell from "@/components/app-shell/AppShell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 export default function AdminDisputesWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const disputesQuery = useAdminDisputes();
+  const disputesQuery = useAdminDisputes({ enabled: Boolean(user) });
   const resolveDisputeMutation = useResolveAdminDispute();
   const [notesById, setNotesById] = useState<Record<string, string>>({});
 
@@ -70,13 +71,20 @@ export default function AdminDisputesWorkspace() {
                     <div className="flex flex-col gap-2">
                       <Button
                         size="sm"
-                        onClick={() =>
-                          resolveDisputeMutation.mutate({
-                            disputeId: dispute.id,
-                            decision: "REFUND_CLIENT",
-                            notes: notesById[dispute.id],
-                          })
-                        }
+                        onClick={() => {
+                          const toastId = toast.loading("Resolving dispute...");
+                          resolveDisputeMutation.mutate(
+                            {
+                              disputeId: dispute.id,
+                              decision: "REFUND_CLIENT",
+                              notes: notesById[dispute.id],
+                            },
+                            {
+                              onSuccess: () => toast.success("Client refund approved.", { id: toastId }),
+                              onError: (error) => toast.error(error.message || "Unable to resolve dispute.", { id: toastId }),
+                            },
+                          );
+                        }}
                         disabled={dispute.status === "RESOLVED" || resolveDisputeMutation.status === "pending"}
                       >
                         Refund client
@@ -84,13 +92,20 @@ export default function AdminDisputesWorkspace() {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() =>
-                          resolveDisputeMutation.mutate({
-                            disputeId: dispute.id,
-                            decision: "PAY_ARTISAN",
-                            notes: notesById[dispute.id],
-                          })
-                        }
+                        onClick={() => {
+                          const toastId = toast.loading("Resolving dispute...");
+                          resolveDisputeMutation.mutate(
+                            {
+                              disputeId: dispute.id,
+                              decision: "PAY_ARTISAN",
+                              notes: notesById[dispute.id],
+                            },
+                            {
+                              onSuccess: () => toast.success("Artisan payout approved.", { id: toastId }),
+                              onError: (error) => toast.error(error.message || "Unable to resolve dispute.", { id: toastId }),
+                            },
+                          );
+                        }}
                         disabled={dispute.status === "RESOLVED" || resolveDisputeMutation.status === "pending"}
                       >
                         Pay artisan

@@ -56,7 +56,7 @@ export interface ApiPagination {
   hasPrev: boolean;
 }
 
-export interface PaginatedResponse<T, K extends string = "results"> {
+export interface PaginatedResponse<T> {
   [key: string]: T[] | ApiPagination;
   pagination: ApiPagination;
 }
@@ -135,10 +135,17 @@ export interface Contract {
 }
 
 export interface WalletBalance {
+  exists?: boolean;
   balance: number;
   frozen: number;
   available: number;
   version?: number;
+  virtualAccount?: {
+    accountNumber?: string | null;
+    accountName?: string | null;
+    bankName?: string | null;
+    status?: string | null;
+  } | null;
 }
 
 export interface WalletTransaction {
@@ -262,6 +269,81 @@ export interface AdminUserRecord {
   createdAt: string;
 }
 
+export interface AdminUserDetail {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  status: string;
+  artisanVerified: boolean;
+  createdAt: string;
+  updatedAt: string;
+  lastLoginAt?: string | null;
+  wallet?: {
+    balance: number;
+    frozen: number;
+    available: number;
+    updatedAt: string;
+  } | null;
+  artisanProfile?: {
+    bio: string;
+    skills: string[];
+    experience: string;
+    portfolio: string[];
+    verified: boolean;
+    rating: number;
+    reviewCount?: number;
+    updatedAt: string;
+  } | null;
+  transactions: WalletTransaction[];
+  notifications: Array<{
+    id: string;
+    title: string;
+    message: string;
+    createdAt: string;
+  }>;
+  activity: {
+    clientJobs: Array<{
+      id: string;
+      title: string;
+      status: string;
+      flagged?: boolean;
+      forceCloseReason?: string;
+    }>;
+    artisanJobs: Array<{
+      id: string;
+      title: string;
+      status: string;
+      flagged?: boolean;
+      forceCloseReason?: string;
+    }>;
+    clientContracts: Array<{
+      id: string;
+      amount: number;
+      status: string;
+      createdAt: string;
+    }>;
+    artisanContracts: Array<{
+      id: string;
+      amount: number;
+      status: string;
+      createdAt: string;
+    }>;
+    sentReviews: Array<{
+      id: string;
+      rating: number;
+      comment?: string | null;
+      createdAt: string;
+    }>;
+    receivedReviews: Array<{
+      id: string;
+      rating: number;
+      comment?: string | null;
+      createdAt: string;
+    }>;
+  };
+}
+
 export interface AdminDisputeRecord {
   id: string;
   contractId?: string | null;
@@ -286,4 +368,15 @@ export interface AdminDisputeRecord {
 export interface AdminCollection<T> {
   data: T[];
   meta?: Record<string, unknown>;
+}
+
+export interface AdminOverviewReport {
+  reportType: "overview";
+  totals: {
+    users: number;
+    activeJobs: number;
+    openDisputes: number;
+    platformFees: number;
+    flaggedJobs: number;
+  };
 }

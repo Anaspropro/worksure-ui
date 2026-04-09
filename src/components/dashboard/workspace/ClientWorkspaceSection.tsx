@@ -6,22 +6,24 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function ClientWorkspaceSection({
   jobTitle,
   jobDescription,
-  jobBudget,
+  jobBudgetInput,
   setJobTitle,
   setJobDescription,
-  setJobBudget,
+  setJobBudgetInput,
   onCreateJob,
   isBusy,
 }: {
   jobTitle: string;
   jobDescription: string;
-  jobBudget: number;
+  jobBudgetInput: string;
   setJobTitle: (value: string) => void;
   setJobDescription: (value: string) => void;
-  setJobBudget: (value: number) => void;
+  setJobBudgetInput: (value: string) => void;
   onCreateJob: () => void;
   isBusy: boolean;
 }) {
+  const jobBudget = Number(jobBudgetInput || 0);
+
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card className="border-border/90 bg-white">
@@ -34,7 +36,7 @@ export default function ClientWorkspaceSection({
         <CardContent className="space-y-3">
           <Input placeholder="Job title" value={jobTitle} onChange={(event) => setJobTitle(event.target.value)} />
           <Textarea placeholder="Describe the work" value={jobDescription} onChange={(event) => setJobDescription(event.target.value)} />
-          <Input type="number" placeholder="Budget" value={jobBudget} onChange={(event) => setJobBudget(Number(event.target.value))} />
+          <Input type="number" placeholder="Budget" value={jobBudgetInput} onChange={(event) => setJobBudgetInput(event.target.value)} />
           <Button onClick={onCreateJob} disabled={isBusy || !jobTitle || jobBudget <= 0}>
             Create job
           </Button>

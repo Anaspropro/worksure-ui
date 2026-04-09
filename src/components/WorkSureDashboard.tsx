@@ -53,11 +53,13 @@ export default function WorkSureDashboard({
   user: User;
 }) {
   const [jobTitle, setJobTitle] = useState("");
-  const [jobBudget, setJobBudget] = useState(0);
+  const [jobBudgetInput, setJobBudgetInput] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const [proposalJobId, setProposalJobId] = useState("");
-  const [proposalAmount, setProposalAmount] = useState(0);
+  const [proposalAmountInput, setProposalAmountInput] = useState("");
   const [proposalMessage, setProposalMessage] = useState("");
+  const jobBudget = Number(jobBudgetInput || 0);
+  const proposalAmount = Number(proposalAmountInput || 0);
 
   const { data: jobs, isLoading: jobsLoading } = useJobs();
   const { data: proposals, isLoading: proposalsLoading } = useProposals({
@@ -204,8 +206,8 @@ export default function WorkSureDashboard({
               <Input
                 type="number"
                 placeholder="Budget"
-                value={jobBudget}
-                onChange={(event) => setJobBudget(Number(event.target.value))}
+                value={jobBudgetInput}
+                onChange={(event) => setJobBudgetInput(event.target.value)}
               />
               <Button
                 onClick={() =>
@@ -264,8 +266,8 @@ export default function WorkSureDashboard({
               <Input
                 type="number"
                 placeholder="Proposal amount"
-                value={proposalAmount}
-                onChange={(event) => setProposalAmount(Number(event.target.value))}
+                value={proposalAmountInput}
+                onChange={(event) => setProposalAmountInput(event.target.value)}
               />
               <Textarea
                 placeholder="Proposal message"
@@ -339,25 +341,27 @@ export default function WorkSureDashboard({
           <CardHeader>
             <CardTitle>{roleView === "CLIENT" ? "Your jobs" : "Open jobs"}</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-3">
-            {visibleJobs.length ? (
-              visibleJobs.map((job) => (
-                <div key={job.id} className="rounded-2xl border border-border bg-surface p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-foreground">{job.title}</p>
-                    <StatusBadge status={job.status} />
-                  </div>
-                  <p className="mt-2 text-sm text-text-secondary">{job.description}</p>
-                  <div className="mt-3 flex items-center gap-2">
-                    <Badge variant="secondary">Budget</Badge>
-                    <span className="text-sm font-medium text-secondary">{formatAmount(job.budget)}</span>
-                  </div>
+            <CardContent className="space-y-3">
+              {visibleJobs.length ? (
+                <div className="space-y-3">
+                  {visibleJobs.map((job) => (
+                    <div key={job.id} className="rounded-2xl border border-border bg-surface p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <p className="font-medium text-foreground">{job.title}</p>
+                        <StatusBadge status={job.status} />
+                      </div>
+                      <p className="mt-2 text-sm text-text-secondary">{job.description}</p>
+                      <div className="mt-3 flex items-center gap-2">
+                        <Badge variant="secondary">Budget</Badge>
+                        <span className="text-sm font-medium text-secondary">{formatAmount(job.budget)}</span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))
-            ) : (
-              <p className="text-sm text-text-secondary">No jobs to show yet.</p>
-            )}
-          </CardContent>
+              ) : (
+                <p className="text-sm text-text-secondary">No jobs to show yet.</p>
+              )}
+            </CardContent>
         </Card>
 
         <Card className="border-border/90 bg-white">
@@ -373,42 +377,44 @@ export default function WorkSureDashboard({
           </CardHeader>
           <CardContent className="space-y-3">
             {proposals?.length ? (
-              proposals.map((proposal) => (
-                <div key={proposal.id} className="rounded-2xl border border-border bg-surface p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-foreground">{proposal.job.title}</p>
-                    <StatusBadge status={proposal.status} />
+              <div className="space-y-3">
+                {proposals.map((proposal) => (
+                  <div key={proposal.id} className="rounded-2xl border border-border bg-surface p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-medium text-foreground">{proposal.job.title}</p>
+                      <StatusBadge status={proposal.status} />
+                    </div>
+                    <p className="mt-2 text-sm font-medium text-secondary">
+                      {formatAmount(proposal.amount)}
+                    </p>
+                    <p className="mt-2 text-sm text-text-secondary">{proposal.message}</p>
+
+                    {roleView === "CLIENT" && proposal.status === "PENDING" ? (
+                      <div className="mt-3 flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={() => acceptProposalMutation.mutate(proposal.id)}
+                          disabled={isBusy}
+                        >
+                          Accept
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {roleView === "CLIENT" && proposal.status === "ACCEPTED" ? (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          onClick={() => createContractMutation.mutate(proposal.id)}
+                          disabled={isBusy}
+                        >
+                          Create contract
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
-                  <p className="mt-2 text-sm font-medium text-secondary">
-                    {formatAmount(proposal.amount)}
-                  </p>
-                  <p className="mt-2 text-sm text-text-secondary">{proposal.message}</p>
-
-                  {roleView === "CLIENT" && proposal.status === "PENDING" ? (
-                    <div className="mt-3 flex gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => acceptProposalMutation.mutate(proposal.id)}
-                        disabled={isBusy}
-                      >
-                        Accept
-                      </Button>
-                    </div>
-                  ) : null}
-
-                  {roleView === "CLIENT" && proposal.status === "ACCEPTED" ? (
-                    <div className="mt-3">
-                      <Button
-                        size="sm"
-                        onClick={() => createContractMutation.mutate(proposal.id)}
-                        disabled={isBusy}
-                      >
-                        Create contract
-                      </Button>
-                    </div>
-                  ) : null}
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
               <p className="text-sm text-text-secondary">No proposals yet.</p>
             )}
@@ -422,114 +428,116 @@ export default function WorkSureDashboard({
           </CardHeader>
           <CardContent className="space-y-3">
             {contracts?.length ? (
-              contracts.map((contract) => (
-                <div key={contract.id} className="rounded-2xl border border-border bg-surface p-4">
-                  <div className="flex items-start justify-between gap-3">
-                    <p className="font-medium text-foreground">{contract.job.title}</p>
-                    <StatusBadge
-                      status={
-                        contract.escrowReleased ? "COMPLETED" : contract.status
-                      }
-                    />
+              <div className="space-y-3">
+                {contracts.map((contract) => (
+                  <div key={contract.id} className="rounded-2xl border border-border bg-surface p-4">
+                    <div className="flex items-start justify-between gap-3">
+                      <p className="font-medium text-foreground">{contract.job.title}</p>
+                      <StatusBadge
+                        status={
+                          contract.escrowReleased ? "COMPLETED" : contract.status
+                        }
+                      />
+                    </div>
+                    <p className="mt-2 text-sm font-medium text-secondary">
+                      {formatAmount(contract.amount)}
+                    </p>
+                    <p className="mt-2 text-xs text-text-secondary">
+                      Client confirm: {String(contract.clientConfirmedCompletion)} / Artisan confirm:{" "}
+                      {String(contract.artisanConfirmedCompletion)}
+                    </p>
+
+                    {contract.status === "DRAFT" && user.id === contract.clientId ? (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          onClick={() =>
+                            fundContractMutation.mutate({
+                              contractId: contract.id,
+                              amount: contract.amount,
+                            })
+                          }
+                          disabled={isBusy}
+                        >
+                          Fund contract
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {contract.status === "ACTIVE" && user.id === contract.clientId ? (
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() =>
+                            confirmCompletionMutation.mutate({
+                              contractId: contract.id,
+                              isClient: true,
+                            })
+                          }
+                          disabled={isBusy}
+                        >
+                          Confirm completion
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {contract.status === "ACTIVE" && user.id === contract.artisanId ? (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          variant="secondary"
+                          onClick={() =>
+                            confirmCompletionMutation.mutate({
+                              contractId: contract.id,
+                              isClient: false,
+                            })
+                          }
+                          disabled={isBusy}
+                        >
+                          Confirm delivery
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {contract.status === "ACTIVE" &&
+                    contract.clientConfirmedCompletion &&
+                    contract.artisanConfirmedCompletion &&
+                    !contract.escrowReleased &&
+                    user.id === contract.clientId ? (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          onClick={() => releaseEscrowMutation.mutate(contract.id)}
+                          disabled={isBusy}
+                        >
+                          Release escrow
+                        </Button>
+                      </div>
+                    ) : null}
+
+                    {contract.status === "ACTIVE" &&
+                    !contract.escrowReleased &&
+                    user.id === contract.clientId ? (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            refundContractMutation.mutate({
+                              contractId: contract.id,
+                              reason: "Client requested refund",
+                            })
+                          }
+                          disabled={isBusy}
+                        >
+                          Refund
+                        </Button>
+                      </div>
+                    ) : null}
                   </div>
-                  <p className="mt-2 text-sm font-medium text-secondary">
-                    {formatAmount(contract.amount)}
-                  </p>
-                  <p className="mt-2 text-xs text-text-secondary">
-                    Client confirm: {String(contract.clientConfirmedCompletion)} / Artisan confirm:{" "}
-                    {String(contract.artisanConfirmedCompletion)}
-                  </p>
-
-                  {contract.status === "DRAFT" && user.id === contract.clientId ? (
-                    <div className="mt-3">
-                      <Button
-                        size="sm"
-                        onClick={() =>
-                          fundContractMutation.mutate({
-                            contractId: contract.id,
-                            amount: contract.amount,
-                          })
-                        }
-                        disabled={isBusy}
-                      >
-                        Fund contract
-                      </Button>
-                    </div>
-                  ) : null}
-
-                  {contract.status === "ACTIVE" && user.id === contract.clientId ? (
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() =>
-                          confirmCompletionMutation.mutate({
-                            contractId: contract.id,
-                            isClient: true,
-                          })
-                        }
-                        disabled={isBusy}
-                      >
-                        Confirm completion
-                      </Button>
-                    </div>
-                  ) : null}
-
-                  {contract.status === "ACTIVE" && user.id === contract.artisanId ? (
-                    <div className="mt-3">
-                      <Button
-                        size="sm"
-                        variant="secondary"
-                        onClick={() =>
-                          confirmCompletionMutation.mutate({
-                            contractId: contract.id,
-                            isClient: false,
-                          })
-                        }
-                        disabled={isBusy}
-                      >
-                        Confirm delivery
-                      </Button>
-                    </div>
-                  ) : null}
-
-                  {contract.status === "ACTIVE" &&
-                  contract.clientConfirmedCompletion &&
-                  contract.artisanConfirmedCompletion &&
-                  !contract.escrowReleased &&
-                  user.id === contract.clientId ? (
-                    <div className="mt-3">
-                      <Button
-                        size="sm"
-                        onClick={() => releaseEscrowMutation.mutate(contract.id)}
-                        disabled={isBusy}
-                      >
-                        Release escrow
-                      </Button>
-                    </div>
-                  ) : null}
-
-                  {contract.status === "ACTIVE" &&
-                  !contract.escrowReleased &&
-                  user.id === contract.clientId ? (
-                    <div className="mt-3">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          refundContractMutation.mutate({
-                            contractId: contract.id,
-                            reason: "Client requested refund",
-                          })
-                        }
-                        disabled={isBusy}
-                      >
-                        Refund
-                      </Button>
-                    </div>
-                  ) : null}
-                </div>
-              ))
+                ))}
+              </div>
             ) : (
               <p className="text-sm text-text-secondary">No contracts yet.</p>
             )}

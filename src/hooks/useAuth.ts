@@ -2,19 +2,23 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
-  clearToken,
+  clearSessionHint,
   getProfile,
+  hasSessionHint,
   login,
+  markSessionHint,
   logoutRequest,
   register,
-  setToken,
 } from "@/proxy";
 import type { AuthSuccess, User } from "@/types/index";
 
 export function useUser() {
+  const hasToken = hasSessionHint();
+
   return useQuery<User>({
     queryKey: ["user"],
     queryFn: getProfile,
+    enabled: hasToken,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
@@ -27,7 +31,8 @@ export function useLogin() {
     mutationFn: async ({ email, password }: { email: string; password: string }) =>
       login(email, password),
     onSuccess(data) {
-      setToken(data.accessToken);
+      markSessionHint();
+      queryClient.setQueryData(["user"], data.user);
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
@@ -44,7 +49,8 @@ export function useRegister() {
     mutationFn: async ({ name, email, password, role }: { name: string; email: string; password: string; role: User["role"] }) =>
       register(name, email, password, role),
     onSuccess(data) {
-      setToken(data.accessToken);
+      markSessionHint();
+      queryClient.setQueryData(["user"], data.user);
       queryClient.invalidateQueries({ queryKey: ["user"] });
     },
   });
@@ -57,7 +63,7 @@ export function useLogout() {
       await logoutRequest();
     },
     onSettled() {
-      clearToken();
+      clearSessionHint();
       queryClient.clear();
     },
   });

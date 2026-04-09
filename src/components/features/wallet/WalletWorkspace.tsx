@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,18 +23,21 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 export default function WalletWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const balanceQuery = useWalletBalance();
-  const summaryQuery = useWalletSummary();
-  const transactionsQuery = useWalletTransactions();
+  const canLoadProtectedData = Boolean(user);
+  const balanceQuery = useWalletBalance({ enabled: canLoadProtectedData });
+  const summaryQuery = useWalletSummary({ enabled: canLoadProtectedData });
+  const transactionsQuery = useWalletTransactions({ enabled: canLoadProtectedData });
   const createWalletMutation = useCreateWallet();
   const addFundsMutation = useAddFunds();
   const withdrawFundsMutation = useWithdrawFunds();
   const paystackInitMutation = usePaystackInit();
   const paystackVerifyMutation = usePaystackVerify();
-  const [amount, setAmount] = useState(0);
-  const [paystackAmount, setPaystackAmount] = useState(0);
+  const [amountInput, setAmountInput] = useState("");
+  const [paystackAmountInput, setPaystackAmountInput] = useState("");
   const paystackProcessedRef = useRef(false);
   const [paystackStatusMessage, setPaystackStatusMessage] = useState<string | null>(null);
+  const amount = Number(amountInput || 0);
+  const paystackAmount = Number(paystackAmountInput || 0);
 
   useEffect(() => {
     if (typeof window === "undefined") {
@@ -41,24 +45,30 @@ export default function WalletWorkspace() {
     }
 
     const searchParams = new URLSearchParams(window.location.search);
-    const reference = searchParams.get("reference");
+    const reference = searchParams.get("reference") ?? searchParams.get("trxref");
     const status = searchParams.get("status");
 
-    if (reference && status === "success" && !paystackProcessedRef.current) {
+    if (reference && !paystackProcessedRef.current && (!status || status === "success")) {
       paystackProcessedRef.current = true;
       paystackVerifyMutation.mutate(
         { reference },
         {
           onSuccess: () => {
+            toast.success("Paystack deposit verified and wallet updated.");
             setPaystackStatusMessage("Paystack deposit verified and wallet updated.");
             window.history.replaceState({}, "", window.location.pathname);
-          },          onError: (error: Error) => {
+            void balanceQuery.refetch();
+            void summaryQuery.refetch();
+            void transactionsQuery.refetch();
+          },
+          onError: (error: Error) => {
+            toast.error(error.message || "Paystack verification failed");
             setPaystackStatusMessage(error.message || "Paystack verification failed");
           },
         },
       );
     }
-  }, [paystackVerifyMutation]);
+  }, [balanceQuery, paystackVerifyMutation, summaryQuery, transactionsQuery]);
 
   if (!user) {
     return null;
@@ -67,6 +77,60 @@ export default function WalletWorkspace() {
   const balance = balanceQuery.data;
   const summary = summaryQuery.data;
   const transactions = transactionsQuery.data?.transactions ?? [];
+  const virtualAccount = balance?.virtualAccount ?? summary?.wallet.virtualAccount;
+
+  const handleCreateWallet = () => {
+    const toastId = toast.loading("Setting up your wallet...");
+    createWalletMutation.mutate(undefined, {
+      onSuccess: (result) => {
+        toast.success(
+          result.created ? "Wallet created successfully." : "Wallet already exists.",
+          { id: toastId },
+        );
+      },
+      onError: (error) => {
+        toast.error(error.message || "Unable to create wallet.", { id: toastId });
+      },
+    });
+  };
+
+  const handleAddFunds = () => {
+    const toastId = toast.loading("Adding funds...");
+    addFundsMutation.mutate(
+      {
+        amount,
+        reference: `wallet-add-${Date.now()}`,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Funds added successfully.", { id: toastId });
+          setAmountInput("");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Unable to add funds.", { id: toastId });
+        },
+      },
+    );
+  };
+
+  const handleWithdrawFunds = () => {
+    const toastId = toast.loading("Processing withdrawal...");
+    withdrawFundsMutation.mutate(
+      {
+        amount,
+        reference: `wallet-withdraw-${Date.now()}`,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Withdrawal completed.", { id: toastId });
+          setAmountInput("");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Unable to withdraw funds.", { id: toastId });
+        },
+      },
+    );
+  };
 
   return (
     <AppShell user={user}>
@@ -105,43 +169,46 @@ export default function WalletWorkspace() {
           <Card className="border-border/80 bg-white">
             <CardHeader>
               <CardTitle>Wallet actions</CardTitle>
-              <CardDescription>Use explicit funding or withdrawal actions with a visible amount.</CardDescription>
+              <CardDescription>
+                Use explicit funding or withdrawal actions with a visible amount.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
               <Button
                 variant="outline"
-                onClick={() => createWalletMutation.mutate()}
-                disabled={createWalletMutation.status === "pending"}
+                onClick={handleCreateWallet}
+                disabled={createWalletMutation.status === "pending" || balance?.exists}
               >
-                Create wallet
+                {balance?.exists ? "Wallet already created" : "Create wallet"}
               </Button>
+              {virtualAccount ? (
+                <div className="rounded-2xl border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
+                  <p className="font-medium text-foreground">Paystack virtual account</p>
+                  <p className="mt-1">
+                    {virtualAccount.accountNumber
+                      ? `${virtualAccount.bankName ?? "Bank"} - ${virtualAccount.accountNumber}`
+                      : "Provisioning in progress"}
+                  </p>
+                  <p>{virtualAccount.accountName ?? user.name}</p>
+                </div>
+              ) : null}
               <Input
                 type="number"
                 placeholder="Amount"
-                value={amount}
-                onChange={(event) => setAmount(Number(event.target.value))}
+                value={amountInput}
+                onChange={(event) => setAmountInput(event.target.value)}
               />
               <div className="flex flex-wrap gap-2">
                 <Button
                   disabled={amount <= 0 || addFundsMutation.status === "pending"}
-                  onClick={() =>
-                    addFundsMutation.mutate({
-                      amount,
-                      reference: `wallet-add-${Date.now()}`,
-                    })
-                  }
+                  onClick={handleAddFunds}
                 >
                   Add funds
                 </Button>
                 <Button
                   variant="outline"
                   disabled={amount <= 0 || withdrawFundsMutation.status === "pending"}
-                  onClick={() =>
-                    withdrawFundsMutation.mutate({
-                      amount,
-                      reference: `wallet-withdraw-${Date.now()}`,
-                    })
-                  }
+                  onClick={handleWithdrawFunds}
                 >
                   Withdraw
                 </Button>
@@ -155,8 +222,8 @@ export default function WalletWorkspace() {
                   id="paystackAmount"
                   type="number"
                   min={1}
-                  value={paystackAmount}
-                  onChange={(event) => setPaystackAmount(Number(event.target.value))}
+                  value={paystackAmountInput}
+                  onChange={(event) => setPaystackAmountInput(event.target.value)}
                   className="mt-1 w-full rounded-md border p-2"
                 />
                 <div className="mt-2 flex items-center gap-2">
@@ -164,13 +231,22 @@ export default function WalletWorkspace() {
                     disabled={paystackAmount <= 0 || paystackInitMutation.status === 'pending'}
                     onClick={async () => {
                       if (!user?.email) return;
-                      const result = await paystackInitMutation.mutateAsync({
-                        amount: paystackAmount,
-                        email: user.email,
-                        callbackUrl: `${window.location.origin}/wallet`,
-                      });
+                      const toastId = toast.loading("Redirecting to Paystack...");
+                      try {
+                        const result = await paystackInitMutation.mutateAsync({
+                          amount: paystackAmount,
+                          email: user.email,
+                          callbackUrl: `${window.location.origin}/wallet`,
+                        });
 
-                      window.location.href = result.authorizationUrl;
+                        toast.success("Redirecting to Paystack checkout.", { id: toastId });
+                        setPaystackAmountInput("");
+                        window.location.href = result.authorizationUrl;
+                      } catch (error) {
+                        toast.error(error instanceof Error ? error.message : "Unable to initialize Paystack.", {
+                          id: toastId,
+                        });
+                      }
                     }}
                   >
                     Deposit with Paystack

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import { ArrowRight, BriefcaseBusiness, FilePlus2 } from "lucide-react";
+import { toast } from "sonner";
 import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useUser } from "@/hooks/useAuth";
 import { useCreateContract } from "@/hooks/useContracts";
-import { useCreateJob, useRoleScopedJobs } from "@/hooks/useJobs";
+import { useCreateJob, useJobs } from "@/hooks/useJobs";
 import {
   useAcceptProposal,
   useCreateProposal,
@@ -39,8 +40,30 @@ function EmptyState({
 export default function JobsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const jobsQuery = useRoleScopedJobs({ role: user?.role, userId: user?.id });
-  const proposalsQuery = useProposals({ role: user?.role, userId: user?.id });
+  const canLoadProtectedData = Boolean(user);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [categoryFilter, setCategoryFilter] = useState("ALL");
+  const deferredSearch = useDeferredValue(search);
+  const jobsQuery = useJobs(
+    {
+      clientId: user?.role === "CLIENT" ? user.id : undefined,
+      status:
+        user?.role === "ARTISAN"
+          ? "OPEN"
+          : statusFilter !== "ALL"
+            ? statusFilter
+            : undefined,
+      category: categoryFilter !== "ALL" ? categoryFilter : undefined,
+      search: deferredSearch.trim() || undefined,
+      limit: 50,
+    },
+    { enabled: canLoadProtectedData },
+  );
+  const proposalsQuery = useProposals(
+    { role: user?.role, userId: user?.id },
+    { enabled: canLoadProtectedData },
+  );
   const createJobMutation = useCreateJob();
   const createProposalMutation = useCreateProposal();
   const acceptProposalMutation = useAcceptProposal();
@@ -50,11 +73,13 @@ export default function JobsWorkspace() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [budget, setBudget] = useState(0);
+  const [budgetInput, setBudgetInput] = useState("");
   const [category, setCategory] = useState("general");
   const [proposalJobId, setProposalJobId] = useState("");
-  const [proposalAmount, setProposalAmount] = useState(0);
+  const [proposalAmountInput, setProposalAmountInput] = useState("");
   const [proposalMessage, setProposalMessage] = useState("");
+  const budget = Number(budgetInput || 0);
+  const proposalAmount = Number(proposalAmountInput || 0);
 
   const pendingProposals = useMemo(
     () => proposalsQuery.data?.filter((proposal) => proposal.status === "PENDING") ?? [],
@@ -67,6 +92,59 @@ export default function JobsWorkspace() {
 
   const jobs = jobsQuery.data ?? [];
   const proposals = proposalsQuery.data ?? [];
+  const categoryOptions = useMemo(
+    () =>
+      Array.from(
+        new Set(jobs.map((job) => job.category).filter((value): value is string => Boolean(value))),
+      ),
+    [jobs],
+  );
+
+  const handleCreateJob = () => {
+    const toastId = toast.loading("Publishing job...");
+    createJobMutation.mutate(
+      {
+        title: title.trim(),
+        description: description.trim(),
+        budget,
+        category: category.trim() || "general",
+      },
+      {
+        onSuccess: () => {
+          toast.success("Job published successfully.", { id: toastId });
+          setTitle("");
+          setDescription("");
+          setBudgetInput("");
+          setCategory("general");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Unable to publish job.", { id: toastId });
+        },
+      },
+    );
+  };
+
+  const handleCreateProposal = () => {
+    const toastId = toast.loading("Submitting proposal...");
+    createProposalMutation.mutate(
+      {
+        jobId: proposalJobId,
+        amount: proposalAmount,
+        message: proposalMessage.trim(),
+      },
+      {
+        onSuccess: () => {
+          toast.success("Proposal submitted successfully.", { id: toastId });
+          setProposalJobId("");
+          setProposalAmountInput("");
+          setProposalMessage("");
+        },
+        onError: (error) => {
+          toast.error(error.message || "Unable to submit proposal.", { id: toastId });
+        },
+      },
+    );
+  };
 
   return (
     <AppShell user={user}>
@@ -125,6 +203,45 @@ export default function JobsWorkspace() {
           </Card>
         </section>
 
+        <Card className="border-border/80 bg-white">
+          <CardHeader>
+            <CardTitle>Search and filter jobs</CardTitle>
+            <CardDescription>
+              Narrow the visible job list by keyword, category, or status.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-3 md:grid-cols-3">
+            <Input
+              placeholder="Search jobs"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+            />
+            <select
+              className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              value={categoryFilter}
+              onChange={(event) => setCategoryFilter(event.target.value)}
+            >
+              <option value="ALL">All categories</option>
+              {categoryOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            <select
+              className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+              value={statusFilter}
+              onChange={(event) => setStatusFilter(event.target.value)}
+              disabled={user.role === "ARTISAN"}
+            >
+              <option value="ALL">{user.role === "CLIENT" ? "All statuses" : "Open jobs only"}</option>
+              <option value="OPEN">Open</option>
+              <option value="IN_PROGRESS">In progress</option>
+              <option value="COMPLETED">Completed</option>
+            </select>
+          </CardContent>
+        </Card>
+
         {user.role === "CLIENT" ? (
           <section className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
             <Card className="border-border/80 bg-white">
@@ -143,8 +260,8 @@ export default function JobsWorkspace() {
                   <Input
                     type="number"
                     placeholder="Budget"
-                    value={budget}
-                    onChange={(event) => setBudget(Number(event.target.value))}
+                    value={budgetInput}
+                    onChange={(event) => setBudgetInput(event.target.value)}
                   />
                   <Input
                     placeholder="Category"
@@ -154,14 +271,7 @@ export default function JobsWorkspace() {
                 </div>
                 <Button
                   disabled={!title.trim() || !description.trim() || budget <= 0 || createJobMutation.status === "pending"}
-                  onClick={() =>
-                    createJobMutation.mutate({
-                      title,
-                      description,
-                      budget,
-                      category,
-                    })
-                  }
+                  onClick={handleCreateJob}
                 >
                   Publish job
                 </Button>
@@ -188,6 +298,11 @@ export default function JobsWorkspace() {
                 <CardDescription>Pick an open job and send a clear price with a short delivery note.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
+                {!user.artisanVerified ? (
+                  <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                    Artisan verification is required before you can submit proposals.
+                  </div>
+                ) : null}
                 <select
                   className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   value={proposalJobId}
@@ -203,8 +318,8 @@ export default function JobsWorkspace() {
                 <Input
                   type="number"
                   placeholder="Proposed amount"
-                  value={proposalAmount}
-                  onChange={(event) => setProposalAmount(Number(event.target.value))}
+                  value={proposalAmountInput}
+                  onChange={(event) => setProposalAmountInput(event.target.value)}
                 />
                 <Textarea
                   placeholder="How will you handle this work?"
@@ -212,14 +327,8 @@ export default function JobsWorkspace() {
                   onChange={(event) => setProposalMessage(event.target.value)}
                 />
                 <Button
-                  disabled={!proposalJobId || !proposalMessage.trim() || proposalAmount <= 0 || createProposalMutation.status === "pending"}
-                  onClick={() =>
-                    createProposalMutation.mutate({
-                      jobId: proposalJobId,
-                      amount: proposalAmount,
-                      message: proposalMessage,
-                    })
-                  }
+                  disabled={!user.artisanVerified || !proposalJobId || !proposalMessage.trim() || proposalAmount <= 0 || createProposalMutation.status === "pending"}
+                  onClick={handleCreateProposal}
                 >
                   Send proposal
                 </Button>
@@ -303,7 +412,12 @@ export default function JobsWorkspace() {
                         <>
                           <Button
                             size="sm"
-                            onClick={() => acceptProposalMutation.mutate(proposal.id)}
+                            onClick={() =>
+                              acceptProposalMutation.mutate(proposal.id, {
+                                onSuccess: () => toast.success("Proposal accepted."),
+                                onError: (error) => toast.error(error.message || "Unable to accept proposal."),
+                              })
+                            }
                             disabled={acceptProposalMutation.status === "pending"}
                           >
                             Accept
@@ -311,7 +425,12 @@ export default function JobsWorkspace() {
                           <Button
                             size="sm"
                             variant="outline"
-                            onClick={() => rejectProposalMutation.mutate(proposal.id)}
+                            onClick={() =>
+                              rejectProposalMutation.mutate(proposal.id, {
+                                onSuccess: () => toast.success("Proposal rejected."),
+                                onError: (error) => toast.error(error.message || "Unable to reject proposal."),
+                              })
+                            }
                             disabled={rejectProposalMutation.status === "pending"}
                           >
                             Reject
@@ -322,7 +441,12 @@ export default function JobsWorkspace() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => createContractMutation.mutate(proposal.id)}
+                          onClick={() =>
+                            createContractMutation.mutate(proposal.id, {
+                              onSuccess: () => toast.success("Contract created."),
+                              onError: (error) => toast.error(error.message || "Unable to create contract."),
+                            })
+                          }
                           disabled={createContractMutation.status === "pending"}
                         >
                           Create contract
@@ -332,7 +456,12 @@ export default function JobsWorkspace() {
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => withdrawProposalMutation.mutate(proposal.id)}
+                          onClick={() =>
+                            withdrawProposalMutation.mutate(proposal.id, {
+                              onSuccess: () => toast.success("Proposal withdrawn."),
+                              onError: (error) => toast.error(error.message || "Unable to withdraw proposal."),
+                            })
+                          }
                           disabled={withdrawProposalMutation.status === "pending"}
                         >
                           Withdraw

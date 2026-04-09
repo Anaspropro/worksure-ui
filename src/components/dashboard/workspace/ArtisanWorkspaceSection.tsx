@@ -6,26 +6,30 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 export default function ArtisanWorkspaceSection({
   jobs,
   proposalJobId,
-  proposalAmount,
+  proposalAmountInput,
   proposalMessage,
   setProposalJobId,
-  setProposalAmount,
+  setProposalAmountInput,
   setProposalMessage,
   onSubmitProposal,
   isBusy,
   formatAmount,
+  artisanVerified,
 }: {
   jobs: Array<{ id: string; title: string; budget: number }> | undefined;
   proposalJobId: string;
-  proposalAmount: number;
+  proposalAmountInput: string;
   proposalMessage: string;
   setProposalJobId: (value: string) => void;
-  setProposalAmount: (value: number) => void;
+  setProposalAmountInput: (value: string) => void;
   setProposalMessage: (value: string) => void;
   onSubmitProposal: () => void;
   isBusy: boolean;
   formatAmount: (value: number) => string;
+  artisanVerified: boolean;
 }) {
+  const proposalAmount = Number(proposalAmountInput || 0);
+
   return (
     <section className="grid gap-4 lg:grid-cols-2">
       <Card className="border-border/90 bg-white">
@@ -36,6 +40,11 @@ export default function ArtisanWorkspaceSection({
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-3">
+          {!artisanVerified ? (
+            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+              Artisan verification is required before you can submit proposals.
+            </div>
+          ) : null}
           <select
             className="h-11 w-full rounded-xl border border-border bg-input px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             value={proposalJobId}
@@ -48,9 +57,9 @@ export default function ArtisanWorkspaceSection({
               </option>
             ))}
           </select>
-          <Input type="number" placeholder="Proposal amount" value={proposalAmount} onChange={(event) => setProposalAmount(Number(event.target.value))} />
+          <Input type="number" placeholder="Proposal amount" value={proposalAmountInput} onChange={(event) => setProposalAmountInput(event.target.value)} />
           <Textarea placeholder="Proposal message" value={proposalMessage} onChange={(event) => setProposalMessage(event.target.value)} />
-          <Button onClick={onSubmitProposal} disabled={isBusy || !proposalJobId || proposalAmount <= 0 || !proposalMessage.trim()}>
+          <Button onClick={onSubmitProposal} disabled={!artisanVerified || isBusy || !proposalJobId || proposalAmount <= 0 || !proposalMessage.trim()}>
             Submit proposal
           </Button>
         </CardContent>

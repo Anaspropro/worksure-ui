@@ -10,31 +10,40 @@ type WalletMutationInput = {
   metadata?: Record<string, unknown>;
 };
 
-export function useWalletBalance() {
+type WalletCreateResponse = {
+  wallet: WalletBalance;
+  created: boolean;
+  virtualAccount?: WalletBalance["virtualAccount"];
+};
+
+export function useWalletBalance(options: { enabled?: boolean } = {}) {
   return useQuery<WalletBalance>({
     queryKey: ["wallet", "balance"],
     queryFn: () => proxyFetch<WalletBalance>("/wallet/balance"),
+    enabled: options.enabled,
   });
 }
 
-export function useWalletSummary() {
+export function useWalletSummary(options: { enabled?: boolean } = {}) {
   return useQuery<WalletSummary>({
     queryKey: ["wallet", "summary"],
     queryFn: () => proxyFetch<WalletSummary>("/wallet/summary"),
+    enabled: options.enabled,
   });
 }
 
-export function useWalletTransactions() {
+export function useWalletTransactions(options: { enabled?: boolean } = {}) {
   return useQuery<WalletTransactionsResponse>({
     queryKey: ["wallet", "transactions"],
     queryFn: () => proxyFetch<WalletTransactionsResponse>("/wallet/transactions"),
+    enabled: options.enabled,
   });
 }
 
 export function useCreateWallet() {
   const queryClient = useQueryClient();
 
-  return useMutation({
+  return useMutation<WalletCreateResponse, Error, void>({
     mutationFn: () => proxyFetch("/wallet/create", { method: "POST" }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
@@ -109,6 +118,7 @@ export function usePaystackVerify() {
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
+      queryClient.refetchQueries({ queryKey: ["wallet"] });
     },
   });
 }

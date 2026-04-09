@@ -29,20 +29,22 @@ function buildReviewsQuery(params: ReviewsQuery = {}) {
   return query.toString();
 }
 
-export function useReviews(params: ReviewsQuery = {}) {
+export function useReviews(params: ReviewsQuery = {}, options: { enabled?: boolean } = {}) {
   return useQuery<Review[]>({
     queryKey: ["reviews", params],
     queryFn: () =>
       proxyFetchRaw<ReviewsResponse>(`/reviews${buildReviewsQuery(params) ? `?${buildReviewsQuery(params)}` : ""}`).then(
         (response) => response.reviews,
       ),
+    enabled: options.enabled,
   });
 }
 
-export function useMyReviews() {
+export function useMyReviews(options: { enabled?: boolean } = {}) {
   return useQuery<Review[]>({
     queryKey: ["reviews", "me"],
     queryFn: () => proxyFetchRaw<Review[]>("/reviews/me"),
+    enabled: options.enabled,
   });
 }
 
