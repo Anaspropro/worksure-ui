@@ -23,13 +23,13 @@ export const sharedLinks = [
 
 export function getDashboardLinks(role: User["role"]) {
   return {
-    CLIENT: [{ href: "/dashboard/client", label: "Client Dashboard", icon: LayoutDashboard }],
+    CLIENT: [{ href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard }],
     ARTISAN: [
-      { href: "/dashboard/artisan", label: "Artisan Dashboard", icon: LayoutDashboard },
+      { href: "/dashboard/artisan", label: "Dashboard", icon: LayoutDashboard },
       { href: "/kyc/status", label: "Verification", icon: FileUser },
     ],
     ADMIN: [
-      { href: "/dashboard/admin", label: "Admin Dashboard", icon: ShieldCheck },
+      { href: "/dashboard/admin", label: "Dashboard", icon: ShieldCheck },
       { href: "/admin/users", label: "Users", icon: ShieldPlus },
       { href: "/admin/disputes", label: "Disputes", icon: FileText },
     ],

@@ -3,13 +3,11 @@ import type { User } from "@/types";
 
 export default function SidebarProfile({ user }: { user: User }) {
   return (
-    <div className="shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] ">
-      <div className="flex items-center gap-3">
-        <UserAvatar user={user} />
-        <div className="min-w-0">
-          <p className="truncate font-normal">{user.name}</p>
-          <p className="mt-1 truncate text-sm text-slate-300">{user.email}</p>
-        </div>
+    <div className="flex items-center gap-3">
+      <UserAvatar user={user} className="h-10 w-10 rounded-full object-cover" />
+      <div className="min-w-0">
+        <p className="truncate text-sm font-semibold text-current">{user.name}</p>
+        <p className="truncate text-xs text-current/70">{user.email}</p>
       </div>
     </div>
   );

@@ -21,7 +21,7 @@ export default function DashboardStats({
               <p className="text-sm text-text-secondary">Open jobs</p>
               <p className="mt-2 text-3xl font-semibold text-secondary">{jobsCount}</p>
             </div>
-            <div className="rounded-2xl bg-white/80 p-3">
+            <div className="rounded-lg bg-white/80 p-3">
               <BriefcaseBusiness className="size-5 text-primary-dark" />
             </div>
           </div>
@@ -34,7 +34,7 @@ export default function DashboardStats({
               <p className="text-sm text-text-secondary">{emphasisLabel}</p>
               <p className="mt-2 text-3xl font-semibold text-primary-dark">{emphasisValue}</p>
             </div>
-            <div className="rounded-2xl bg-white/80 p-3">
+            <div className="rounded-lg bg-white/80 p-3">
               <ShieldCheck className="size-5 text-primary-dark" />
             </div>
           </div>
@@ -47,7 +47,7 @@ export default function DashboardStats({
               <p className="text-sm text-text-secondary">Ready to release</p>
               <p className="mt-2 text-3xl font-semibold text-success">{readyToRelease}</p>
             </div>
-            <div className="rounded-2xl bg-white/80 p-3">
+            <div className="rounded-lg bg-white/80 p-3">
               <Wallet className="size-5 text-primary-dark" />
             </div>
           </div>

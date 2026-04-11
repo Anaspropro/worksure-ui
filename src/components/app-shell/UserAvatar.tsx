@@ -22,16 +22,14 @@ export default function UserAvatar({
       <Image
         src={user.avatarUrl}
         alt={user.name}
-        className={`h-6 w-6 rounded-2xl object-cover ring-1 ring-white/15 ${className}`.trim()}
+        className={` ${className}`.trim()}
       />
     );
   }
 
   return (
     <div
-      aria-label={user.name}
-      className={`flex h-6 w-6 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#10b981,#059669)] text-sm font-semibold text-white shadow-[0_16px_36px_-20px_rgba(16,185,129,0.85)] ${className}`.trim()}
-    >
+      aria-label={user.name}>
       {getInitials(user.name)}
     </div>
   );

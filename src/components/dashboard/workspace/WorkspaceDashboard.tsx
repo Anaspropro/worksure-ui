@@ -169,7 +169,7 @@ export default function WorkspaceDashboard({
 
       {roleView === "ADMIN" ? <AdminWorkspaceSection /> : null}
 
-      <section className="grid gap-4 grid-cols-1">
+      <section className="grid gap-4 grid-cols-2">
         <JobsPanel roleView={roleView} jobs={visibleJobs} formatAmount={formatAmount} />
         <ProposalsPanel
           roleView={roleView}

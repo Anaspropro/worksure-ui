@@ -19,7 +19,7 @@ export default function JobsPanel({
       <CardContent className="space-y-3">
         {jobs.length ? (
           jobs.map((job) => (
-            <div key={job.id} className="rounded-2xl border border-border bg-surface p-4">
+            <div key={job.id} className="rounded-lg border border-border bg-surface p-4">
               <div className="flex items-start justify-between gap-3">
                 <p className="font-medium text-foreground">{job.title}</p>
                 <StatusBadge status={job.status} />

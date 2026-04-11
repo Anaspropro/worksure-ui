@@ -33,7 +33,7 @@ export default function ProposalsPanel({
       <CardContent className="space-y-3">
         {proposals?.length ? (
           proposals.map((proposal) => (
-            <div key={proposal.id} className="rounded-2xl border border-border bg-surface p-4">
+            <div key={proposal.id} className="rounded-lg border border-border bg-surface p-4">
               <div className="flex items-start justify-between gap-3">
                 <p className="font-medium text-foreground">{proposal.job.title}</p>
                 <StatusBadge status={proposal.status} />

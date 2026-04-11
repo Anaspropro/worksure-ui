@@ -41,12 +41,12 @@ export default function ArtisanWorkspaceSection({
         </CardHeader>
         <CardContent className="space-y-3">
           {!artisanVerified ? (
-            <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
               Artisan verification is required before you can submit proposals.
             </div>
           ) : null}
           <select
-            className="h-11 w-full rounded-xl border border-border bg-input px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            className="h-11 w-full rounded-lg border border-border bg-input px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
             value={proposalJobId}
             onChange={(event) => setProposalJobId(event.target.value)}
           >

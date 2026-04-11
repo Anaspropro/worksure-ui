@@ -30,7 +30,7 @@ export default function DashboardHero({
             {description}
           </CardDescription>
         </div>
-        <div className="grid gap-3 rounded-2xl bg-white/45 p-4 md:grid-cols-4">
+        <div className="grid gap-3 rounded-2xl bg-white/45 p-4 grid-cols-2 md:grid-cols-4">
           {workflowSteps.map(({ label, icon }) => (
             <div key={label} className="flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 ring-1 ring-emerald-100 shadow-[0_16px_36px_-30px_rgba(16,185,129,0.25)]">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
