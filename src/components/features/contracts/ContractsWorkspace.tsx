@@ -50,7 +50,7 @@ export default function ContractsWorkspace() {
           </CardHeader>
         </Card>
 
-        <section className="grid gap-4 md:grid-cols-3">
+        <section className="grid gap-4 grid-cols-2 md:grid-cols-3">
           <Card size="sm">
             <CardContent className="space-y-1 py-2">
               <p className="text-sm text-muted-foreground">Total contracts</p>
@@ -65,7 +65,7 @@ export default function ContractsWorkspace() {
               </p>
             </CardContent>
           </Card>
-          <Card size="sm">
+          <Card size="sm" className="col-span-2 lg:col-span-1">
             <CardContent className="space-y-1 py-2">
               <p className="text-sm text-muted-foreground">Ready to release</p>
               <p className="text-3xl font-semibold text-foreground">{readyToRelease.length}</p>
@@ -81,7 +81,7 @@ export default function ContractsWorkspace() {
           <CardContent className="space-y-4">
             {contracts.length ? (
               contracts.map((contract) => (
-                <div key={contract.id} className="rounded-2xl border border-border bg-background/75 p-4">
+                <div key={contract.id} className="rounded-lg border border-border bg-background/75 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-semibold text-foreground">{contract.job.title}</p>
@@ -187,7 +187,7 @@ export default function ContractsWorkspace() {
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
                 No contracts yet. Accepted proposals will show up here once a contract is created.
               </div>
             )}

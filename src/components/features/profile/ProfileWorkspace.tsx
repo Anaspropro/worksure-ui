@@ -121,7 +121,7 @@ export default function ProfileWorkspace() {
                   onChange={(event) => setExperience(event.target.value)}
                   placeholder="Experience"
                 />
-                <div className="rounded-2xl border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
+                <div className="rounded-lg border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
                   <p>Total reviews: {reviewStatsQuery.data?.totalReviews ?? 0}</p>
                   <p>Average rating: {reviewStatsQuery.data?.averageRating ?? 0}</p>
                 </div>

@@ -66,7 +66,7 @@ export default function ReviewsWorkspace() {
               </CardHeader>
               <CardContent className="space-y-3">
                 <select
-                  className="h-11 w-full rounded-xl border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
                   value={contractId}
                   onChange={(event) => setContractId(event.target.value)}
                 >
@@ -126,7 +126,7 @@ export default function ReviewsWorkspace() {
           <CardContent className="space-y-3">
             {visibleReviews.length ? (
               visibleReviews.map((review) => (
-                <div key={review.id} className="rounded-2xl border border-border bg-background/75 p-4">
+                <div key={review.id} className="rounded-lg border border-border bg-background/75 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-semibold text-foreground">
@@ -144,7 +144,7 @@ export default function ReviewsWorkspace() {
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
                 No reviews yet. Completed contract feedback will start to build reputation here.
               </div>
             )}

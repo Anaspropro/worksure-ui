@@ -64,7 +64,7 @@ export default function ContractDetailWorkspace({
           </Card>
         ) : (
           <>
-            <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+            <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
               <Card className="border-border/80 bg-white">
                 <CardHeader>
                   <div className="flex flex-wrap items-center justify-between gap-3">

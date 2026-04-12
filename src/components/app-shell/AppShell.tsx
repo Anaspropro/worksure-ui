@@ -41,9 +41,9 @@ export default function AppShell({
               />
             </div>
 
-            <div className="min-w-0">
+            {/* <div className="min-w-0">
               <SidebarNav role={user.role} desktop />
-            </div>
+            </div> */}
 
             <div className="flex shrink-0 items-center gap-3">
               {/* <div className="rounded-full border border-emerald-100 bg-emerald-50/70 px-4 py-2">

@@ -78,7 +78,7 @@ export function LandingHeader() {
     <header className="py-2 shadow-[0_18px_40px_-30px_rgba(16,185,129,0.35)] backdrop-blur">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#10b981,#059669)] text-xs font-bold text-white">
+          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[linear-gradient(135deg,#10b981,#059669)] text-xs font-bold text-white">
             WS
           </div>
           <div>
@@ -165,21 +165,21 @@ export function LandingHeroSection() {
                       Fund work first. Release only when the job is done.
                     </p>
                   </div>
-                  <div className="rounded-2xl bg-white/12 p-3">
+                  <div className="rounded-md bg-white/12 p-3">
                     <Sparkles className="size-5 text-emerald-100" />
                   </div>
                 </div>
 
                 <div className="mt-5 space-y-3">
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
+                  <div className="rounded-md bg-white/10 px-4 py-3">
                     <p className="text-xs uppercase tracking-[0.18em] text-emerald-100/75">Stage 1</p>
                     <p className="mt-1 text-sm font-medium">Client funds escrow</p>
                   </div>
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
+                  <div className="rounded-md bg-white/10 px-4 py-3">
                     <p className="text-xs uppercase tracking-[0.18em] text-emerald-100/75">Stage 2</p>
                     <p className="mt-1 text-sm font-medium">Artisan completes the work</p>
                   </div>
-                  <div className="rounded-2xl bg-white/10 px-4 py-3">
+                  <div className="rounded-md bg-white/10 px-4 py-3">
                     <p className="text-xs uppercase tracking-[0.18em] text-emerald-100/75">Stage 3</p>
                     <p className="mt-1 text-sm font-medium">Payment is released with confirmation</p>
                   </div>
@@ -199,7 +199,7 @@ export function LandingHeroSection() {
             <motion.div key={label} variants={fadeInUp}>
               <Card className="border-emerald-200/80 bg-white/88 py-0 shadow-[0_16px_36px_-28px_rgba(16,185,129,0.3)]">
                 <CardContent className="flex items-center gap-3 p-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-primary-soft">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-soft">
                     <Icon className="size-5 text-primary-dark" />
                   </div>
                   <div>
@@ -281,7 +281,7 @@ export function LandingAudienceSection() {
             >
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-primary-soft">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
                     <BadgeCheck className="size-5 text-primary-dark" />
                   </div>
                   <p className="font-semibold text-foreground">{item.title}</p>

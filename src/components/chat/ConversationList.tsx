@@ -21,7 +21,7 @@ export default function ConversationList({
             key={conversation.id}
             type="button"
             onClick={() => onSelect(conversation.id)}
-            className={`w-full rounded-2xl border px-4 py-3 text-left transition ${
+            className={`w-full rounded-lg border px-4 py-3 text-left transition ${
               isActive ? "border-emerald-500 bg-emerald-50" : "border-border/70 bg-white hover:bg-muted/40"
             }`}
           >

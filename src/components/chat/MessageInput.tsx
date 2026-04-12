@@ -25,7 +25,7 @@ export default function MessageInput({
   onSend: () => Promise<void> | void;
 }) {
   return (
-    <div className="space-y-3 rounded-2xl border border-border/70 p-3">
+    <div className="space-y-3 rounded-lg border border-border/70 p-3">
       <Textarea
         value={draft}
         onChange={(event) => onDraftChange(event.target.value)}

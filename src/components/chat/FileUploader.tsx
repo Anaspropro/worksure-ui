@@ -15,7 +15,7 @@ export default function FileUploader({
   return (
     <div className="space-y-3">
       {file ? (
-        <div className="flex items-center justify-between rounded-2xl border border-border/70 bg-muted/40 px-3 py-2 text-sm">
+        <div className="flex items-center justify-between rounded-lg border border-border/70 bg-muted/40 px-3 py-2 text-sm">
           <span className="truncate">Attachment: {file.name}</span>
           <Button type="button" variant="ghost" size="sm" onClick={onClear}>
             Remove

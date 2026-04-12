@@ -67,7 +67,7 @@ export default function NotificationsWorkspace() {
           <CardContent className="space-y-3">
             {notifications.length ? (
               notifications.map((notification) => (
-                <div key={notification.id} className="rounded-2xl border border-border bg-background/75 p-4">
+                <div key={notification.id} className="rounded-lg border border-border bg-background/75 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-semibold text-foreground">{notification.title}</p>
@@ -98,7 +98,7 @@ export default function NotificationsWorkspace() {
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
                 No notifications yet. Proposal and contract activity will begin appearing here as events happen.
               </div>
             )}

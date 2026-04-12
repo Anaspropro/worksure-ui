@@ -19,7 +19,7 @@ import { useLogin, useRegister, useUser } from "@/hooks/useAuth";
 import { getDashboardPathForRole } from "@/proxy";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+// import { Badge } from "@/components/ui/badge";
 import {
   InputGroup,
   InputGroupAddon,
@@ -52,17 +52,14 @@ const trustNotes = [
 const roleCards: Array<{
   value: UserRole;
   label: string;
-  description: string;
 }> = [
   {
     value: "CLIENT",
     label: "Client",
-    description: "Post jobs, review proposals, and fund escrow with confidence.",
   },
   {
     value: "ARTISAN",
     label: "Artisan",
-    description: "Bid on real work, manage contracts, and track payout progress.",
   },
 ];
 
@@ -145,13 +142,15 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   return (
     <main className="min-h-screen overflow-hidden bg-[linear-gradient(145deg,#f2fff7_0%,#f7faf8_44%,#eef6ff_100%)] px-5 py-8 md:px-8 md:py-10">
-      <div className="mx-auto grid min-h-[calc(100vh-4rem)] w-full max-w-6xl items-stretch gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <section className="relative overflow-hidden rounded-[2rem] border border-emerald-200/80 bg-[linear-gradient(160deg,#0f3d2f_0%,#14523d_35%,#173f63_100%)] p-6 text-white shadow-[0_32px_90px_-50px_rgba(15,23,42,0.7)] md:p-8 xl:p-10">
+      <div className="mx-auto flex justify-center items-center gap-6 max-w-6xl">
+        {/* <section className="relative overflow-hidden rounded-[2rem] border border-emerald-200/80 bg-[linear-gradient(160deg,#0f3d2f_0%,#14523d_35%,#173f63_100%)] p-6 text-white shadow-[0_32px_90px_-50px_rgba(15,23,42,0.7)] md:p-8 xl:p-10">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,255,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_right,rgba(255,255,255,0.1),transparent_24%)]" />
           <div className="relative flex h-full flex-col justify-between gap-8">
             <div className="space-y-5">
               <Badge className="w-fit rounded-full border border-white/20 bg-white/10 px-3 py-1 text-white">
-                {mode === "login" ? "Secure workspace access" : "Create your WorkSure profile"}
+                {mode === "login"
+                  ? "Secure workspace access"
+                  : "Create your WorkSure profile"}
               </Badge>
               <div className="space-y-3">
                 <h1 className="max-w-xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
@@ -160,8 +159,9 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                     : "Open your account and move every service job through a clearer workflow."}
                 </h1>
                 <p className="max-w-2xl text-base leading-7 text-emerald-50/90">
-                  WorkSure keeps job discovery, proposal review, escrow funding, and release actions
-                  visible from the same workspace so both sides always know what happens next.
+                  WorkSure keeps job discovery, proposal review, escrow funding,
+                  and release actions visible from the same workspace so both
+                  sides always know what happens next.
                 </p>
               </div>
             </div>
@@ -173,27 +173,29 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   className="rounded-[1.5rem] border border-white/12 bg-white/10 p-4 backdrop-blur-sm"
                 >
                   <div className="flex items-start gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white/14">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-white/14">
                       <Icon className="size-5 text-white" />
                     </div>
                     <div className="space-y-1">
                       <p className="font-medium text-white">{title}</p>
-                      <p className="text-sm leading-6 text-emerald-50/85">{description}</p>
+                      <p className="text-sm leading-6 text-emerald-50/85">
+                        {description}
+                      </p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
 
-        <Card className="flex items-center border border-border/80 bg-white/95 px-0 shadow-[0_28px_80px_-42px_rgba(15,23,42,0.3)] backdrop-blur">
-          <div className="w-full px-6 py-7 md:px-8 md:py-9">
+        <Card className="flex items-center border border-primary bg-white/95 px-0 shadow-2xl backdrop-brightness-50">
+          <div className="w-full px-6 py-7 md:px-8 md:py-9 ">
             <CardHeader className="px-0 pb-6 pt-0 text-left">
               <CardTitle className="text-3xl font-semibold tracking-tight text-slate-950">
                 {mode === "login" ? "Sign in" : "Create account"}
               </CardTitle>
-              <CardDescription className="max-w-md text-base leading-7">
+              <CardDescription className="max-w-md text-sm md:text-base leading-7">
                 {mode === "login"
                   ? "Use your account details to continue into the dashboard that matches your role."
                   : "Set up your details once and we'll take you straight into your role-specific workspace."}
@@ -204,10 +206,13 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               <form className="space-y-5" onSubmit={handleSubmit}>
                 {mode === "register" ? (
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-foreground" htmlFor="full-name">
+                    <label
+                      className="text-sm font-medium text-foreground"
+                      htmlFor="full-name"
+                    >
                       Full name
                     </label>
-                    <InputGroup className="h-12 rounded-2xl border-border bg-background">
+                    <InputGroup className="h-12 rounded-lg border-border bg-background">
                       <InputGroupAddon>
                         <InputGroupText>
                           <User2 className="size-4" />
@@ -224,11 +229,14 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   </div>
                 ) : null}
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground" htmlFor="email">
+                <div className="space-y-4">
+                  <label
+                    className="text-sm font-medium text-foreground"
+                    htmlFor="email"
+                  >
                     Email address
                   </label>
-                  <InputGroup className="h-12 rounded-2xl border-border bg-background">
+                  <InputGroup className="h-12 rounded-md border-border bg-background">
                     <InputGroupAddon>
                       <InputGroupText>
                         <Mail className="size-4" />
@@ -241,15 +249,19 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                       autoComplete="email"
                       value={email}
                       onChange={(event) => setEmail(event.target.value)}
+                      className="px-4"
                     />
                   </InputGroup>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground" htmlFor="password">
+                <div className="space-y-4">
+                  <label
+                    className="text-sm font-medium text-foreground"
+                    htmlFor="password"
+                  >
                     Password
                   </label>
-                  <InputGroup className="h-12 rounded-2xl border-border bg-background">
+                  <InputGroup className="h-12 rounded-md border-border bg-background">
                     <InputGroupAddon>
                       <InputGroupText>
                         <LockKeyhole className="size-4" />
@@ -257,9 +269,15 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                     </InputGroupAddon>
                     <InputGroupInput
                       id="password"
-                      placeholder={mode === "login" ? "Enter your password" : "Create a strong password"}
+                      placeholder={
+                        mode === "login"
+                          ? "Enter your password"
+                          : "Create a strong password"
+                      }
                       type={showPassword ? "text" : "password"}
-                      autoComplete={mode === "login" ? "current-password" : "new-password"}
+                      autoComplete={
+                        mode === "login" ? "current-password" : "new-password"
+                      }
                       value={password}
                       onChange={(event) => setPassword(event.target.value)}
                     />
@@ -269,9 +287,15 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                         variant="ghost"
                         size="icon-sm"
                         onClick={() => setShowPassword((current) => !current)}
-                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        aria-label={
+                          showPassword ? "Hide password" : "Show password"
+                        }
                       >
-                        {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                        {showPassword ? (
+                          <EyeOff className="size-4" />
+                        ) : (
+                          <Eye className="size-4" />
+                        )}
                       </InputGroupButton>
                     </InputGroupAddon>
                   </InputGroup>
@@ -279,8 +303,10 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
                 {mode === "register" ? (
                   <fieldset className="space-y-3">
-                    <legend className="text-sm font-medium text-foreground">Choose your role</legend>
-                    <div className="grid gap-3">
+                    <legend className="text-sm font-medium text-foreground">
+                      Choose your role
+                    </legend>
+                    <div className="grid gap-3 grid-cols-2 ">
                       {roleCards.map((option) => (
                         <button
                           key={option.value}
@@ -294,9 +320,8 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                         >
                           <div className="flex items-start justify-between gap-3">
                             <div>
-                              <p className="font-medium text-foreground">{option.label}</p>
-                              <p className="mt-1 text-sm leading-6 text-text-secondary">
-                                {option.description}
+                              <p className="font-medium text-foreground">
+                                {option.label}
                               </p>
                             </div>
                             <div
@@ -314,7 +339,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                 ) : null}
 
                 {authError ? (
-                  <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                  <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
                     {authError}
                   </div>
                 ) : null}
@@ -322,8 +347,13 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                 <Button
                   type="submit"
                   size="lg"
-                  className="h-12 w-full rounded-2xl"
-                  disabled={isBusy || !email.trim() || !password || (mode === "register" && !name.trim())}
+                  className="h-12 w-full rounded-lg"
+                  disabled={
+                    isBusy ||
+                    !email.trim() ||
+                    !password ||
+                    (mode === "register" && !name.trim())
+                  }
                 >
                   {isBusy
                     ? mode === "login"
@@ -337,12 +367,14 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
                 <div className="rounded-[1.35rem] bg-slate-50 px-4 py-3 text-sm leading-6 text-text-secondary">
                   {mode === "login"
-                    ? "Use the same email and password you registered with. We'll route you to the correct workspace automatically."
-                    : "Your account is created with role-aware access, so clients and artisans land in the right workspace immediately."}
+                    ? "Login with your credentials."
+                    : "Your account is created with role-aware access."}
                 </div>
 
                 <p className="text-sm text-text-secondary">
-                  {mode === "login" ? "Need an account?" : "Already have an account?"}{" "}
+                  {mode === "login"
+                    ? "Need an account?"
+                    : "Already have an account?"}{" "}
                   <Link
                     href={mode === "login" ? "/auth/register" : "/auth/login"}
                     className="font-medium text-secondary underline-offset-4 hover:underline"

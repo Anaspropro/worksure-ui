@@ -63,7 +63,7 @@ export default function ChatWindow({
         ) : null}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="max-h-112 space-y-3 overflow-y-auto rounded-2xl border border-border/70 bg-stone-50/70 p-4">
+        <div className="max-h-112 space-y-3 overflow-y-auto rounded-lg border border-border/70 bg-stone-50/70 p-4">
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No messages yet. Start the thread with a delivery update, question, or attachment.

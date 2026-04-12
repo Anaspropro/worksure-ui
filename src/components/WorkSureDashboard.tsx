@@ -146,9 +146,9 @@ export default function WorkSureDashboard({
                 {screenCopy.description}
               </CardDescription>
             </div>
-            <div className="grid gap-3 rounded-2xl bg-surface-muted/70 p-4 md:grid-cols-4">
+            <div className="grid gap-3 rounded-lg bg-surface-muted/70 p-4 md:grid-cols-4">
               {workflowSteps.map(({ label, icon: Icon }, index) => (
-                <div key={label} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 ring-1 ring-border">
+                <div key={label} className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 ring-1 ring-border">
                   <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
                     <Icon className={`size-4 ${index === workflowSteps.length - 1 ? "text-success" : "text-primary-dark"}`} />
                   </div>
@@ -345,7 +345,7 @@ export default function WorkSureDashboard({
               {visibleJobs.length ? (
                 <div className="space-y-3">
                   {visibleJobs.map((job) => (
-                    <div key={job.id} className="rounded-2xl border border-border bg-surface p-4">
+                    <div key={job.id} className="rounded-lg border border-border bg-surface p-4">
                       <div className="flex items-start justify-between gap-3">
                         <p className="font-medium text-foreground">{job.title}</p>
                         <StatusBadge status={job.status} />
@@ -379,7 +379,7 @@ export default function WorkSureDashboard({
             {proposals?.length ? (
               <div className="space-y-3">
                 {proposals.map((proposal) => (
-                  <div key={proposal.id} className="rounded-2xl border border-border bg-surface p-4">
+                  <div key={proposal.id} className="rounded-lg border border-border bg-surface p-4">
                     <div className="flex items-start justify-between gap-3">
                       <p className="font-medium text-foreground">{proposal.job.title}</p>
                       <StatusBadge status={proposal.status} />
@@ -430,7 +430,7 @@ export default function WorkSureDashboard({
             {contracts?.length ? (
               <div className="space-y-3">
                 {contracts.map((contract) => (
-                  <div key={contract.id} className="rounded-2xl border border-border bg-surface p-4">
+                  <div key={contract.id} className="rounded-lg border border-border bg-surface p-4">
                     <div className="flex items-start justify-between gap-3">
                       <p className="font-medium text-foreground">{contract.job.title}</p>
                       <StatusBadge

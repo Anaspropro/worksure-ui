@@ -11,7 +11,7 @@ function AttachmentPreview({ message }: { message: ChatMessage }) {
 
   if (message.type === "IMAGE") {
     return (
-      <div className="overflow-hidden rounded-xl">
+      <div className="overflow-hidden rounded-lg">
         <Image
           src={message.fileUrl}
           alt={message.fileName || "Chat image"}
@@ -25,7 +25,7 @@ function AttachmentPreview({ message }: { message: ChatMessage }) {
   }
 
   if (message.type === "VIDEO") {
-    return <video controls src={message.fileUrl} className="max-h-72 rounded-xl" />;
+    return <video controls src={message.fileUrl} className="max-h-72 rounded-lg" />;
   }
 
   if (message.type === "AUDIO") {
@@ -54,7 +54,7 @@ export default function MessageBubble({
   return (
     <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
       <div
-        className={`max-w-[85%] space-y-2 rounded-2xl px-4 py-3 text-sm shadow-sm ${
+        className={`max-w-[85%] space-y-2 rounded-lg px-4 py-3 text-sm shadow-sm ${
           isOwn ? "bg-emerald-600 text-white" : "bg-white text-foreground"
         }`}
       >

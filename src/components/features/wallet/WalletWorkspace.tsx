@@ -182,7 +182,7 @@ export default function WalletWorkspace() {
                 {balance?.exists ? "Wallet already created" : "Create wallet"}
               </Button>
               {virtualAccount ? (
-                <div className="rounded-2xl border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
+                <div className="rounded-lg border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
                   <p className="font-medium text-foreground">Paystack virtual account</p>
                   <p className="mt-1">
                     {virtualAccount.accountNumber
@@ -214,7 +214,7 @@ export default function WalletWorkspace() {
                 </Button>
               </div>
 
-              <div className="mt-4 rounded-2xl border border-border bg-surface-muted/60 p-4">
+              <div className="mt-4 rounded-lg border border-border bg-surface-muted/60 p-4">
                 <label className="block text-sm text-muted-foreground" htmlFor="paystackAmount">
                   Paystack top-up amount
                 </label>
@@ -258,7 +258,7 @@ export default function WalletWorkspace() {
                 )}
               </div>
 
-              <div className="rounded-2xl border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-border bg-surface-muted/60 p-4 text-sm text-muted-foreground">
                 Recent transactions: {summary?.recentTransactions.length ?? 0}
               </div>
             </CardContent>
@@ -272,7 +272,7 @@ export default function WalletWorkspace() {
             <CardContent className="space-y-3 text-sm text-muted-foreground">
               {(summary?.transactionSummary ?? []).length ? (
                 summary?.transactionSummary?.map((entry, index) => (
-                  <div key={`${entry.type}-${entry.status}-${index}`} className="rounded-2xl border border-border bg-white/80 p-4">
+                  <div key={`${entry.type}-${entry.status}-${index}`} className="rounded-lg border border-border bg-white/80 p-4">
                     <p className="font-medium text-foreground">
                       {entry.type} - {entry.status}
                     </p>
@@ -295,7 +295,7 @@ export default function WalletWorkspace() {
           <CardContent className="space-y-3">
             {transactions.length ? (
               transactions.map((transaction) => (
-                <div key={transaction.id} className="rounded-2xl border border-border bg-background/75 p-4">
+                <div key={transaction.id} className="rounded-lg border border-border bg-background/75 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">
                       <p className="font-semibold text-foreground">{transaction.type}</p>
@@ -310,7 +310,7 @@ export default function WalletWorkspace() {
                 </div>
               ))
             ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
+              <div className="rounded-lg border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
                 No wallet activity yet. Funding, withdrawals, and contract-linked transactions will show up here.
               </div>
             )}
