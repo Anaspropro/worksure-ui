@@ -9,10 +9,10 @@ import {
   EyeOff,
   LockKeyhole,
   Mail,
-  ShieldCheck,
+  // ShieldCheck,
   User2,
-  Wallet,
-  Wrench,
+  // Wallet,
+  // Wrench,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLogin, useRegister, useUser } from "@/hooks/useAuth";
@@ -31,23 +31,23 @@ import type { UserRole } from "@/types";
 
 type AuthMode = "login" | "register";
 
-const trustNotes = [
-  {
-    title: "Escrow clarity",
-    description: "Track funding, progress, and payment release in one visible workflow.",
-    icon: Wallet,
-  },
-  {
-    title: "Safer collaboration",
-    description: "Clients and artisans move through role-aware actions with fewer blind spots.",
-    icon: ShieldCheck,
-  },
-  {
-    title: "Built for real jobs",
-    description: "Create, propose, contract, and complete work without losing context.",
-    icon: Wrench,
-  },
-];
+// const trustNotes = [
+//   {
+//     title: "Escrow clarity",
+//     description: "Track funding, progress, and payment release in one visible workflow.",
+//     icon: Wallet,
+//   },
+//   {
+//     title: "Safer collaboration",
+//     description: "Clients and artisans move through role-aware actions with fewer blind spots.",
+//     icon: ShieldCheck,
+//   },
+//   {
+//     title: "Built for real jobs",
+//     description: "Create, propose, contract, and complete work without losing context.",
+//     icon: Wrench,
+//   },
+// ];
 
 const roleCards: Array<{
   value: UserRole;
