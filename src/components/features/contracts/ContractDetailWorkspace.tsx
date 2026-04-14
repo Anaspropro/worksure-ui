@@ -83,7 +83,7 @@ export default function ContractDetailWorkspace({
                 </CardContent>
               </Card>
 
-              <Card className="border-border/80 bg-[linear-gradient(180deg,#ecfdf5_0%,#ffffff_100%)]">
+              <Card className="border-border/80 bg-primary-soft/20">
                 <CardHeader>
                   <CardTitle>Action checklist</CardTitle>
                   <CardDescription>Money moves only after the right confirmations are visible.</CardDescription>

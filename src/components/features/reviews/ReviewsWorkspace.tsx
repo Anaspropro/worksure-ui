@@ -105,7 +105,7 @@ export default function ReviewsWorkspace() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/80 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]">
+            <Card className="border-border/80 bg-secondary-light/20">
               <CardHeader>
                 <CardTitle>Why this matters</CardTitle>
               </CardHeader>

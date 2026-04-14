@@ -43,7 +43,7 @@ export default function ClientWorkspaceSection({
         </CardContent>
       </Card>
 
-      <Card className="border-border bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]">
+      <Card className="border-border bg-secondary-light/20">
         <CardHeader>
           <CardTitle>Client payment rules</CardTitle>
           <CardDescription>

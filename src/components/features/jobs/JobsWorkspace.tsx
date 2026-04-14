@@ -310,7 +310,7 @@ export default function JobsWorkspace() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/80 bg-[linear-gradient(180deg,#ecfdf5_0%,#ffffff_100%)]">
+            <Card className="border-border/80 bg-primary-soft/20">
               <CardHeader>
                 <CardTitle>Client workflow guardrails</CardTitle>
                 <CardDescription>
@@ -345,7 +345,7 @@ export default function JobsWorkspace() {
               </CardHeader>
               <CardContent className="space-y-3">
                 {!user.artisanVerified ? (
-                  <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+                  <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
                     Artisan verification is required before you can submit
                     proposals.
                   </div>
@@ -390,7 +390,7 @@ export default function JobsWorkspace() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/80 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]">
+            <Card className="border-border/80 bg-secondary-light/20">
               <CardHeader>
                 <CardTitle>How artisans win good work</CardTitle>
                 <CardDescription>

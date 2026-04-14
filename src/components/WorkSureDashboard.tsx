@@ -225,7 +225,7 @@ export default function WorkSureDashboard({
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]">
+          <Card className="border-border bg-secondary-light/20">
             <CardHeader>
               <CardTitle>Client payment rules</CardTitle>
               <CardDescription>
@@ -289,7 +289,7 @@ export default function WorkSureDashboard({
             </CardContent>
           </Card>
 
-          <Card className="border-border bg-[linear-gradient(180deg,#ecfdf5_0%,#ffffff_100%)]">
+          <Card className="border-border bg-primary-soft/20">
             <CardHeader>
               <CardTitle>Artisan trust signals</CardTitle>
               <CardDescription>
@@ -320,7 +320,7 @@ export default function WorkSureDashboard({
               <p>Dedicated review flows can reuse the same status colors for verification and disputes.</p>
             </CardContent>
           </Card>
-          <Card className="border-border bg-[linear-gradient(180deg,#fef2f2_0%,#ffffff_100%)]">
+          <Card className="border-border bg-danger/5">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <ShieldAlert className="size-5 text-danger" />

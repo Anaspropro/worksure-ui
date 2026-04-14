@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-[linear-gradient(160deg,#f3fff8_0%,#f8fafc_55%,#eef5ff_100%)] px-6 py-10">
+    <main className="min-h-screen bg-background px-6 py-10">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
         <Card className="w-full border-border/80 bg-white/95 shadow-[0_28px_80px_-42px_rgba(15,23,42,0.28)]">
           <CardHeader className="space-y-5 text-center">
@@ -13,7 +13,7 @@ export default function NotFound() {
               <SearchX className="size-8" />
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-4xl tracking-tight text-slate-950">Page not found</CardTitle>
+              <CardTitle className="text-4xl tracking-tight text-foreground">Page not found</CardTitle>
               <CardDescription className="mx-auto max-w-xl text-base leading-7">
                 The page you tried to open does not exist anymore, may have moved, or was never
                 part of this workspace route map.

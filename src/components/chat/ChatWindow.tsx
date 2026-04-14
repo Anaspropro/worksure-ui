@@ -52,7 +52,7 @@ export default function ChatWindow({
             </CardDescription>
           </div>
           <div className="inline-flex items-center gap-2 rounded-full border border-border/70 px-3 py-1 text-xs font-medium text-muted-foreground">
-            {socketReady && isConnected ? <Wifi className="size-3.5 text-emerald-600" /> : <WifiOff className="size-3.5 text-amber-600" />}
+            {socketReady && isConnected ? <Wifi className="size-3.5 text-primary" /> : <WifiOff className="size-3.5 text-warning" />}
             {socketReady && isConnected ? "Realtime connected" : "Polling fallback"}
           </div>
         </div>
@@ -63,7 +63,7 @@ export default function ChatWindow({
         ) : null}
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="max-h-112 space-y-3 overflow-y-auto rounded-lg border border-border/70 bg-stone-50/70 p-4">
+        <div className="max-h-112 space-y-3 overflow-y-auto rounded-lg border border-border/70 bg-muted/30 p-4">
           {messages.length === 0 ? (
             <p className="text-sm text-muted-foreground">
               No messages yet. Start the thread with a delivery update, question, or attachment.

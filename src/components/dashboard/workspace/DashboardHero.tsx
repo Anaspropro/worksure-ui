@@ -19,20 +19,20 @@ export default function DashboardHero({
   description: string;
 }) {
   return (
-    <Card className="border-emerald-200/80 bg-primary/10 shadow-[0_22px_50px_-34px_rgba(16,185,129,0.3)]">
+    <Card className="border bg-primary/10 shadow-[0_22px_50px_-34px_rgba(16,185,129,0.3)]">
       <CardHeader className="space-y-4">
-        <Badge variant="outline" className="w-fit rounded-full border-emerald-200 bg-white/80 px-3 py-1 text-primary-dark">
+        <Badge variant="outline" className="w-fit rounded-full border bg-card/80 px-3 py-1 text-primary-dark">
           {roleView.toLowerCase()} dashboard
         </Badge>
         <div className="space-y-2">
-          <CardTitle className="text-3xl tracking-tight text-slate-950 sm:text-4xl">{title}</CardTitle>
-          <CardDescription className="max-w-2xl text-base leading-7 text-slate-700">
+          <CardTitle className="text-3xl tracking-tight text-foreground sm:text-4xl">{title}</CardTitle>
+          <CardDescription className="max-w-2xl text-base leading-7 text-text-secondary">
             {description}
           </CardDescription>
         </div>
         <div className="grid gap-3 rounded-2xl bg-white/45 p-4 grid-cols-2 md:grid-cols-4">
           {workflowSteps.map(({ label, icon }) => (
-            <div key={label} className="flex items-center gap-3 rounded-2xl bg-white/90 px-4 py-3 ring-1 ring-emerald-100 shadow-[0_16px_36px_-30px_rgba(16,185,129,0.25)]">
+            <div key={label} className="flex items-center gap-3 rounded-2xl bg-card/90 px-4 py-3 ring-1 ring-primary/20 shadow-[0_16px_36px_-30px_rgba(16,185,129,0.25)]">
               <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
                 <WorkflowIcon icon={icon} />
               </div>

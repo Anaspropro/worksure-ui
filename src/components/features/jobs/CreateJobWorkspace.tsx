@@ -122,7 +122,7 @@ export default function CreateJobWorkspace() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/80 bg-[linear-gradient(180deg,#ecfdf5_0%,#ffffff_100%)]">
+          <Card className="border-border/80 bg-primary-soft/20">
             <CardHeader>
               <CardTitle>What makes a good WorkSure job</CardTitle>
             </CardHeader>

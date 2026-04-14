@@ -41,7 +41,7 @@ export default function ArtisanWorkspaceSection({
         </CardHeader>
         <CardContent className="space-y-3">
           {!artisanVerified ? (
-            <div className="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
               Artisan verification is required before you can submit proposals.
             </div>
           ) : null}
@@ -65,7 +65,7 @@ export default function ArtisanWorkspaceSection({
         </CardContent>
       </Card>
 
-      <Card className="border-border bg-[linear-gradient(180deg,#ecfdf5_0%,#ffffff_100%)]">
+      <Card className="border-border bg-primary-soft/20">
         <CardHeader>
           <CardTitle>Artisan trust signals</CardTitle>
           <CardDescription>

@@ -17,7 +17,7 @@ export default function AdminWorkspaceSection() {
           <p>Dedicated review flows can reuse the same status colors for verification and disputes.</p>
         </CardContent>
       </Card>
-      <Card className="border-border bg-[linear-gradient(180deg,#fef2f2_0%,#ffffff_100%)]">
+      <Card className="border-border bg-danger/5">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <ShieldAlert className="size-5 text-danger" />

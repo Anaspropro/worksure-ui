@@ -55,12 +55,12 @@ export default function MessageBubble({
     <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
       <div
         className={`max-w-[85%] space-y-2 rounded-lg px-4 py-3 text-sm shadow-sm ${
-          isOwn ? "bg-emerald-600 text-white" : "bg-white text-foreground"
+          isOwn ? "bg-primary-dark text-white" : "bg-white text-foreground"
         }`}
       >
         {message.content ? <p className="whitespace-pre-wrap leading-6">{message.content}</p> : null}
         <AttachmentPreview message={message} />
-        <p className={`text-[11px] ${isOwn ? "text-emerald-50/90" : "text-muted-foreground"}`}>
+        <p className={`text-[11px] ${isOwn ? "text-white/75" : "text-muted-foreground"}`}>
           {formatDate(message.createdAt)}
         </p>
       </div>

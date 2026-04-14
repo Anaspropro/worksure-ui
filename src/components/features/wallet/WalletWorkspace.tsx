@@ -264,7 +264,7 @@ export default function WalletWorkspace() {
             </CardContent>
           </Card>
 
-          <Card className="border-border/80 bg-[linear-gradient(180deg,#eff6ff_0%,#ffffff_100%)]">
+          <Card className="border-border/80 bg-secondary-light/20">
             <CardHeader>
               <CardTitle>Wallet summary</CardTitle>
               <CardDescription>These numbers help you understand whether money is liquid or tied to a live contract.</CardDescription>

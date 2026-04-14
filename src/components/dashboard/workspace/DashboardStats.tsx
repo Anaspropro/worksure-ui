@@ -14,7 +14,7 @@ export default function DashboardStats({
 }) {
   return (
     <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-3 mt-4">
-      <Card className="border-emerald-200/80 bg-[linear-gradient(180deg,#def7ea_0%,#f5fff8_100%)]">
+      <Card className="border bg-primary-soft/40">
         <CardContent className="px-5 py-5">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -27,7 +27,7 @@ export default function DashboardStats({
           </div>
         </CardContent>
       </Card>
-      <Card className="border-emerald-200/80 bg-[linear-gradient(180deg,#def7ea_0%,#f5fff8_100%)]">
+      <Card className="border bg-primary-soft/40">
         <CardContent className="px-5 py-5">
           <div className="flex items-start justify-between gap-3">
             <div>
@@ -40,7 +40,7 @@ export default function DashboardStats({
           </div>
         </CardContent>
       </Card>
-      <Card className="border-emerald-200/80 bg-[linear-gradient(180deg,#def7ea_0%,#f5fff8_100%)]">
+      <Card className="border bg-primary-soft/40">
         <CardContent className="px-5 py-5">
           <div className="flex items-start justify-between gap-3">
             <div>
