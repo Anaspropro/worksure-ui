@@ -151,7 +151,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   return (
     <main className="min-h-screen flex">
       {/* ── Brand side panel ───────────────────────────────────── */}
-      <aside className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-col justify-between p-10 xl:p-14">
+      <aside className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-col justify-between p-8 xl:p-14">
         {/* Background */}
         <div className="absolute inset-0 bg-[#064e3b]" />
 
@@ -200,15 +200,17 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
           </div>
 
           {/* Trust features */}
-          <div className="grid grid-cols-3 gap-3">
+          <div className="space-y-3">
             {trustFeatures.map(({ icon: Icon, title, description }) => (
               <div
                 key={title}
                 className="flex items-start gap-3.5 rounded-lg border border-white/8 bg-white/5 px-4 py-3.5 backdrop-blur-sm"
               >
                 <div>
-                  <Icon className="size-4 text-emerald-300" />
-                  <p className="text-sm font-semibold text-white">{title}</p>
+                  <div className="flex gap-4">
+                    <Icon className="size-5 text-emerald-300" />
+                    <p className="text-sm font-semibold text-white">{title}</p>
+                  </div>
                   <p className="text-sm leading-5 text-slate-400 mt-0.5">{description}</p>
                 </div>
               </div>
@@ -227,7 +229,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
         </div>
       </aside>
 
-      {/* ── Form side ──────────────────────────────────────────── */}
+      {/* ──────────── Form side ──────────────────────────────────────────── */}
       <section className="flex flex-1 flex-col items-center justify-center bg-background px-5 py-10 sm:px-8">
         <div className="w-full max-w-[420px] space-y-8">
           {/* Mobile logo */}

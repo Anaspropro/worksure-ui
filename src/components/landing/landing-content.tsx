@@ -75,32 +75,55 @@ const container: Variants = {
 
 export function LandingHeader() {
   return (
-    <header className="py-2 shadow-[0_18px_40px_-30px_rgba(16,185,129,0.35)] backdrop-blur">
-      <div className="flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-emerald-100">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-md bg-[linear-gradient(135deg,#10b981,#059669)] text-xs font-bold text-white">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-500 to-emerald-600 text-white font-bold text-sm shadow-lg">
             WS
           </div>
           <div>
-            <p className="text-xl font-italic font-semibold text-foreground">
+            <p className="text-xl font-bold text-gray-900">
               WorkSure
             </p>
+            <p className="text-xs text-gray-500">Secure • Simple • Trusted</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <nav className="flex items-center gap-4">
           <Button
             asChild
-            size="lg"
+            size="sm"
             variant="ghost"
-            className="hidden sm:inline-flex"
+            className="hidden md:inline-flex text-gray-600 hover:text-emerald-600 transition-colors"
           >
-            <Link href="/auth/login">Login</Link>
+            <Link href="/jobs">Browse Jobs</Link>
           </Button>
-          <Button asChild size="lg" className="rounded-full px-4">
-            <Link href="/auth/register">Get started</Link>
+          <Button
+            asChild
+            size="sm"
+            variant="ghost"
+            className="hidden md:inline-flex text-gray-600 hover:text-emerald-600 transition-colors"
+          >
+            <Link href="/about">How it Works</Link>
           </Button>
-        </div>
+          <div className="flex items-center gap-2">
+            <Button
+              asChild
+              size="sm"
+              variant="outline"
+              className="border-emerald-200 text-emerald-700 hover:bg-emerald-50 transition-colors"
+            >
+              <Link href="/auth/login">Login</Link>
+            </Button>
+            <Button 
+              asChild 
+              size="sm" 
+              className="bg-emerald-600 text-white hover:bg-emerald-700 transition-colors shadow-md"
+            >
+              <Link href="/auth/register">Get Started</Link>
+            </Button>
+          </div>
+        </nav>
       </div>
     </header>
   );
@@ -113,9 +136,9 @@ export function LandingHeroSection() {
       whileInView="visible"
       viewport={{ once: true, amount: 0.2 }}
       variants={fadeInUp}
-      className="relative overflow-hidden bg-[linear-gradient(180deg,#eafcf3_0%,#f6fffa_46%,#ffffff_100%)]"
+      className="relative overflow-hidden bg-[#064e3b]"
     >
-      <div className="absolute inset-x-0 top-0 h-80 bg-[radial-gradient(circle_at_top_left,rgba(16,185,129,0.18),transparent_42%),radial-gradient(circle_at_top_right,rgba(110,231,183,0.18),transparent_36%)]" />
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-emerald-900/20 to-transparent" />
       <motion.div
         className="relative mx-auto flex w-full max-w-6xl flex-col gap-8 px-4 py-5 sm:px-6 lg:px-8 lg:py-8"
         variants={container}
@@ -126,18 +149,18 @@ export function LandingHeroSection() {
 
         <div className="grid items-center gap-8 lg:grid-cols-[1fr_0.9fr]">
           <div className="space-y-6">
-            <Badge className="rounded-full bg-primary-soft px-4 py-1.5 text-primary-dark">
+            <Badge className="rounded-full bg-emerald-100 text-emerald-800 border-emerald-200 px-4 py-1.5">
               Simple trust for real-world service payments
             </Badge>
 
             <div className="space-y-4">
-              <h1 className="max-w-xl text-balance text-4xl font-bold leading-tight text-emerald-950 sm:text-5xl">
-                Secure hiring and escrow made easier for everyday work.
-              </h1>
-              <p className="max-w-lg text-base leading-7 text-text-secondary">
-                WorkSure helps clients hire with confidence and gives artisans better visibility
-                into funded work, progress, and safe payment release.
-              </p>
+              <h1 className="max-w-xl text-balance text-4xl font-bold leading-tight text-white sm:text-5xl">
+              Secure hiring and escrow made easier for <span className="text-emerald-300">everyday work.</span>
+            </h1>
+            <p className="max-w-lg text-base leading-7 text-emerald-100">
+              WorkSure helps clients hire with confidence and gives artisans better visibility
+              into funded work, progress, and safe payment release.
+            </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -197,14 +220,14 @@ export function LandingHeroSection() {
         >
           {statCards.map(({ value, label, icon: Icon }) => (
             <motion.div key={label} variants={fadeInUp}>
-              <Card className="border-emerald-200/80 bg-white/88 py-0 shadow-[0_16px_36px_-28px_rgba(16,185,129,0.3)]">
+              <Card className="border-emerald-600/30 bg-emerald-700/50 py-0 shadow-sm">
                 <CardContent className="flex items-center gap-3 p-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-primary-soft">
-                    <Icon className="size-5 text-primary-dark" />
+                  <div className="flex h-11 w-11 items-center justify-center rounded-md bg-emerald-600/30 border border-emerald-500/30">
+                    <Icon className="size-5 text-emerald-200" />
                   </div>
                   <div>
-                    <p className="text-lg font-semibold text-foreground">{value}</p>
-                    <p className="text-xs text-text-secondary">{label}</p>
+                    <p className="text-lg font-semibold text-white">{value}</p>
+                    <p className="text-xs text-emerald-200">{label}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -218,23 +241,23 @@ export function LandingHeroSection() {
 
 export function LandingPromiseSection() {
   return (
-    <section id="about" className="bg-white py-18">
+    <section id="about" className="bg-slate-50 py-18">
       <div className="mx-auto flex w-full max-w-5xl flex-col gap-10 px-6 lg:px-8">
         <div className="text-center">
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-dark">
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
             About WorkSure
           </p>
           <h2 className="mt-3 text-emerald-950">A calmer way to handle trust, work, and payments</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-text-secondary">
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-600">
             WorkSure is designed for local services where trust matters most. Instead of leaving
             payment expectations unclear, the platform makes funding, delivery, confirmation, and
             release visible from the start.
           </p>
         </div>
 
-        <Card className="border-emerald-200/70 bg-[linear-gradient(180deg,#f4fff8_0%,#ffffff_100%)] py-0 shadow-[0_18px_45px_-30px_rgba(16,185,129,0.18)]">
+        <Card className="border-emerald-100 bg-emerald-50 py-0">
           <CardContent className="p-6">
-            <p className="text-sm leading-7 text-text-secondary">
+            <p className="text-sm leading-7 text-slate-600">
               The goal is simple: clients should feel their money is protected, artisans should feel
               funded work is real, and admins should have clearer oversight when something needs
               attention.
@@ -244,13 +267,13 @@ export function LandingPromiseSection() {
 
         <div className="grid gap-4 md:grid-cols-3">
           {featureCards.map(({ title, description, icon: Icon }) => (
-            <Card key={title} className="border-emerald-100 bg-white py-0 text-center shadow-[0_16px_40px_-34px_rgba(15,23,42,0.18)]">
+            <Card key={title} className="border-emerald-100 bg-white py-0 text-center shadow-sm">
               <CardContent className="flex flex-col items-center p-6">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary-soft">
-                  <Icon className="size-5 text-primary-dark" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-50 border border-emerald-200">
+                  <Icon className="size-5 text-emerald-700" />
                 </div>
                 <p className="mt-4 font-semibold text-foreground">{title}</p>
-                <p className="mt-2 text-sm leading-6 text-text-secondary">{description}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-600">{description}</p>
               </CardContent>
             </Card>
           ))}
@@ -264,11 +287,11 @@ export function LandingAudienceSection() {
   return (
     <section
       id="trust"
-      className="bg-[linear-gradient(180deg,#ebfdf4_0%,#dcfce7_100%)] py-24"
+      className="bg-slate-100 py-24"
     >
       <div className="mx-auto flex w-full max-w-5xl flex-col items-center px-6 text-center lg:px-8">
         <h2 className="text-emerald-950">Loved by customers and artisans</h2>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
+        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
           The experience is built to feel approachable and reliable, even for
           users who are not deeply technical.
         </p>
@@ -277,16 +300,16 @@ export function LandingAudienceSection() {
           {trustCards.map((item) => (
             <Card
               key={item.title}
-              className="border-emerald-200/70 bg-white/88 py-0 text-left shadow-[0_18px_40px_-30px_rgba(16,185,129,0.2)]"
+              className="border-emerald-100 bg-white py-0 text-left shadow-sm"
             >
               <CardContent className="p-6">
                 <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-primary-soft">
-                    <BadgeCheck className="size-5 text-primary-dark" />
+                  <div className="flex h-10 w-10 items-center justify-center rounded-md bg-emerald-100 border border-emerald-200">
+                    <BadgeCheck className="size-5 text-emerald-700" />
                   </div>
                   <p className="font-semibold text-foreground">{item.title}</p>
                 </div>
-                <p className="mt-4 text-sm leading-6 text-text-secondary">
+                <p className="mt-4 text-sm leading-6 text-slate-600">
                   {item.description}
                 </p>
               </CardContent>
@@ -300,18 +323,18 @@ export function LandingAudienceSection() {
 
 export function LandingHowItWorksSection() {
   return (
-    <section className="bg-white py-24">
+    <section className="bg-slate-50 py-24">
       <div className="mx-auto w-full max-w-5xl px-6 lg:px-8">
-        <div className="rounded-[36px] border border-emerald-200/80 bg-[linear-gradient(180deg,#f6fffa_0%,#ffffff_100%)] p-8 shadow-[0_24px_60px_-38px_rgba(16,185,129,0.24)]">
+        <div className="rounded-[36px] border border-emerald-200 bg-slate-100 p-8">
           <div className="grid gap-8 lg:grid-cols-[1fr_0.88fr] lg:items-center">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-dark">
+              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
                 Why it works
               </p>
               <h3 className="mt-3 text-3xl font-semibold tracking-tight text-emerald-950">
                 A marketplace layout that keeps money information visible
               </h3>
-              <p className="mt-4 max-w-xl text-base leading-7 text-text-secondary">
+              <p className="mt-4 max-w-xl text-base leading-7 text-slate-600">
                 WorkSure should never make payment actions feel hidden or confusing. The landing
                 page now introduces the product with the same clarity the app should keep inside the
                 dashboard.
@@ -319,17 +342,17 @@ export function LandingHowItWorksSection() {
             </div>
 
             <div className="space-y-3">
-              <div className="rounded-3xl bg-primary-soft px-5 py-4">
-                <p className="text-sm font-semibold text-primary-dark">Fund Escrow</p>
-                <p className="mt-1 text-sm text-text-secondary">The client secures the job before work starts.</p>
+              <div className="rounded-3xl bg-emerald-100 border border-emerald-200 px-5 py-4">
+                <p className="text-sm font-semibold text-emerald-800">Fund Escrow</p>
+                <p className="mt-1 text-sm text-slate-600">The client secures the job before work starts.</p>
               </div>
-              <div className="rounded-3xl bg-white px-5 py-4 ring-1 ring-emerald-200">
-                <p className="text-sm font-semibold text-primary-dark">Track Progress</p>
-                <p className="mt-1 text-sm text-text-secondary">Both sides can follow the contract state clearly.</p>
+              <div className="rounded-3xl bg-white border border-emerald-200 px-5 py-4">
+                <p className="text-sm font-semibold text-emerald-800">Track Progress</p>
+                <p className="mt-1 text-sm text-slate-600">Both sides can follow the contract state clearly.</p>
               </div>
-              <div className="rounded-3xl bg-white px-5 py-4 ring-1 ring-emerald-200">
-                <p className="text-sm font-semibold text-primary-dark">Release Payment</p>
-                <p className="mt-1 text-sm text-text-secondary">Funds move only after completion is confirmed.</p>
+              <div className="rounded-3xl bg-white border border-emerald-200 px-5 py-4">
+                <p className="text-sm font-semibold text-emerald-800">Release Payment</p>
+                <p className="mt-1 text-sm text-slate-600">Funds move only after completion is confirmed.</p>
               </div>
             </div>
           </div>
@@ -341,13 +364,13 @@ export function LandingHowItWorksSection() {
 
 export function LandingCtaSection() {
   return (
-    <section id="community" className="bg-[linear-gradient(180deg,#ebfdf4_0%,#ffffff_100%)] py-22">
+    <section id="community" className="bg-slate-100 py-22">
       <div className="mx-auto flex w-full max-w-4xl flex-col items-center px-6 text-center lg:px-8">
-        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-dark">
+        <p className="text-sm font-semibold uppercase tracking-[0.18em] text-emerald-700">
           Join Our Community
         </p>
         <h2 className="mt-3 text-emerald-950">Start using WorkSure with a safer payment flow</h2>
-        <p className="mt-4 max-w-2xl text-base leading-7 text-text-secondary">
+        <p className="mt-4 max-w-2xl text-base leading-7 text-slate-600">
           Create an account as a client or artisan and move into a workspace where job status,
           escrow, and payout actions are easier to understand.
         </p>
@@ -367,7 +390,7 @@ export function LandingCtaSection() {
 
 export function LandingFooter() {
   return (
-    <footer className="border-t border-emerald-100 bg-[#eafcf3]">
+    <footer className="border-t border-emerald-200 bg-white">
       <div className="mx-auto grid w-full max-w-6xl gap-8 px-6 py-10 text-sm text-text-secondary md:grid-cols-[1fr_auto] lg:px-8">
         <div>
           <p className="font-semibold text-foreground">WorkSure</p>
