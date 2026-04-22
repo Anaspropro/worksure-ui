@@ -231,7 +231,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
       {/* ──────────── Form side ──────────────────────────────────────────── */}
       <section className="flex flex-1 flex-col items-center justify-center bg-background px-5 py-10 sm:px-8">
-        <div className="w-full max-w-[420px] space-y-8">
+        <div className="w-full max-w-105 space-y-8">
           {/* Mobile logo */}
           <div className="flex items-center gap-2.5 lg:hidden">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">

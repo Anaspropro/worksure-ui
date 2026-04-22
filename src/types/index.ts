@@ -15,11 +15,17 @@ export type ProposalStatus =
 
 export type ContractStatus =
   | "DRAFT"
+  | "PENDING_PAYMENT"
   | "FUNDED"
   | "ACTIVE"
+  | "IN_PROGRESS"
+  | "CLIENT_CONFIRMED"
+  | "READY_FOR_PAYOUT"
   | "COMPLETED"
+  | "PAID_OUT"
   | "CANCELLED"
-  | "DISPUTED";
+  | "DISPUTED"
+  | "REFUNDED";
 
 export type WalletTransactionStatus = "PENDING" | "COMPLETED" | "FAILED";
 
