@@ -1,7 +1,19 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { Proposal } from "@/types";
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 12 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.06, duration: 0.35, ease: "easeOut" as const },
+  }),
+};
 
 export default function ProposalsPanel({
   roleView,
@@ -19,7 +31,7 @@ export default function ProposalsPanel({
   formatAmount: (value: number) => string;
 }) {
   return (
-    <Card className="border-border/90 bg-white">
+    <Card className="border-border bg-card">
       <CardHeader>
         <CardTitle>Proposals</CardTitle>
         <CardDescription>
@@ -32,13 +44,20 @@ export default function ProposalsPanel({
       </CardHeader>
       <CardContent className="space-y-3">
         {proposals?.length ? (
-          proposals.map((proposal) => (
-            <div key={proposal.id} className="rounded-lg border border-border bg-surface p-4">
+          proposals.map((proposal, i) => (
+            <motion.div
+              key={proposal.id}
+              custom={i}
+              variants={itemVariants}
+              initial="hidden"
+              animate="visible"
+              className="rounded-lg border border-border bg-surface p-4 hover:border-primary/30 transition-colors"
+            >
               <div className="flex items-start justify-between gap-3">
                 <p className="font-medium text-foreground">{proposal.job.title}</p>
                 <StatusBadge status={proposal.status} />
               </div>
-              <p className="mt-2 text-sm font-medium text-secondary">
+              <p className="mt-2 text-sm font-medium text-muted-foreground">
                 {formatAmount(proposal.amount)}
               </p>
               <p className="mt-2 text-sm text-text-secondary">{proposal.message}</p>
@@ -58,7 +77,7 @@ export default function ProposalsPanel({
                   </Button>
                 </div>
               ) : null}
-            </div>
+            </motion.div>
           ))
         ) : (
           <p className="text-sm text-text-secondary">No proposals yet.</p>

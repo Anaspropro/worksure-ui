@@ -3,10 +3,10 @@
 import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowRight,
   Briefcase,
-  CheckCircle2,
   Eye,
   EyeOff,
   LockKeyhole,
@@ -75,6 +75,15 @@ const roleOptions: Array<{
     icon: Wrench,
   },
 ];
+
+const formFieldVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.35, ease: "easeOut" as const },
+  }),
+};
 
 export default function AuthForm({ mode }: { mode: AuthMode }) {
   const router = useRouter();
@@ -148,84 +157,95 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
     );
   };
 
+  // Stagger index offset for register vs login (register has extra name field)
+  const emailIdx = mode === "register" ? 1 : 0;
+  const passwordIdx = emailIdx + 1;
+  const roleIdx = passwordIdx + 1;
+  const submitIdx = roleIdx + 1;
+
   return (
     <main className="min-h-screen flex">
       {/* ── Brand side panel ───────────────────────────────────── */}
-      <aside className="hidden lg:flex lg:w-[52%] xl:w-[55%] relative overflow-hidden flex-col justify-between p-8 xl:p-14">
-        {/* Background */}
-        <div className="absolute inset-0 bg-[#064e3b]" />
+      <aside className="hidden lg:flex lg:w-[45%] relative border-r border-border overflow-hidden flex-col justify-between p-12 bg-gradient-to-br from-[#1a2a6e] via-[#2d4a9e] to-[#4168d0]">
+        {/* Floating decorative orbs */}
+        <motion.div
+          className="absolute top-20 right-16 size-40 rounded-full bg-white/8 blur-2xl"
+          animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+        />
+        <motion.div
+          className="absolute bottom-32 left-10 size-56 rounded-full bg-white/5 blur-3xl"
+          animate={{ y: [0, 15, 0], scale: [1.1, 1, 1.1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+        />
 
-        {/* Content */}
-        <div className="relative z-10 flex flex-col justify-between h-full gap-12">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-400/20 ring-1 ring-emerald-400/30">
-              <Zap className="size-4 text-emerald-300" />
+        <div className="relative z-10 flex flex-col h-full gap-8">
+          <Link href="/" className="flex items-center gap-2 mb-12">
+            <div className="flex bg-white/15 backdrop-blur-sm rounded-lg p-1.5 border border-white/20">
+              <ShieldCheck className="size-5 text-white" />
             </div>
-            <span className="text-lg font-semibold tracking-tight text-white">
-              WorkSure
+            <span className="text-xl font-bold tracking-tight text-white">
+              Work<span className="text-blue-200">Sure</span>
             </span>
           </Link>
 
-          {/* Hero text */}
-          <div className="space-y-6">
-            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-3 py-1.5">
-              <CheckCircle2 className="size-3.5 text-emerald-300" />
-              <span className="text-xs font-medium text-emerald-200 tracking-wide">
-                Trusted by artisans across Nigeria
-              </span>
+          <motion.div
+            className="space-y-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h1 className="text-3xl font-bold tracking-tight text-white">
+              {mode === "login" ? "Welcome back!" : "Create your account"}
+            </h1>
+            <p className="text-base text-blue-200/80 flex max-w-[280px]">
+               {mode === "login" ? "Log in to your account to continue." : "Join WorkSure and start connecting today."}
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="flex-1 flex flex-col items-center justify-center gap-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.6 }}
+          >
+            {/* Trust features */}
+            <div className="space-y-4 w-full max-w-xs">
+              {trustFeatures.map((feature, i) => (
+                <motion.div
+                  key={feature.title}
+                  className="flex items-start gap-3 rounded-xl bg-white/8 backdrop-blur-sm border border-white/10 p-4"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.5 + i * 0.12, duration: 0.4 }}
+                >
+                  <div className="rounded-lg bg-white/15 p-2 flex-shrink-0">
+                    <feature.icon className="size-4 text-blue-200" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-white">{feature.title}</p>
+                    <p className="text-xs text-blue-200/70 mt-0.5">{feature.description}</p>
+                  </div>
+                </motion.div>
+              ))}
             </div>
 
-            <h1 className="text-4xl xl:text-5xl font-bold leading-[1.12] tracking-tight text-white">
-              {mode === "login" ? (
-                <>
-                  Welcome back to
-                  <br />
-                  <span className="text-emerald-300">your workspace.</span>
-                </>
-              ) : (
-                <>
-                  The smarter way to
-                  <br />
-                  <span className="text-emerald-300">hire & get hired.</span>
-                </>
-              )}
-            </h1>
-
-            <p className="max-w-md text-base leading-7 text-slate-300/90">
-              WorkSure brings clients and skilled artisans together through
-              escrow-protected contracts, transparent payments, and a shared
-              workspace from start to finish.
-            </p>
-          </div>
-
-          {/* Trust features */}
-          <div className="space-y-3">
-            {trustFeatures.map(({ icon: Icon, title, description }) => (
-              <div
-                key={title}
-                className="flex items-start gap-3.5 rounded-lg border border-white/8 bg-white/5 px-4 py-3.5 backdrop-blur-sm"
-              >
-                <div>
-                  <div className="flex gap-4">
-                    <Icon className="size-5 text-emerald-300" />
-                    <p className="text-sm font-semibold text-white">{title}</p>
-                  </div>
-                  <p className="text-sm leading-5 text-slate-400 mt-0.5">{description}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Stats strip */}
-          <div className="grid grid-cols-3 gap-4 rounded-md border border-white/10 bg-white/5 p-5">
-            {stats.map(({ value, label }) => (
-              <div key={label} className="text-center">
-                <p className="text-xl font-bold text-white">{value}</p>
-                <p className="mt-0.5 text-xs text-slate-400">{label}</p>
-              </div>
-            ))}
-          </div>
+            {/* Stats row */}
+            <div className="flex gap-6 mt-4">
+              {stats.map((stat, i) => (
+                <motion.div
+                  key={stat.label}
+                  className="text-center"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.9 + i * 0.1, duration: 0.4 }}
+                >
+                  <p className="text-lg font-bold text-white">{stat.value}</p>
+                  <p className="text-[11px] text-blue-200/60">{stat.label}</p>
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         </div>
       </aside>
 
@@ -233,36 +253,47 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       <section className="flex flex-1 flex-col items-center justify-center bg-background px-5 py-10 sm:px-8">
         <div className="w-full max-w-105 space-y-8">
           {/* Mobile logo */}
-          <div className="flex items-center gap-2.5 lg:hidden">
+          <motion.div
+            className="flex items-center gap-2.5 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 ring-1 ring-primary/20">
               <Zap className="size-4 text-primary" />
             </div>
             <span className="text-lg font-semibold tracking-tight text-foreground">
               WorkSure
             </span>
-          </div>
+          </motion.div>
 
           {/* Heading */}
-          <div className="space-y-1.5">
+          <motion.div
+            className="space-y-1.5 pt-12 lg:pt-0"
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <h2 className="text-2xl font-bold tracking-tight text-foreground">
-              {mode === "login" ? "Sign in to your account" : "Create your account"}
+              {mode === "login" ? "Sign in" : "Create account"}
             </h2>
-            <p className="text-sm text-muted-foreground">
-              {mode === "login"
-                ? "Enter your credentials to access your dashboard."
-                : "Set up your profile and jump into your workspace."}
-            </p>
-          </div>
+          </motion.div>
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
             {/* Name — register only */}
             {mode === "register" && (
-              <div className="space-y-1.5">
+              <motion.div
+                className="space-y-1.5"
+                custom={0}
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <label className="text-sm font-medium text-foreground" htmlFor="full-name">
                   Full name
                 </label>
-                <InputGroup className="h-11 rounded-lg border-border bg-white dark:bg-input/30">
+                <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
                   <InputGroupAddon>
                     <InputGroupText>
                       <User2 className="size-4 text-muted-foreground" />
@@ -276,15 +307,21 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                     onChange={(e) => setName(e.target.value)}
                   />
                 </InputGroup>
-              </div>
+              </motion.div>
             )}
 
             {/* Email */}
-            <div className="space-y-1.5">
+            <motion.div
+              className="space-y-1.5"
+              custom={emailIdx}
+              variants={formFieldVariants}
+              initial="hidden"
+              animate="visible"
+            >
               <label className="text-sm font-medium text-foreground" htmlFor="email">
                 Email address
               </label>
-              <InputGroup className="h-11 rounded-lg border-border bg-white dark:bg-input/30">
+              <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
                 <InputGroupAddon>
                   <InputGroupText>
                     <Mail className="size-4 text-muted-foreground" />
@@ -299,10 +336,16 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </InputGroup>
-            </div>
+            </motion.div>
 
             {/* Password */}
-            <div className="space-y-1.5">
+            <motion.div
+              className="space-y-1.5"
+              custom={passwordIdx}
+              variants={formFieldVariants}
+              initial="hidden"
+              animate="visible"
+            >
               <div className="flex items-center justify-between">
                 <label className="text-sm font-medium text-foreground" htmlFor="password">
                   Password
@@ -316,7 +359,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   </Link>
                 )}
               </div>
-              <InputGroup className="h-11 rounded-lg border-border bg-white dark:bg-input/30">
+              <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
                 <InputGroupAddon>
                   <InputGroupText>
                     <LockKeyhole className="size-4 text-muted-foreground" />
@@ -342,24 +385,31 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   </InputGroupButton>
                 </InputGroupAddon>
               </InputGroup>
-            </div>
+            </motion.div>
 
             {/* Role selector — register only */}
             {mode === "register" && (
-              <fieldset className="space-y-2">
+              <motion.fieldset
+                className="space-y-2"
+                custom={roleIdx}
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+              >
                 <legend className="text-sm font-medium text-foreground">I want to</legend>
                 <div className="grid grid-cols-2 gap-3">
                   {roleOptions.map(({ value, label, description, icon: Icon }) => {
                     const selected = role === value;
                     return (
-                      <button
+                      <motion.button
                         key={value}
                         type="button"
                         onClick={() => setRole(value)}
-                        className={`group relative flex flex-col gap-2 rounded-lg border p-3.5 text-left transition-all duration-200 ${
+                        whileTap={{ scale: 0.97 }}
+                        className={`group relative flex flex-col gap-2 rounded-xl border p-3.5 text-left transition-all duration-200 ${
                           selected
                             ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
-                            : "border-border bg-white dark:bg-input/20 hover:border-primary/40 hover:bg-primary/3"
+                            : "border-border bg-card dark:bg-input/20 hover:border-primary/40 hover:bg-primary/3"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -386,64 +436,74 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                           </p>
                           <p className="mt-0.5 text-xs leading-4 text-muted-foreground">{description}</p>
                         </div>
-                      </button>
+                      </motion.button>
                     );
                   })}
                 </div>
-              </fieldset>
+              </motion.fieldset>
             )}
 
             {/* Error */}
-            {authError && (
-              <div className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 dark:border-red-400/20 dark:bg-red-400/8 px-4 py-3">
-                <span className="mt-0.5 shrink-0 text-red-500">
-                  <svg className="size-4" viewBox="0 0 16 16" fill="currentColor">
-                    <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm-.75 3.5a.75.75 0 0 1 1.5 0v3.25a.75.75 0 0 1-1.5 0V4.5zm.75 7a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" />
-                  </svg>
-                </span>
-                <p className="text-sm text-red-700 dark:text-red-400">{authError}</p>
-              </div>
-            )}
+            <AnimatePresence>
+              {authError && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
+                  animate={{ opacity: 1, height: "auto", marginTop: 16 }}
+                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
+                  className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 dark:border-red-400/20 dark:bg-red-400/8 px-4 py-3 overflow-hidden"
+                >
+                  <span className="mt-0.5 shrink-0 text-red-500">
+                    <svg className="size-4" viewBox="0 0 16 16" fill="currentColor">
+                      <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm-.75 3.5a.75.75 0 0 1 1.5 0v3.25a.75.75 0 0 1-1.5 0V4.5zm.75 7a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" />
+                    </svg>
+                  </span>
+                  <p className="text-sm text-red-700 dark:text-red-400">{authError}</p>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
             {/* Submit */}
-            <Button
-              type="submit"
-              className="h-11 w-full rounded-lg font-semibold"
-              disabled={
-                isBusy ||
-                !email.trim() ||
-                !password ||
-                (mode === "register" && !name.trim())
-              }
+            <motion.div
+              custom={submitIdx}
+              variants={formFieldVariants}
+              initial="hidden"
+              animate="visible"
             >
-              {isBusy
-                ? mode === "login"
-                  ? "Signing in…"
-                  : "Creating account…"
-                : mode === "login"
-                  ? "Continue to dashboard"
-                  : "Create account"}
-              {!isBusy && <ArrowRight className="ml-1 size-4" />}
-            </Button>
+              <Button
+                type="submit"
+                className="h-11 w-full rounded-lg font-semibold shadow-lg shadow-primary/15"
+                disabled={
+                  isBusy ||
+                  !email.trim() ||
+                  !password ||
+                  (mode === "register" && !name.trim())
+                }
+                asChild={false}
+              >
+                <motion.span
+                  className="inline-flex items-center"
+                  whileHover={{ x: 2 }}
+                  transition={{ type: "spring", stiffness: 400 }}
+                >
+                  {isBusy
+                    ? mode === "login"
+                      ? "Signing in…"
+                      : "Creating account…"
+                    : mode === "login"
+                      ? "Continue to dashboard"
+                      : "Create account"}
+                  {!isBusy && <ArrowRight className="ml-1 size-4" />}
+                </motion.span>
+              </Button>
+            </motion.div>
           </form>
 
-          {/* Divider + switch link */}
-          <div className="space-y-5">
-            <div className="relative flex items-center gap-3 text-xs text-muted-foreground">
-              <div className="h-px flex-1 bg-border" />
-              <span>
-                {mode === "login" ? "Don't have an account?" : "Already have an account?"}
-              </span>
-              <div className="h-px flex-1 bg-border" />
-            </div>
-
-            <Link
-              href={mode === "login" ? "/auth/register" : "/auth/login"}
-              className="flex h-11 w-full items-center justify-center rounded-lg border border-border bg-white dark:bg-muted/40 text-sm font-medium text-foreground transition-colors hover:bg-muted/60 hover:border-border/80"
-            >
-              {mode === "login" ? "Create a new account" : "Sign in instead"}
-            </Link>
-          </div>
+            <p className="text-center text-sm text-foreground mt-6">
+              {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
+              <Link href={mode === "login" ? "/auth/register" : "/auth/login"} className="font-semibold text-primary hover:text-primary-dark">
+                 {mode === "login" ? "Sign up" : "Sign in"}
+              </Link>
+            </p>
 
           {/* Footer note */}
           <p className="text-center text-xs leading-5 text-muted-foreground">

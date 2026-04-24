@@ -6,16 +6,20 @@ import {
   LandingHowItWorksSection,
   LandingPromiseSection,
 } from "@/components/landing";
+import LandingNavbar from "@/components/landing/LandingNavbar";
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen  text-foreground">
-      <LandingHeroSection />
-      <LandingPromiseSection />
-      <LandingHowItWorksSection />
-      <LandingAudienceSection />
-      <LandingCtaSection />
-      <LandingFooter />
-    </main>
+    <div className="min-h-screen bg-background text-foreground">
+      <LandingNavbar />
+      <main>
+        <LandingHeroSection />
+        <LandingPromiseSection />
+        <LandingHowItWorksSection />
+        <LandingAudienceSection />
+        <LandingCtaSection />
+        <LandingFooter />
+      </main>
+    </div>
   );
 }

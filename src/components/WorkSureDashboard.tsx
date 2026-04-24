@@ -454,7 +454,8 @@ export default function WorkSureDashboard({
                           onClick={() =>
                             fundContractMutation.mutate({
                               contractId: contract.id,
-                              amount: contract.amount,
+                              email: user.email,
+                              callbackUrl: window.location.href,
                             })
                           }
                           disabled={isBusy}

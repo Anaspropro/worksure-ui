@@ -37,11 +37,11 @@ export function useCreateContract() {
 
 export function useFundContract() {
   const qc = useQueryClient();
-  return useMutation<Contract, Error, { contractId: string; amount: number }>({
-    mutationFn: ({ contractId, amount }) =>
+  return useMutation<Contract, Error, { contractId: string; email: string; callbackUrl?: string }>({
+    mutationFn: ({ contractId, email, callbackUrl }) =>
       proxyFetch<Contract>(`/contracts/${contractId}/fund`, {
         method: "POST",
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ contractId, email, callbackUrl }),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["contracts"] }),
   });
@@ -49,11 +49,11 @@ export function useFundContract() {
 
 export function useConfirmCompletion() {
   const qc = useQueryClient();
-  return useMutation<Contract, Error, { contractId: string; isClient: boolean }>({
-    mutationFn: ({ contractId, isClient }) =>
+  return useMutation<Contract, Error, { contractId: string; isClient: boolean; notes?: string }>({
+    mutationFn: ({ contractId, isClient, notes }) =>
       proxyFetch<Contract>(`/contracts/${contractId}/confirm-completion`, {
         method: "POST",
-        body: JSON.stringify({ isClient }),
+        body: JSON.stringify({ contractId, isClient, notes }),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["contracts"] }),
   });
@@ -76,7 +76,7 @@ export function useRefundContract() {
     mutationFn: ({ contractId, reason }) =>
       proxyFetch<{ message: string }>(`/contracts/${contractId}/refund`, {
         method: "POST",
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ contractId, reason }),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["contracts"] }),
   });

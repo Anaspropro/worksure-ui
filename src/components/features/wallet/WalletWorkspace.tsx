@@ -19,6 +19,7 @@ import {
   useWithdrawFunds,
 } from "@/hooks/useWallet";
 import { formatCurrency, formatDate } from "@/lib/formatters";
+import { FinancialAmount } from "@/components/ui/financial-amount";
 
 export default function WalletWorkspace() {
   const userQuery = useUser();
@@ -148,19 +149,25 @@ export default function WalletWorkspace() {
           <Card size="sm">
             <CardContent className="space-y-1 py-2">
               <p className="text-sm text-muted-foreground">Total balance</p>
-              <p className="text-3xl font-semibold text-foreground">{formatCurrency(balance?.balance)}</p>
+              <p className="text-3xl font-semibold text-amount-primary">
+                <FinancialAmount amount={balance?.balance ?? 0} size="3xl" />
+              </p>
             </CardContent>
           </Card>
           <Card size="sm">
             <CardContent className="space-y-1 py-2">
               <p className="text-sm text-muted-foreground">Frozen in escrow</p>
-              <p className="text-3xl font-semibold text-foreground">{formatCurrency(balance?.frozen)}</p>
+              <p className="text-3xl font-semibold text-neutral-amount">
+                <FinancialAmount amount={balance?.frozen ?? 0} size="3xl" type="neutral" />
+              </p>
             </CardContent>
           </Card>
           <Card size="sm">
             <CardContent className="space-y-1 py-2">
               <p className="text-sm text-muted-foreground">Available to use</p>
-              <p className="text-3xl font-semibold text-foreground">{formatCurrency(balance?.available)}</p>
+              <p className="text-3xl font-semibold text-positive-balance">
+                <FinancialAmount amount={balance?.available ?? 0} size="3xl" type="positive" />
+              </p>
             </CardContent>
           </Card>
         </section>
@@ -277,7 +284,7 @@ export default function WalletWorkspace() {
                       {entry.type} - {entry.status}
                     </p>
                     <p className="mt-1">Count: {entry._count?.id ?? 0}</p>
-                    <p>Amount: {formatCurrency(entry._sum?.amount ?? 0)}</p>
+                    <p>Amount: <span className="text-amount-primary"><FinancialAmount amount={entry._sum?.amount ?? 0} size="sm" /></span></p>
                   </div>
                 ))
               ) : (
@@ -304,7 +311,9 @@ export default function WalletWorkspace() {
                     <StatusBadge status={transaction.status} />
                   </div>
                   <div className="mt-4 flex flex-wrap gap-3 text-sm text-muted-foreground">
-                    <span>{formatCurrency(transaction.amount)}</span>
+                    <span className="text-amount-primary">
+                      <FinancialAmount amount={transaction.amount} size="sm" />
+                    </span>
                     <span>{formatDate(transaction.createdAt)}</span>
                   </div>
                 </div>

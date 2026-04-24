@@ -2,60 +2,65 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { getDashboardLinks, sharedLinks } from "@/components/app-shell/navigation";
 import type { User } from "@/types";
 
+const navItemVariants = {
+  hidden: { opacity: 0, x: -12 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: i * 0.04, duration: 0.3, ease: "easeOut" as const },
+  }),
+};
+
 export default function SidebarNav({
   role,
-  mobile = false,
-  desktop = false,
+  unreadCount = 2,
 }: {
   role: User["role"];
-  mobile?: boolean;
-  desktop?: boolean;
+  unreadCount?: number;
 }) {
   const pathname = usePathname();
   const navItems = [...(getDashboardLinks(role) ?? []), ...sharedLinks];
 
   return (
-    <nav
-      className={
-        mobile
-          ? "flex items-center gap-2 overflow-x-auto pb-1"
-          : desktop
-            ? "flex items-center gap-2 overflow-x-auto"
-            : "space-y-1"
-      }
-    >
-      {navItems.map(({ href, label, icon: Icon }) => {
+    <nav className="space-y-0.5 flex flex-col">
+      {navItems.map(({ href, label, icon: Icon, badge }, i) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
-          <Link
+          <motion.div
             key={href}
-            href={href}
-            className={
-              mobile
-                ? `flex min-w-fit shrink-0 flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[11px] font-medium transition ${
-                    active
-                      ? "bg-primary text-white shadow-[0_14px_30px_-22px_rgba(16,185,129,0.9)]"
-                      : "text-muted-foreground hover:bg-primary-soft/50 hover:text-primary-dark"
-                  }`
-                : desktop
-                  ? `flex min-w-fit items-center gap-2 rounded-full px-3 py-2 text-sm transition ${
-                      active
-                        ? "bg-primary-dark text-white shadow-[0_16px_32px_-24px_rgba(5,150,105,0.9)]"
-                        : "text-muted-foreground hover:bg-primary-soft/50 hover:text-primary-dark"
-                    }`
-                : `flex items-center gap-3 rounded-[1.15rem] px-3.5 py-3 text-sm transition ${
-                    active
-                      ? "bg-[linear-gradient(135deg,rgba(16,185,129,0.32),rgba(5,150,105,0.22))] text-white shadow-[0_18px_30px_-22px_rgba(15,23,42,0.8)] ring-1 ring-white/10"
-                      : "text-sidebar-foreground/70 hover:bg-white/8 hover:text-white"
-                  }`
-            }
+            custom={i}
+            variants={navItemVariants}
+            initial="hidden"
+            animate="visible"
           >
-            <Icon className="size-4" />
-            {label}
-          </Link>
+            <Link
+              href={href}
+              className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
+                active
+                  ? "text-primary"
+                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+              }`}
+            >
+              {active && (
+                <motion.div
+                  layoutId="activeNavIndicator"
+                  className="absolute inset-0 rounded-lg bg-primary/10 border border-primary/20"
+                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
+                />
+              )}
+              <Icon className="relative z-10 size-4 flex-shrink-0" />
+              <span className="relative z-10 flex-1">{label}</span>
+              {badge && unreadCount > 0 && (
+                <span className="relative z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white px-1">
+                  {unreadCount > 9 ? "9+" : unreadCount}
+                </span>
+              )}
+            </Link>
+          </motion.div>
         );
       })}
     </nav>
