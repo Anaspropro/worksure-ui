@@ -209,6 +209,10 @@
   --glass-bg: rgba(22, 32, 50, 0.72);
   --gradient-start: #3B6CF4;
   --gradient-end: #6C8FFA;
+  --brand-hero-from: #0f1c4d;
+  --brand-hero-via: #1a3178;
+  --brand-hero-to: #2d5ae0;
+  --brand-footer: #0a1333;
   --chart-1: #6C8FFA;
   --chart-2: #16A34A;
   --chart-3: #F59E0B;

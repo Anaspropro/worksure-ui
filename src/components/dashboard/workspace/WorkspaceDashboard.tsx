@@ -290,30 +290,46 @@ export default function WorkspaceDashboard({
     <div className="space-y-6">
       {/* ── Header row ── */}
       <motion.div
-        className="flex flex-wrap items-center justify-between gap-4"
+        className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--brand-hero-from)] via-[var(--brand-hero-via)] to-[var(--brand-hero-to)] p-6 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Dashboard</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">Welcome back, {firstName} 👋</p>
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 left-0 h-full w-full bg-[radial-gradient(circle_at_20%_40%,rgba(255,255,255,0.18),transparent_55%)]" />
+          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(108,143,250,0.24),transparent_55%)]" />
         </div>
-        <div className="flex items-center gap-3">
-          {roleView === "CLIENT" && (
-            <Button asChild size="sm" className="gap-1.5 shadow-sm shadow-primary/15">
-              <Link href="/jobs/create">
-                <Plus className="size-4" /> Post a Job
-              </Link>
-            </Button>
-          )}
-          {roleView === "ARTISAN" && (
-            <Button asChild variant="outline" size="sm">
-              <Link href="/jobs">
-                <Search className="size-4 mr-1.5" /> Browse Jobs
-              </Link>
-            </Button>
-          )}
+
+        <div className="relative flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+            <p className="mt-0.5 text-sm text-blue-100/80">Welcome back, {firstName} 👋</p>
+          </div>
+          <div className="flex items-center gap-3">
+            {roleView === "CLIENT" && (
+              <Button
+                asChild
+                size="sm"
+                className="gap-1.5 bg-white text-[color:var(--brand-hero-via)] hover:bg-blue-50 shadow-xl shadow-black/20 font-semibold"
+              >
+                <Link href="/jobs/create">
+                  <Plus className="size-4" /> Post a Job
+                </Link>
+              </Button>
+            )}
+            {roleView === "ARTISAN" && (
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="border-white/30 bg-transparent text-white hover:bg-white/10 hover:text-white"
+              >
+                <Link href="/jobs">
+                  <Search className="size-4 mr-1.5" /> Browse Jobs
+                </Link>
+              </Button>
+            )}
+          </div>
         </div>
       </motion.div>
 

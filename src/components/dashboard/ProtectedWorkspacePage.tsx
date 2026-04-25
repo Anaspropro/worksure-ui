@@ -33,7 +33,7 @@ export default function ProtectedWorkspacePage({
   return (
     <AppShell user={user}>
       <main className="space-y-6">
-        <Card className="border border-border bg-white shadow-sm">
+        <Card className="border border-border bg-card shadow-sm">
           <CardHeader>
             <CardTitle className="text-3xl tracking-tight">{title}</CardTitle>
             <CardDescription className="max-w-2xl text-base leading-7">
@@ -41,7 +41,7 @@ export default function ProtectedWorkspacePage({
             </CardDescription>
           </CardHeader>
         </Card>
-        <Card className="border border-dashed border-border bg-white/80 shadow-sm">
+        <Card className="border border-dashed border-border bg-card/80 shadow-sm">
           <CardContent className="px-6 py-8 text-sm leading-7 text-text-secondary">
             This page now has a routed place in the app shell. The next implementation slice can
             connect it to the backend and move it beyond placeholder status.

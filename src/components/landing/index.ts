@@ -1,8 +1,1 @@
-export {
-  LandingAudienceSection,
-  LandingCtaSection,
-  LandingFooter,
-  LandingHeroSection,
-  LandingHowItWorksSection,
-  LandingPromiseSection,
-} from "./landing-content";
+export { default as LandingPage } from "./LandingPage";
