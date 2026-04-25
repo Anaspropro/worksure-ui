@@ -1,21 +1,26 @@
-import {
-  LandingAudienceSection,
-  LandingCtaSection,
-  LandingFooter,
-  LandingHeroSection,
-  LandingHowItWorksSection,
-  LandingPromiseSection,
-} from "@/components/landing";
+import LandingHero from "./LandingHero";
+import LandingFeatures from "./LandingFeatures";
+import LandingStats from "./LandingStats";
+import LandingHowItWorks from "./LandingHowItWorks";
+import LandingBenefits from "./LandingBenefits";
+import LandingFAQ from "./LandingFAQ";
+import { LandingCTA, LandingFooter } from "./LandingCTAFooter";
+import LandingNavbar from "./LandingNavbar";
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen  text-foreground">
-      <LandingHeroSection />
-      <LandingPromiseSection />
-      <LandingHowItWorksSection />
-      <LandingAudienceSection />
-      <LandingCtaSection />
+    <div className="min-h-screen bg-background text-foreground">
+      <LandingNavbar />
+      <main>
+        <LandingHero />
+        <LandingFeatures />
+        <LandingStats />
+        <LandingHowItWorks />
+        <LandingBenefits />
+        <LandingFAQ />
+        <LandingCTA />
+      </main>
       <LandingFooter />
-    </main>
+    </div>
   );
 }

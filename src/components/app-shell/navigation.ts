@@ -1,37 +1,45 @@
 import {
-  Bell,
   BriefcaseBusiness,
+  CreditCard,
   FileText,
   FileUser,
   LayoutDashboard,
-  MessageSquareQuote,
+  MessageSquare,
+  Settings,
   ShieldCheck,
   ShieldPlus,
-  UserRound,
-  Wallet,
 } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import type { User } from "@/types";
 
-export const sharedLinks = [
+export interface NavItem {
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  badge?: boolean;
+}
+
+export const sharedLinks: NavItem[] = [
   { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
   { href: "/contracts", label: "Contracts", icon: FileText },
-  { href: "/reviews", label: "Reviews", icon: MessageSquareQuote },
-  { href: "/notifications", label: "Alerts", icon: Bell },
-  { href: "/profile", label: "Profile", icon: UserRound },
-  { href: "/wallet", label: "Wallet", icon: Wallet },
+  { href: "/wallet", label: "Payments", icon: CreditCard },
+  { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
+  { href: "/profile", label: "Settings", icon: Settings },
 ];
 
-export function getDashboardLinks(role: User["role"]) {
-  return {
-    CLIENT: [{ href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard }],
-    ARTISAN: [
-      { href: "/dashboard/artisan", label: "Dashboard", icon: LayoutDashboard },
-      { href: "/kyc/status", label: "Verification", icon: FileUser },
-    ],
-    ADMIN: [
-      { href: "/dashboard/admin", label: "Dashboard", icon: ShieldCheck },
-      { href: "/admin/users", label: "Users", icon: ShieldPlus },
-      { href: "/admin/disputes", label: "Disputes", icon: FileText },
-    ],
-  }[role];
+export function getDashboardLinks(role: User["role"]): NavItem[] {
+  return (
+    {
+      CLIENT: [{ href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard }],
+      ARTISAN: [
+        { href: "/dashboard/artisan", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/kyc/status", label: "Verification", icon: FileUser },
+      ],
+      ADMIN: [
+        { href: "/dashboard/admin", label: "Dashboard", icon: ShieldCheck },
+        { href: "/admin/users", label: "Users", icon: ShieldPlus },
+        { href: "/admin/disputes", label: "Disputes", icon: FileText },
+      ],
+    }[role] ?? []
+  );
 }

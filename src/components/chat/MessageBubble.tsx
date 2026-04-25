@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { formatDate } from "@/lib/formatters";
 import type { ChatMessage } from "@/types";
@@ -52,10 +53,15 @@ export default function MessageBubble({
   isOwn: boolean;
 }) {
   return (
-    <div className={`flex ${isOwn ? "justify-end" : "justify-start"}`}>
+    <motion.div
+      className={`flex ${isOwn ? "justify-end" : "justify-start"}`}
+      initial={{ opacity: 0, x: isOwn ? 20 : -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
+    >
       <div
         className={`max-w-[85%] space-y-2 rounded-lg px-4 py-3 text-sm shadow-sm ${
-          isOwn ? "bg-primary-dark text-white" : "bg-white text-foreground"
+          isOwn ? "bg-primary text-white" : "bg-card text-foreground border border-border"
         }`}
       >
         {message.content ? <p className="whitespace-pre-wrap leading-6">{message.content}</p> : null}
@@ -64,6 +70,6 @@ export default function MessageBubble({
           {formatDate(message.createdAt)}
         </p>
       </div>
-    </div>
+    </motion.div>
   );
 }

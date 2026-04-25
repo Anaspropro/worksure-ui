@@ -111,7 +111,8 @@ export default function ContractsWorkspace() {
                         onClick={() =>
                           fundContractMutation.mutate({
                             contractId: contract.id,
-                            amount: contract.amount,
+                            email: user.email,
+                            callbackUrl: window.location.href,
                           })
                         }
                         disabled={fundContractMutation.status === "pending"}

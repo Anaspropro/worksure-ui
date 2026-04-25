@@ -7,21 +7,25 @@ import { Slot } from "radix-ui";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-xl border border-transparent text-sm font-semibold whitespace-nowrap shadow-sm outline-none select-none transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-out will-change-transform focus-visible:ring-2 focus-visible:ring-ring/35 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 motion-reduce:transform-none motion-reduce:transition-none aria-invalid:border-destructive aria-invalid:ring-2 aria-invalid:ring-destructive/20 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center rounded-md border border-transparent text-sm font-semibold whitespace-nowrap shadow-sm outline-none select-none transition-colors duration-200 ease-out focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[0_16px_32px_-18px_rgba(16,185,129,0.7)] hover:bg-primary-dark",
+          "bg-primary text-primary-foreground hover:bg-primary-700 focus-visible:ring-primary/50",
         outline:
-          "border-border bg-background text-foreground hover:border-secondary/25 hover:bg-secondary-light/40 hover:text-secondary aria-expanded:bg-muted",
+          "border-border bg-background text-foreground hover:bg-accent hover:text-foreground",
         secondary:
-          "bg-secondary text-secondary-foreground shadow-[0_16px_32px_-18px_rgba(30,58,138,0.7)] hover:bg-secondary/90",
+          "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost:
-          "text-foreground hover:bg-muted hover:text-foreground aria-expanded:bg-muted",
+          "text-foreground shadow-none hover:bg-accent hover:text-accent-foreground",
         destructive:
-          "bg-destructive text-white shadow-[0_14px_28px_-18px_rgba(239,68,68,0.7)] hover:bg-destructive/90 focus-visible:ring-destructive/25",
-        link: "text-secondary underline-offset-4 hover:text-secondary/90 hover:underline",
+          "bg-danger text-white hover:bg-danger-600 focus-visible:ring-danger/50",
+        success:
+          "bg-success text-white hover:bg-success-600 focus-visible:ring-success/50",
+        warning:
+          "bg-warning text-white hover:bg-warning-600 focus-visible:ring-warning/50",
+        link: "text-primary underline-offset-4 shadow-none hover:underline",
       },
       size: {
         default:
