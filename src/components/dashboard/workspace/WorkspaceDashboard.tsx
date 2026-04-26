@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
-import type { User, Contract, Job, Proposal } from "@/types";
+import type { User, Contract, Job } from "@/types";
 import { useJobs, useCreateJob } from "@/hooks/useJobs";
 import { useProposals, useCreateProposal, useAcceptProposal } from "@/hooks/useProposals";
 import {
@@ -175,7 +175,7 @@ function ActivityItem({ icon: Icon, iconColor, iconBg, title, sub, time }: {
 }
 
 /* ── Job row ────────────────────────────────────────────────── */
-function JobRow({ job, onBrowse }: { job: Job; onBrowse?: () => void }) {
+function JobRow({ job }: { job: Job }) {
   return (
     <motion.div
       variants={fadeUp}

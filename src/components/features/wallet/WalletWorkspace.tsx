@@ -18,7 +18,7 @@ import {
   useWalletTransactions,
   useWithdrawFunds,
 } from "@/hooks/useWallet";
-import { formatCurrency, formatDate } from "@/lib/formatters";
+import { formatDate } from "@/lib/formatters";
 import { FinancialAmount } from "@/components/ui/financial-amount";
 
 export default function WalletWorkspace() {

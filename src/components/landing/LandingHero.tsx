@@ -13,10 +13,11 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function LandingHero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white">
+    <section className="relative overflow-hidden bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.15),transparent_50%)]" />
@@ -46,12 +47,12 @@ export default function LandingHero() {
               transition={{ delay: 0.1, duration: 0.6 }}
             >
               Hire Artisans with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-200 to-white">
                 Confidence,
               </span>
               <br />
               Pay with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-yellow-200 to-yellow-400">
                 Security
               </span>
             </motion.h1>
@@ -102,7 +103,7 @@ export default function LandingHero() {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="size-9 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 border-2 border-[#1a3178] flex items-center justify-center"
+                    className="size-9 rounded-full bg-linear-to-br from-blue-300 to-blue-500 border-2 border-[#1a3178] flex items-center justify-center"
                   >
                     <Users className="size-4 text-white" />
                   </div>
@@ -132,9 +133,15 @@ export default function LandingHero() {
             transition={{ delay: 0.3, duration: 0.7 }}
           >
             {/* Main image placeholder */}
-            <div className="relative w-full h-[480px] rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a3178]/80 to-transparent z-10" />
-              <div className="absolute inset-0 bg-[url('/placeholder-hero.webp')] bg-cover bg-center opacity-40" />
+            <div className="relative w-full h-140 rounded-3xl bg-white/5 backdrop-blur-sm overflow-hidden">
+              <div className="absolute inset-0 bg-linear-to-t from-[#1a3178]/80 to-transparent z-10" />
+              {/* <div className="absolute inset-0 bg-[url('/hero.png')] bg-cover bg-center opacity-80" /> */}
+              <Image
+                src="/hero.png"
+                alt="Hero Image"
+                fill
+                className="object-contain  opacity-80"
+              />
               <div className="absolute bottom-6 left-6 right-6 z-20">
                 <p className="text-lg font-semibold">
                   Real artisans. Real escrow. Real results.

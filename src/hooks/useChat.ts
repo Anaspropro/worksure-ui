@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { io, type Socket } from "socket.io-client";
 import { proxyFetch, proxyFetchEnvelope } from "@/proxy";
@@ -111,7 +111,7 @@ function resolveUploadType(fileType?: string | null) {
 export function useConversationSocket(conversationId?: string, enabled = true) {
   const queryClient = useQueryClient();
   const [isConnected, setIsConnected] = useState(false);
-  const socketRef = useRef<Socket | null>(null);
+  const [socket, setSocket] = useState<Socket | null>(null);
   const tokenQuery = useChatSocketToken(Boolean(conversationId) && enabled && Boolean(CHAT_SOCKET_URL));
 
   useEffect(() => {
@@ -126,15 +126,15 @@ export function useConversationSocket(conversationId?: string, enabled = true) {
       },
     });
 
-    socketRef.current = socket;
-
     socket.on("connect", () => {
+      setSocket(socket);
       setIsConnected(true);
       socket.emit("joinConversation", { conversationId });
     });
 
     socket.on("disconnect", () => {
       setIsConnected(false);
+      setSocket(null);
     });
 
     socket.on("newMessage", (message: ChatMessage) => {
@@ -155,14 +155,12 @@ export function useConversationSocket(conversationId?: string, enabled = true) {
     return () => {
       socket.emit("leaveConversation", { conversationId });
       socket.disconnect();
-      socketRef.current = null;
-      setIsConnected(false);
     };
   }, [conversationId, enabled, queryClient, tokenQuery.data?.token]);
 
   return {
     isConnected,
     socketReady: Boolean(tokenQuery.data?.token && CHAT_SOCKET_URL),
-    socket: socketRef.current,
+    socket,
   };
 }

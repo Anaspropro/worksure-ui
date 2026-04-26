@@ -7,9 +7,9 @@ import { Button } from "@/components/ui/button";
 
 export function LandingCTA() {
   return (
-    <section className="py-20 bg-gradient-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white relative overflow-hidden">
+    <section className="py-20 bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute w-[600px] h-[600px] rounded-full bg-blue-400/10 -top-60 -right-40 blur-3xl" />
+        <div className="absolute w-150 h-150 rounded-full bg-blue-400/10 -top-60 -right-40 blur-3xl" />
         <div className="absolute w-96 h-96 rounded-full bg-white/5 -bottom-40 -left-20 blur-3xl" />
       </div>
 

@@ -24,7 +24,6 @@ export default function ContractsPanel({
   onConfirmCompletion,
   onReleaseEscrow,
   onRefund,
-  formatAmount,
 }: {
   contracts: Contract[] | undefined;
   user: User;
@@ -33,7 +32,6 @@ export default function ContractsPanel({
   onConfirmCompletion: (contractId: string, isClient: boolean) => void;
   onReleaseEscrow: (contractId: string) => void;
   onRefund: (contractId: string) => void;
-  formatAmount: (value: number) => string;
 }) {
   return (
     <Card className="border-border bg-card">
