@@ -147,6 +147,26 @@ function getPayloadMessage(value: unknown): string | undefined {
   return undefined;
 }
 
+function getPayloadCode(value: unknown): string | undefined {
+  if (value && typeof value === "object" && "code" in value) {
+    const maybe = (value as { code?: unknown }).code;
+    if (typeof maybe === "string") return maybe;
+  }
+
+  return undefined;
+}
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public status: number,
+    public code?: string,
+  ) {
+    super(message);
+    this.name = "ApiError";
+  }
+}
+
 export async function proxyFetchEnvelope<T>(
   path: string,
   init: RequestInit = {},
@@ -188,7 +208,9 @@ export async function proxyFetchRaw<T>(
   const payload = (await response.json().catch(() => null)) as unknown;
 
   if (!response.ok) {
-    throw new Error(getPayloadMessage(payload) ?? response.statusText);
+    const message = getPayloadMessage(payload) ?? response.statusText;
+    const code = getPayloadCode(payload);
+    throw new ApiError(message, response.status, code);
   }
 
   return payload as T;

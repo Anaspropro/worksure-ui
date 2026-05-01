@@ -450,14 +450,14 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   initial={{ opacity: 0, height: 0, marginTop: 0 }}
                   animate={{ opacity: 1, height: "auto", marginTop: 16 }}
                   exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                  className="flex items-start gap-2.5 rounded-lg border border-red-200 bg-red-50 dark:border-red-400/20 dark:bg-red-400/8 px-4 py-3 overflow-hidden"
+                  className="flex items-start gap-2.5 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 overflow-hidden"
                 >
-                  <span className="mt-0.5 shrink-0 text-red-500">
+                  <span className="mt-0.5 shrink-0 text-danger">
                     <svg className="size-4" viewBox="0 0 16 16" fill="currentColor">
                       <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm-.75 3.5a.75.75 0 0 1 1.5 0v3.25a.75.75 0 0 1-1.5 0V4.5zm.75 7a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" />
                     </svg>
                   </span>
-                  <p className="text-sm text-red-700 dark:text-red-400">{authError}</p>
+                  <p className="text-sm text-danger">{authError}</p>
                 </motion.div>
               )}
             </AnimatePresence>

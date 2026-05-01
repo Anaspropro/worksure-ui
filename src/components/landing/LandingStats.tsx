@@ -37,7 +37,7 @@ export default function LandingStats() {
     <section className="py-20 bg-gradient-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-5">
         <div className="absolute w-96 h-96 rounded-full bg-white/20 -top-32 -right-32 blur-3xl" />
-        <div className="absolute w-72 h-72 rounded-full bg-blue-300/20 -bottom-20 -left-20 blur-3xl" />
+        <div className="absolute w-72 h-72 rounded-full bg-info/20 -bottom-20 -left-20 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -49,11 +49,11 @@ export default function LandingStats() {
         >
           <h2 className="text-3xl font-bold sm:text-4xl">
             Building Trust,{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-warning/80 to-warning">
               Together
             </span>
           </h2>
-          <p className="mt-3 text-blue-100/70 max-w-lg mx-auto">
+          <p className="mt-3 text-primary-foreground/70 max-w-lg mx-auto">
             Real numbers from real people using WorkSure every day.
           </p>
         </motion.div>
@@ -71,7 +71,7 @@ export default function LandingStats() {
               <p className="text-4xl font-bold text-white">
                 <AnimatedCounter target={s.value} suffix={s.suffix} />
               </p>
-              <p className="mt-2 text-sm text-blue-200/70">{s.label}</p>
+              <p className="mt-2 text-sm text-primary-foreground/70">{s.label}</p>
             </motion.div>
           ))}
         </div>

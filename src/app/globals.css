@@ -166,14 +166,14 @@
   /* Radius — more modern, softer */
   --radius: 0.625rem;
   
-  /* Sidebar Colors — blue-tinted */
-  --sidebar: #F5F8FC;
-  --sidebar-foreground: #334155;
+  /* Sidebar Colors — Dark Blue (matches landing page) */
+  --sidebar: #0f1c4d;
+  --sidebar-foreground: rgba(255, 255, 255, 0.8);
   --sidebar-primary: #3B6CF4;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #E0E8F5;
-  --sidebar-accent-foreground: #0F172A;
-  --sidebar-border: #DBE3F2;
+  --sidebar-accent: rgba(255, 255, 255, 0.1);
+  --sidebar-accent-foreground: #FFFFFF;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-ring: #3B6CF4;
 }
 

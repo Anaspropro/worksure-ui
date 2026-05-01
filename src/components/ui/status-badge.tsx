@@ -14,7 +14,7 @@ export function StatusBadge({
   const normalized = status.toUpperCase().replace(/ /g, "_");
   
   // Map to the exact state names expected by StateBadge
-  const stateMap: Record<string, "DRAFT" | "PENDING_PAYMENT" | "FUNDED" | "IN_PROGRESS" | "CLIENT_CONFIRMED" | "READY_FOR_PAYOUT" | "PAID_OUT" | "DISPUTED" | "CANCELLED" | "REFUNDED"> = {
+  const stateMap: Record<string, "DRAFT" | "PENDING_PAYMENT" | "FUNDED" | "IN_PROGRESS" | "CLIENT_CONFIRMED" | "READY_FOR_PAYOUT" | "PAID_OUT" | "DISPUTED" | "CANCELLED" | "REFUNDED" | "PAYMENT_FAILED" | "EXPIRED"> = {
     "DRAFT": "DRAFT",
     "PENDING_PAYMENT": "PENDING_PAYMENT", 
     "FUNDED": "FUNDED",
@@ -25,7 +25,8 @@ export function StatusBadge({
     "DISPUTED": "DISPUTED",
     "CANCELLED": "CANCELLED",
     "REFUNDED": "REFUNDED",
-    "EXPIRED": "CANCELLED", // Map expired to cancelled styling
+    "PAYMENT_FAILED": "PAYMENT_FAILED",
+    "EXPIRED": "EXPIRED",
   };
 
   const state = stateMap[normalized] ?? "DRAFT";

@@ -33,8 +33,8 @@ export default function NotFound() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <motion.div
+              <div className="">
+                {/* <motion.div
                   className="rounded-2xl border border-border bg-surface p-4"
                   initial={{ opacity: 0, x: -12 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -49,14 +49,14 @@ export default function NotFound() {
                       </p>
                     </div>
                   </div>
-                </motion.div>
+                </motion.div> */}
                 <motion.div
                   className="rounded-2xl border border-border bg-surface p-4"
                   initial={{ opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4, duration: 0.4 }}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center justify-center gap-3">
                     <Home className="mt-0.5 size-5 text-primary" />
                     <div>
                       <p className="font-medium text-foreground">Start from home</p>

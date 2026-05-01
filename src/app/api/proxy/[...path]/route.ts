@@ -7,6 +7,7 @@ const API_URL =
 const TOKEN_KEY = "token";
 const SESSION_HINT_KEY = "auth_present";
 const SESSION_MAX_AGE = 60 * 60 * 24 * 30;
+const MAX_BODY_SIZE = 3 * 1024 * 1024; // 3MB
 
 type RouteContext = {
   params: Promise<{
@@ -26,6 +27,15 @@ function buildUpstreamUrl(pathSegments: string[], request: NextRequest) {
 async function forwardRequest(request: NextRequest, context: RouteContext) {
   const { path } = await context.params;
   const url = buildUpstreamUrl(path, request);
+
+  const contentLength = parseInt(request.headers.get("content-length") ?? "0");
+  if (contentLength > MAX_BODY_SIZE) {
+    return NextResponse.json(
+      { message: "File too large. Maximum allowed size is 3MB." },
+      { status: 413 },
+    );
+  }
+
   const headers = new Headers();
   const token = request.cookies.get(TOKEN_KEY)?.value;
 

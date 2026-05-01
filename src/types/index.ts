@@ -25,7 +25,9 @@ export type ContractStatus =
   | "PAID_OUT"
   | "CANCELLED"
   | "DISPUTED"
-  | "REFUNDED";
+  | "REFUNDED"
+  | "PAYMENT_FAILED"
+  | "EXPIRED";
 
 export type WalletTransactionStatus = "PENDING" | "COMPLETED" | "FAILED";
 
@@ -47,9 +49,21 @@ export type NotificationType =
 
 export type NotificationPriority = "low" | "medium" | "high" | "urgent";
 
+export enum ErrorCode {
+  UNAUTHORIZED = "UNAUTHORIZED",
+  FORBIDDEN = "FORBIDDEN",
+  NOT_FOUND = "NOT_FOUND",
+  VALIDATION_ERROR = "VALIDATION_ERROR",
+  STATE_VIOLATION = "STATE_VIOLATION",
+  INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS",
+  PAYMENT_FAILED = "PAYMENT_FAILED",
+  INTERNAL_ERROR = "INTERNAL_ERROR",
+}
+
 export interface ApiEnvelope<T> {
   data: T;
   message?: string;
+  code?: string;
   meta?: Record<string, unknown>;
 }
 

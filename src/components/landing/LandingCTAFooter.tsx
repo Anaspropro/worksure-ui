@@ -9,7 +9,7 @@ export function LandingCTA() {
   return (
     <section className="py-20 bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white relative overflow-hidden">
       <div className="absolute inset-0">
-        <div className="absolute w-150 h-150 rounded-full bg-blue-400/10 -top-60 -right-40 blur-3xl" />
+        <div className="absolute w-150 h-150 rounded-full bg-primary/10 -top-60 -right-40 blur-3xl" />
         <div className="absolute w-96 h-96 rounded-full bg-white/5 -bottom-40 -left-20 blur-3xl" />
       </div>
 
@@ -21,12 +21,12 @@ export function LandingCTA() {
           transition={{ duration: 0.6 }}
         >
           <div className="mx-auto mb-6 size-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
-            <Mail className="size-7 text-blue-200" />
+            <Mail className="size-7 text-primary-foreground" />
           </div>
           <h2 className="text-3xl font-bold sm:text-4xl">
             Ready to Work with Confidence?
           </h2>
-          <p className="mt-4 text-blue-100/70 max-w-xl mx-auto text-lg">
+          <p className="mt-4 text-primary-foreground/70 max-w-xl mx-auto text-lg">
             Join thousands of clients and artisans who trust WorkSure for
             secure, transparent work.
           </p>
@@ -34,7 +34,7 @@ export function LandingCTA() {
             <Button
               asChild
               size="lg"
-              className="h-12 rounded-xl px-8 text-base bg-white text-[#1a3178] hover:bg-blue-50 shadow-xl shadow-black/20 font-semibold"
+              className="h-12 rounded-xl px-8 text-base bg-white text-primary-dark hover:bg-muted shadow-xl shadow-black/20 font-semibold"
             >
               <Link href="/auth/register">
                 Create Free Account <ArrowRight className="ml-2 size-4" />
@@ -97,10 +97,10 @@ export function LandingFooter() {
                 <ShieldCheck className="size-5 text-white" />
               </div>
               <span className="text-xl font-bold">
-                Work<span className="text-blue-300">Sure</span>
+                Work<span className="text-info">Sure</span>
               </span>
             </div>
-            <p className="text-sm text-blue-200/60 leading-relaxed">
+            <p className="text-sm text-primary-foreground/60 leading-relaxed">
               The secure escrow marketplace that connects clients with verified
               artisans. Trust built in.
             </p>
@@ -114,7 +114,7 @@ export function LandingFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-blue-200/60 hover:text-white transition-colors"
+                      className="text-sm text-primary-foreground/60 hover:text-white transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -126,10 +126,10 @@ export function LandingFooter() {
         </div>
 
         <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-blue-200/40">
+          <p className="text-xs text-primary-foreground/40">
             © {new Date().getFullYear()} WorkSure. All rights reserved.
           </p>
-          <div className="flex gap-4 text-xs text-blue-200/40">
+          <div className="flex gap-4 text-xs text-primary-foreground/40">
             <Link href="#" className="hover:text-white transition-colors">
               Terms
             </Link>
