@@ -38,6 +38,7 @@ export function getDashboardLinks(role: User["role"]): NavItem[] {
       ADMIN: [
         { href: "/dashboard/admin", label: "Dashboard", icon: ShieldCheck },
         { href: "/admin/users", label: "Users", icon: ShieldPlus },
+        { href: "/admin/kyc", label: "Verification", icon: FileUser },
         { href: "/admin/disputes", label: "Disputes", icon: FileText },
       ],
     }[role] ?? []
