@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { 
   BarChart3, 
@@ -14,12 +14,18 @@ import {
   Activity
 } from "lucide-react";
 import { useAdminContracts, useAdminContractStats } from "@/hooks/useAdmin";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import type { ContractStatus } from "@/types";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle,
+  Button,
+  Input,
+  Badge,
+} from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";  
+import type { Contract } from "@/types";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -37,12 +43,14 @@ export default function AdminContractsWorkspace() {
   const { data: stats, isLoading: statsLoading } = useAdminContractStats();
   const { data: contracts, isLoading: contractsLoading } = useAdminContracts(statusFilter);
 
-  const filteredContracts = contracts?.data.filter(c => 
-    c.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.artisanName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.id.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredContracts = useMemo(() => {
+    return contracts?.data.filter((c: Contract) => 
+      c.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.artisanName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      c.id.toLowerCase().includes(searchTerm.toLowerCase())
+    ) || [];
+  }, [contracts, searchTerm]);
 
   return (
     <div className="space-y-8">
@@ -141,7 +149,7 @@ export default function AdminContractsWorkspace() {
           transition={{ delay: 0.4 }}
           className="grid gap-4 md:grid-cols-2"
         >
-           <Card className="border-border bg-card">
+          <Card className="border-border bg-card">
             <CardHeader>
               <CardTitle className="text-base">Status breakdown</CardTitle>
               <CardDescription>Distribution of contracts by lifecycle state</CardDescription>
@@ -176,7 +184,7 @@ export default function AdminContractsWorkspace() {
                   <div className="text-xl font-bold">₦{stats.payoutVolume.toLocaleString()}</div>
                 </div>
                 <div className="space-y-1">
-                   <div className="flex items-center justify-center gap-1 text-danger">
+                  <div className="flex items-center justify-center gap-1 text-danger">
                     <ArrowDownRight className="size-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">Refunds</span>
                   </div>
@@ -203,7 +211,7 @@ export default function AdminContractsWorkspace() {
                   placeholder="Search contracts..."
                   className="pl-9 bg-background"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
                 />
               </div>
               <Button variant="outline" size="icon" className="shrink-0">
@@ -241,7 +249,7 @@ export default function AdminContractsWorkspace() {
                     </td>
                   </tr>
                 ) : (
-                  filteredContracts?.map((contract) => (
+                  filteredContracts?.map((contract: Contract) => (
                     <tr key={contract.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 font-mono text-xs text-muted-foreground">
                         {contract.id.split('-')[0].toUpperCase()}

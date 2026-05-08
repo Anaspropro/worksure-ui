@@ -16,8 +16,6 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAdminUsers, useVerifyArtisan } from "@/hooks/useAdmin";
-import { useUser } from "@/hooks/useAuth";
-import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,16 +44,11 @@ const itemVariants = {
 };
 
 export default function AdminKycWorkspace() {
-  const userQuery = useUser();
-  const user = userQuery.data;
-
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "VERIFIED">("PENDING");
 
-  const { data: usersData, isLoading } = useAdminUsers({ enabled: Boolean(user) });
+  const { data: usersData, isLoading } = useAdminUsers();
   const verifyMutation = useVerifyArtisan();
-
-  if (!user) return null;
 
   const artisans = useMemo(() => {
     return usersData?.data.filter(u => u.role === "ARTISAN") || [];
@@ -87,8 +80,7 @@ export default function AdminKycWorkspace() {
   };
 
   return (
-    <AppShell user={user}>
-      <div className="space-y-8 p-6 lg:p-8">
+    <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden rounded-2xl border-none bg-linear-to-br from-[#0f172a] via-[#1e293b] to-[#334155] p-8 text-white shadow-2xl">
           <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_20%_80%,rgba(59,130,246,0.1),transparent_50%)]" />
@@ -246,6 +238,5 @@ export default function AdminKycWorkspace() {
           </motion.div>
         )}
       </div>
-    </AppShell>
   );
 }

@@ -13,15 +13,18 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdminDisputes, useResolveAdminDispute } from "@/hooks/useAdmin";
-import { useUser } from "@/hooks/useAuth";
-import AppShell from "@/components/app-shell/AppShell";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle, 
+  Button, 
+  Input, 
+  Badge,  
+  Textarea 
+} from "@/components/ui";
 import { Skeleton } from "@/components/ui/skeleton";
-import { StatusBadge } from "@/components/ui/status-badge";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
@@ -35,17 +38,12 @@ const cardVariants = {
 };
 
 export default function AdminDisputesWorkspace() {
-  const userQuery = useUser();
-  const user = userQuery.data;
-  
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
   const [resolutionNotes, setResolutionNotes] = useState("");
 
-  const { data: disputes, isLoading } = useAdminDisputes({ enabled: Boolean(user) });
+  const { data: disputes, isLoading } = useAdminDisputes();
   const resolveMutation = useResolveAdminDispute();
-
-  if (!user) return null;
 
   const filteredDisputes = useMemo(() => {
     return disputes?.data.filter(d => 
@@ -77,8 +75,7 @@ export default function AdminDisputesWorkspace() {
   };
 
   return (
-    <AppShell user={user}>
-      <div className="space-y-8 p-6 lg:p-8">
+    <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden rounded-2xl border-none bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] p-8 text-white shadow-2xl">
           <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
@@ -279,8 +276,7 @@ export default function AdminDisputesWorkspace() {
             </AnimatePresence>
           </aside>
         </div>
-      </div>
-    </AppShell>
+    </div>
   );
 }
 

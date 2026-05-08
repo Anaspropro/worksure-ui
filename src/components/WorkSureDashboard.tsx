@@ -109,12 +109,12 @@ export default function WorkSureDashboard({
       };
     }
 
-    return {
-      title: "Admin workspace",
-      description:
-        "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
-      emphasis: "Trust oversight",
-    };
+    // return {
+    //   title: "Admin workspace",
+    //   description:
+    //     "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
+    //   emphasis: "Trust oversight",
+    // };
   }, [roleView]);
 
   const visibleJobs =
@@ -308,7 +308,7 @@ export default function WorkSureDashboard({
         </section>
       ) : null}
 
-      {roleView === "ADMIN" ? (
+      {/* {roleView === "ADMIN" ? (
         <section className="grid gap-4 lg:grid-cols-3">
           <Card className="border-border/90 bg-white lg:col-span-2">
             <CardHeader>
@@ -337,7 +337,7 @@ export default function WorkSureDashboard({
             </CardContent>
           </Card>
         </section>
-      ) : null}
+      ) : null} */}
 
       <section className="grid gap-4 xl:grid-cols-3">
         <Card className="border-border/90 bg-white">

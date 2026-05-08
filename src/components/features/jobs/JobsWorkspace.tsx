@@ -154,476 +154,474 @@ export default function JobsWorkspace() {
   };
 
   return (
-    <AppShell user={user}>
-      <main className="space-y-6">
-        <Card className="border-border/80 bg-white/95">
-          <CardHeader className="gap-3 md:flex md:flex-row md:items-start md:justify-between">
-            <div className="space-y-1">
-              <CardTitle className="text-3xl tracking-tight">
-                {user.role === "CLIENT"
-                  ? "Client Jobs Workspace"
-                  : "Open Jobs and Proposals"}
-              </CardTitle>
-              <CardDescription className="max-w-3xl text-base leading-7">
-                {user.role === "CLIENT"
-                  ? "Create jobs, review incoming proposals, and turn accepted work into escrow-backed contracts."
-                  : "Browse open opportunities, send proposals, and keep your pipeline moving toward funded work."}
-              </CardDescription>
-            </div>
-            {user.role === "CLIENT" ? (
-              <Button asChild>
-                <Link href="/jobs/create">
-                  <FilePlus2 className="size-4" />
-                  New job
-                </Link>
-              </Button>
-            ) : null}
-          </CardHeader>
-        </Card>
+    <main className="space-y-6">
+      <Card className="border-border/80 bg-white/95">
+        <CardHeader className="gap-3 md:flex md:flex-row md:items-start md:justify-between">
+          <div className="space-y-1">
+            <CardTitle className="text-3xl tracking-tight">
+              {user.role === "CLIENT"
+                ? "Client Jobs Workspace"
+                : "Open Jobs and Proposals"}
+            </CardTitle>
+            <CardDescription className="max-w-3xl text-base leading-7">
+              {user.role === "CLIENT"
+                ? "Create jobs, review incoming proposals, and turn accepted work into escrow-backed contracts."
+                : "Browse open opportunities, send proposals, and keep your pipeline moving toward funded work."}
+            </CardDescription>
+          </div>
+          {user.role === "CLIENT" ? (
+            <Button asChild>
+              <Link href="/jobs/create">
+                <FilePlus2 className="size-4" />
+                New job
+              </Link>
+            </Button>
+          ) : null}
+        </CardHeader>
+      </Card>
 
-        <section className="grid gap-4 grid-cols-2 md:grid-cols-3">
-          <Card size="sm">
-            <CardContent className="space-y-1 py-2">
-              <p className="text-sm text-muted-foreground">Visible jobs</p>
-              <p className="text-3xl font-semibold text-foreground">
-                {jobs.length}
-              </p>
+      <section className="grid gap-4 grid-cols-2 md:grid-cols-3">
+        <Card size="sm">
+          <CardContent className="space-y-1 py-2">
+            <p className="text-sm text-muted-foreground">Visible jobs</p>
+            <p className="text-3xl font-semibold text-foreground">
+              {jobs.length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card size="sm">
+          <CardContent className="space-y-1 py-2">
+            <p className="text-sm text-muted-foreground">
+              {user.role === "CLIENT"
+                ? "Pending proposals"
+                : "Submitted proposals"}
+            </p>
+            <p className="text-3xl font-semibold text-foreground">
+              {user.role === "CLIENT"
+                ? pendingProposals.length
+                : proposals.length}
+            </p>
+          </CardContent>
+        </Card>
+        <Card size="sm" className="col-span-2 lg:col-span-1">
+          <CardContent className="space-y-1 py-2">
+            <p className="text-sm text-muted-foreground">Average budget</p>
+            <p className="text-3xl font-semibold text-foreground">
+              {formatCurrency(
+                jobs.length
+                  ? jobs.reduce(
+                      (sum, job) => sum + Number(job.budget ?? 0),
+                      0,
+                    ) / jobs.length
+                  : 0,
+              )}
+            </p>
+          </CardContent>
+        </Card>
+      </section>
+
+      <Card className="border-border/80 bg-white">
+        <CardHeader>
+          <CardTitle>Search and filter jobs</CardTitle>
+          <CardDescription>
+            Narrow the visible job list by keyword, category, or status.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-3 md:grid-cols-3">
+          <Input
+            placeholder="Search jobs"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+          <select
+            className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            value={categoryFilter}
+            onChange={(event) => setCategoryFilter(event.target.value)}
+          >
+            <option value="ALL">All categories</option>
+            {categoryOptions.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+          </select>
+          <select
+            className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+            value={statusFilter}
+            onChange={(event) => setStatusFilter(event.target.value)}
+            disabled={user.role === "ARTISAN"}
+          >
+            <option value="ALL">
+              {user.role === "CLIENT" ? "All statuses" : "Open jobs only"}
+            </option>
+            <option value="OPEN">Open</option>
+            <option value="IN_PROGRESS">In progress</option>
+            <option value="COMPLETED">Completed</option>
+          </select>
+        </CardContent>
+      </Card>
+
+      {user.role === "CLIENT" ? (
+        <section className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
+          <Card className="border-border/80 bg-white">
+            <CardHeader>
+              <CardTitle>Quick job intake</CardTitle>
+              <CardDescription>
+                Capture a concise brief and publish it directly to the
+                marketplace.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <Input
+                placeholder="Job title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+              />
+              <Textarea
+                placeholder="Describe the scope, deliverables, and timing."
+                value={description}
+                onChange={(event) => setDescription(event.target.value)}
+              />
+              <div className="grid gap-3 md:grid-cols-2">
+                <Input
+                  type="number"
+                  placeholder="Budget"
+                  value={budgetInput}
+                  onChange={(event) => setBudgetInput(event.target.value)}
+                />
+                <Input
+                  placeholder="Category"
+                  value={category}
+                  onChange={(event) => setCategory(event.target.value)}
+                />
+              </div>
+              <Button
+                disabled={
+                  !title.trim() ||
+                  !description.trim() ||
+                  budget <= 0 ||
+                  createJobMutation.status === "pending"
+                }
+                onClick={handleCreateJob}
+              >
+                Publish job
+              </Button>
             </CardContent>
           </Card>
-          <Card size="sm">
-            <CardContent className="space-y-1 py-2">
-              <p className="text-sm text-muted-foreground">
-                {user.role === "CLIENT"
-                  ? "Pending proposals"
-                  : "Submitted proposals"}
+
+          <Card className="border-border/80 bg-primary-soft/20">
+            <CardHeader>
+              <CardTitle>Client workflow guardrails</CardTitle>
+              <CardDescription>
+                Keep money decisions obvious and attached to a visible job
+                state.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
+              <p>
+                Review proposals inside the context of the original job brief.
               </p>
-              <p className="text-3xl font-semibold text-foreground">
-                {user.role === "CLIENT"
-                  ? pendingProposals.length
-                  : proposals.length}
+              <p>
+                Accept only when scope and amount are clear enough to
+                contract.
               </p>
-            </CardContent>
-          </Card>
-          <Card size="sm" className="col-span-2 lg:col-span-1">
-            <CardContent className="space-y-1 py-2">
-              <p className="text-sm text-muted-foreground">Average budget</p>
-              <p className="text-3xl font-semibold text-foreground">
-                {formatCurrency(
-                  jobs.length
-                    ? jobs.reduce(
-                        (sum, job) => sum + Number(job.budget ?? 0),
-                        0,
-                      ) / jobs.length
-                    : 0,
-                )}
+              <p>
+                Move from proposal to contract so escrow and completion
+                history stay auditable.
               </p>
             </CardContent>
           </Card>
         </section>
-
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle>Search and filter jobs</CardTitle>
-            <CardDescription>
-              Narrow the visible job list by keyword, category, or status.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3 md:grid-cols-3">
-            <Input
-              placeholder="Search jobs"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-            <select
-              className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              value={categoryFilter}
-              onChange={(event) => setCategoryFilter(event.target.value)}
-            >
-              <option value="ALL">All categories</option>
-              {categoryOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
-            <select
-              className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              value={statusFilter}
-              onChange={(event) => setStatusFilter(event.target.value)}
-              disabled={user.role === "ARTISAN"}
-            >
-              <option value="ALL">
-                {user.role === "CLIENT" ? "All statuses" : "Open jobs only"}
-              </option>
-              <option value="OPEN">Open</option>
-              <option value="IN_PROGRESS">In progress</option>
-              <option value="COMPLETED">Completed</option>
-            </select>
-          </CardContent>
-        </Card>
-
-        {user.role === "CLIENT" ? (
-          <section className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
-            <Card className="border-border/80 bg-white">
-              <CardHeader>
-                <CardTitle>Quick job intake</CardTitle>
-                <CardDescription>
-                  Capture a concise brief and publish it directly to the
-                  marketplace.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Input
-                  placeholder="Job title"
-                  value={title}
-                  onChange={(event) => setTitle(event.target.value)}
-                />
-                <Textarea
-                  placeholder="Describe the scope, deliverables, and timing."
-                  value={description}
-                  onChange={(event) => setDescription(event.target.value)}
-                />
-                <div className="grid gap-3 md:grid-cols-2">
-                  <Input
-                    type="number"
-                    placeholder="Budget"
-                    value={budgetInput}
-                    onChange={(event) => setBudgetInput(event.target.value)}
-                  />
-                  <Input
-                    placeholder="Category"
-                    value={category}
-                    onChange={(event) => setCategory(event.target.value)}
-                  />
-                </div>
-                <Button
-                  disabled={
-                    !title.trim() ||
-                    !description.trim() ||
-                    budget <= 0 ||
-                    createJobMutation.status === "pending"
-                  }
-                  onClick={handleCreateJob}
-                >
-                  Publish job
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/80 bg-primary-soft/20">
-              <CardHeader>
-                <CardTitle>Client workflow guardrails</CardTitle>
-                <CardDescription>
-                  Keep money decisions obvious and attached to a visible job
-                  state.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
-                <p>
-                  Review proposals inside the context of the original job brief.
-                </p>
-                <p>
-                  Accept only when scope and amount are clear enough to
-                  contract.
-                </p>
-                <p>
-                  Move from proposal to contract so escrow and completion
-                  history stay auditable.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-        ) : (
-          <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-            <Card className="border-border/80 bg-white">
-              <CardHeader>
-                <CardTitle>Submit a proposal</CardTitle>
-                <CardDescription>
-                  Pick an open job and send a clear price with a short delivery
-                  note.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {!user.artisanVerified ? (
-                  <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
-                    Artisan verification is required before you can submit
-                    proposals.
-                  </div>
-                ) : null}
-                <select
-                  className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  value={proposalJobId}
-                  onChange={(event) => setProposalJobId(event.target.value)}
-                >
-                  <option value="">Select an open job</option>
-                  {jobs.map((job) => (
-                    <option key={job.id} value={job.id}>
-                      {job.title} ({formatCurrency(job.budget)})
-                    </option>
-                  ))}
-                </select>
-                <Input
-                  type="number"
-                  placeholder="Proposed amount"
-                  value={proposalAmountInput}
-                  onChange={(event) =>
-                    setProposalAmountInput(event.target.value)
-                  }
-                />
-                <Textarea
-                  placeholder="How will you handle this work?"
-                  value={proposalMessage}
-                  onChange={(event) => setProposalMessage(event.target.value)}
-                />
-                <Button
-                  disabled={
-                    !user.artisanVerified ||
-                    !proposalJobId ||
-                    !proposalMessage.trim() ||
-                    proposalAmount <= 0 ||
-                    createProposalMutation.status === "pending"
-                  }
-                  onClick={handleCreateProposal}
-                >
-                  Send proposal
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/80 bg-secondary-light/20">
-              <CardHeader>
-                <CardTitle>How artisans win good work</CardTitle>
-                <CardDescription>
-                  Proposal quality matters as much as price in trust-based
-                  hiring.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
-                <p>Lead with a delivery plan, not only an amount.</p>
-                <p>
-                  Prioritize jobs with realistic budgets so funded contracts
-                  happen faster.
-                </p>
-                <p>
-                  Track accepted proposals closely because they become your
-                  escrow pipeline.
-                </p>
-              </CardContent>
-            </Card>
-          </section>
-        )}
-
-        <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+      ) : (
+        <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
           <Card className="border-border/80 bg-white">
             <CardHeader>
-              <CardTitle>
-                {user.role === "CLIENT" ? "Your jobs" : "Open marketplace jobs"}
-              </CardTitle>
+              <CardTitle>Submit a proposal</CardTitle>
+              <CardDescription>
+                Pick an open job and send a clear price with a short delivery
+                note.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              {jobs.length ? (
-                jobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="rounded-lg border border-border bg-background/70 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="font-semibold text-foreground">
-                          {job.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {job.description}
-                        </p>
-                      </div>
-                      <StatusBadge status={job.status} />
-                    </div>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span>{formatCurrency(job.budget)}</span>
-                      <span>{job.category ?? "General"}</span>
-                      <span>{formatDate(job.createdAt)}</span>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <EmptyState
-                  title={
-                    user.role === "CLIENT"
-                      ? "No jobs posted yet"
-                      : "No open jobs yet"
-                  }
-                  description={
-                    user.role === "CLIENT"
-                      ? "Start with your first job brief so artisans can send proposals."
-                      : "Check back soon or broaden your category focus when more work is posted."
-                  }
-                />
-              )}
+              {!user.artisanVerified ? (
+                <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
+                  Artisan verification is required before you can submit
+                  proposals.
+                </div>
+              ) : null}
+              <select
+                className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                value={proposalJobId}
+                onChange={(event) => setProposalJobId(event.target.value)}
+              >
+                <option value="">Select an open job</option>
+                {jobs.map((job) => (
+                  <option key={job.id} value={job.id}>
+                    {job.title} ({formatCurrency(job.budget)})
+                  </option>
+                ))}
+              </select>
+              <Input
+                type="number"
+                placeholder="Proposed amount"
+                value={proposalAmountInput}
+                onChange={(event) =>
+                  setProposalAmountInput(event.target.value)
+                }
+              />
+              <Textarea
+                placeholder="How will you handle this work?"
+                value={proposalMessage}
+                onChange={(event) => setProposalMessage(event.target.value)}
+              />
+              <Button
+                disabled={
+                  !user.artisanVerified ||
+                  !proposalJobId ||
+                  !proposalMessage.trim() ||
+                  proposalAmount <= 0 ||
+                  createProposalMutation.status === "pending"
+                }
+                onClick={handleCreateProposal}
+              >
+                Send proposal
+              </Button>
             </CardContent>
           </Card>
 
-          <Card className="border-border/80 bg-white">
+          <Card className="border-border/80 bg-secondary-light/20">
             <CardHeader>
-              <CardTitle>
-                {user.role === "CLIENT" ? "Proposal inbox" : "Your proposals"}
-              </CardTitle>
+              <CardTitle>How artisans win good work</CardTitle>
+              <CardDescription>
+                Proposal quality matters as much as price in trust-based
+                hiring.
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3">
-              {proposals.length ? (
-                proposals.map((proposal) => (
-                  <div
-                    key={proposal.id}
-                    className="rounded-lg border border-border bg-background/70 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="font-semibold text-foreground">
-                          {proposal.job.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {user.role === "CLIENT"
-                            ? `From ${proposal.artisan.name}`
-                            : `For ${proposal.client.name}`}
-                        </p>
-                      </div>
-                      <StatusBadge status={proposal.status} />
+            <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
+              <p>Lead with a delivery plan, not only an amount.</p>
+              <p>
+                Prioritize jobs with realistic budgets so funded contracts
+                happen faster.
+              </p>
+              <p>
+                Track accepted proposals closely because they become your
+                escrow pipeline.
+              </p>
+            </CardContent>
+          </Card>
+        </section>
+      )}
+
+      <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+        <Card className="border-border/80 bg-white">
+          <CardHeader>
+            <CardTitle>
+              {user.role === "CLIENT" ? "Your jobs" : "Open marketplace jobs"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {jobs.length ? (
+              jobs.map((job) => (
+                <div
+                  key={job.id}
+                  className="rounded-lg border border-border bg-background/70 p-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-semibold text-foreground">
+                        {job.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {job.description}
+                      </p>
                     </div>
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      {proposal.message}
-                    </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span>{formatCurrency(proposal.amount)}</span>
-                      <span>{formatDate(proposal.createdAt)}</span>
+                    <StatusBadge status={job.status} />
+                  </div>
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <span>{formatCurrency(job.budget)}</span>
+                    <span>{job.category ?? "General"}</span>
+                    <span>{formatDate(job.createdAt)}</span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <EmptyState
+                title={
+                  user.role === "CLIENT"
+                    ? "No jobs posted yet"
+                    : "No open jobs yet"
+                }
+                description={
+                  user.role === "CLIENT"
+                    ? "Start with your first job brief so artisans can send proposals."
+                    : "Check back soon or broaden your category focus when more work is posted."
+                }
+              />
+            )}
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/80 bg-white">
+          <CardHeader>
+            <CardTitle>
+              {user.role === "CLIENT" ? "Proposal inbox" : "Your proposals"}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {proposals.length ? (
+              proposals.map((proposal) => (
+                <div
+                  key={proposal.id}
+                  className="rounded-lg border border-border bg-background/70 p-4"
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div className="space-y-1">
+                      <p className="font-semibold text-foreground">
+                        {proposal.job.title}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {user.role === "CLIENT"
+                          ? `From ${proposal.artisan.name}`
+                          : `For ${proposal.client.name}`}
+                      </p>
                     </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {user.role === "CLIENT" &&
-                      proposal.status === "PENDING" ? (
-                        <>
-                          <Button
-                            size="sm"
-                            onClick={() =>
-                              acceptProposalMutation.mutate(proposal.id, {
-                                onSuccess: () =>
-                                  toast.success("Proposal accepted."),
-                                onError: (error) =>
-                                  toast.error(
-                                    error.message ||
-                                      "Unable to accept proposal.",
-                                  ),
-                              })
-                            }
-                            disabled={
-                              acceptProposalMutation.status === "pending"
-                            }
-                          >
-                            Accept
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() =>
-                              rejectProposalMutation.mutate(proposal.id, {
-                                onSuccess: () =>
-                                  toast.success("Proposal rejected."),
-                                onError: (error) =>
-                                  toast.error(
-                                    error.message ||
-                                      "Unable to reject proposal.",
-                                  ),
-                              })
-                            }
-                            disabled={
-                              rejectProposalMutation.status === "pending"
-                            }
-                          >
-                            Reject
-                          </Button>
-                        </>
-                      ) : null}
-                      {user.role === "CLIENT" &&
-                      proposal.status === "ACCEPTED" ? (
+                    <StatusBadge status={proposal.status} />
+                  </div>
+                  <p className="mt-3 text-sm text-muted-foreground">
+                    {proposal.message}
+                  </p>
+                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                    <span>{formatCurrency(proposal.amount)}</span>
+                    <span>{formatDate(proposal.createdAt)}</span>
+                  </div>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {user.role === "CLIENT" &&
+                    proposal.status === "PENDING" ? (
+                      <>
                         <Button
                           size="sm"
-                          variant="outline"
                           onClick={() =>
-                            createContractMutation.mutate(proposal.id, {
+                            acceptProposalMutation.mutate(proposal.id, {
                               onSuccess: () =>
-                                toast.success("Contract created."),
-                              onError: (error) =>
-                                toast.error(
-                                  error.message || "Unable to create contract.",
-                                ),
-                            })
-                          }
-                          disabled={createContractMutation.status === "pending"}
-                        >
-                          Create contract
-                        </Button>
-                      ) : null}
-                      {user.role === "ARTISAN" &&
-                      proposal.status === "PENDING" ? (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() =>
-                            withdrawProposalMutation.mutate(proposal.id, {
-                              onSuccess: () =>
-                                toast.success("Proposal withdrawn."),
+                                toast.success("Proposal accepted."),
                               onError: (error) =>
                                 toast.error(
                                   error.message ||
-                                    "Unable to withdraw proposal.",
+                                    "Unable to accept proposal.",
                                 ),
                             })
                           }
                           disabled={
-                            withdrawProposalMutation.status === "pending"
+                            acceptProposalMutation.status === "pending"
                           }
                         >
-                          Withdraw
+                          Accept
                         </Button>
-                      ) : null}
-                    </div>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() =>
+                            rejectProposalMutation.mutate(proposal.id, {
+                              onSuccess: () =>
+                                toast.success("Proposal rejected."),
+                              onError: (error) =>
+                                toast.error(
+                                  error.message ||
+                                    "Unable to reject proposal.",
+                                ),
+                            })
+                          }
+                          disabled={
+                            rejectProposalMutation.status === "pending"
+                          }
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    ) : null}
+                    {user.role === "CLIENT" &&
+                    proposal.status === "ACCEPTED" ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          createContractMutation.mutate(proposal.id, {
+                            onSuccess: () =>
+                              toast.success("Contract created."),
+                            onError: (error) =>
+                              toast.error(
+                                error.message || "Unable to create contract.",
+                              ),
+                          })
+                        }
+                        disabled={createContractMutation.status === "pending"}
+                      >
+                        Create contract
+                      </Button>
+                    ) : null}
+                    {user.role === "ARTISAN" &&
+                    proposal.status === "PENDING" ? (
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() =>
+                          withdrawProposalMutation.mutate(proposal.id, {
+                            onSuccess: () =>
+                              toast.success("Proposal withdrawn."),
+                            onError: (error) =>
+                              toast.error(
+                                error.message ||
+                                  "Unable to withdraw proposal.",
+                              ),
+                          })
+                        }
+                        disabled={
+                          withdrawProposalMutation.status === "pending"
+                        }
+                      >
+                        Withdraw
+                      </Button>
+                    ) : null}
                   </div>
-                ))
-              ) : (
-                <EmptyState
-                  title="No proposals yet"
-                  description={
-                    user.role === "CLIENT"
-                      ? "Incoming bids for your jobs will appear here."
-                      : "Your sent proposals will start showing up here once you apply to jobs."
-                  }
-                />
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle>Next step</CardTitle>
-            <CardDescription>
-              Move accepted work into an escrow-backed contract detail page.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="flex flex-wrap items-center justify-between gap-4">
-            <div className="flex items-center gap-3 text-sm text-muted-foreground">
-              <BriefcaseBusiness className="size-4 text-primary" />
-              <span>
-                Accepted proposals should become contracts before any money
-                changes hands.
-              </span>
-            </div>
-            <Button asChild variant="outline">
-              <Link href="/contracts">
-                Go to contracts
-                <ArrowRight className="size-4" />
-              </Link>
-            </Button>
+                </div>
+              ))
+            ) : (
+              <EmptyState
+                title="No proposals yet"
+                description={
+                  user.role === "CLIENT"
+                    ? "Incoming bids for your jobs will appear here."
+                    : "Your sent proposals will start showing up here once you apply to jobs."
+                }
+              />
+            )}
           </CardContent>
         </Card>
-      </main>
-    </AppShell>
+      </section>
+
+      <Card className="border-border/80 bg-white">
+        <CardHeader>
+          <CardTitle>Next step</CardTitle>
+          <CardDescription>
+            Move accepted work into an escrow-backed contract detail page.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-3 text-sm text-muted-foreground">
+            <BriefcaseBusiness className="size-4 text-primary" />
+            <span>
+              Accepted proposals should become contracts before any money
+              changes hands.
+            </span>
+          </div>
+          <Button asChild variant="outline">
+            <Link href="/contracts">
+              Go to contracts
+              <ArrowRight className="size-4" />
+            </Link>
+          </Button>
+        </CardContent>
+      </Card>
+    </main>
   );
 }
