@@ -13,10 +13,11 @@ import {
   Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 export default function LandingHero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white">
+    <section className="relative overflow-hidden bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white">
       {/* Decorative elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.15),transparent_50%)]" />
@@ -33,7 +34,7 @@ export default function LandingHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Sparkles className="size-4 text-yellow-300" />
+              <Sparkles className="size-4 text-warning" />
               <span className="text-sm font-medium text-white/90">
                 Trusted escrow marketplace
               </span>
@@ -46,18 +47,18 @@ export default function LandingHero() {
               transition={{ delay: 0.1, duration: 0.6 }}
             >
               Hire Artisans with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-50 to-white">
                 Confidence,
               </span>
               <br />
               Pay with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 to-yellow-400">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-warning/80 to-warning">
                 Security
               </span>
             </motion.h1>
 
             <motion.p
-              className="max-w-lg text-lg text-blue-100/80 leading-relaxed"
+              className="max-w-lg text-lg text-primary-foreground/80 leading-relaxed"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.5 }}
@@ -75,7 +76,7 @@ export default function LandingHero() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-xl px-8 text-base bg-white text-[#1a3178] hover:bg-blue-50 shadow-xl shadow-black/20 font-semibold"
+                className="h-12 rounded-xl px-8 text-base bg-white text-primary-dark hover:bg-muted shadow-xl shadow-black/20 font-semibold"
               >
                 <Link href="/auth/register">
                   Get Started <ArrowRight className="ml-1 size-4" />
@@ -102,7 +103,7 @@ export default function LandingHero() {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="size-9 rounded-full bg-gradient-to-br from-blue-300 to-blue-500 border-2 border-[#1a3178] flex items-center justify-center"
+                    className="size-9 rounded-full bg-linear-to-br from-info to-primary border-2 border-primary-dark flex items-center justify-center"
                   >
                     <Users className="size-4 text-white" />
                   </div>
@@ -113,11 +114,11 @@ export default function LandingHero() {
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className="size-3.5 fill-yellow-400 text-yellow-400"
+                      className="size-3.5 fill-warning text-warning"
                     />
                   ))}
                 </div>
-                <p className="text-xs text-blue-200/70 mt-0.5">
+                <p className="text-xs text-primary-foreground/70 mt-0.5">
                   Trusted by 8,500+ clients across Nigeria
                 </p>
               </div>
@@ -132,14 +133,21 @@ export default function LandingHero() {
             transition={{ delay: 0.3, duration: 0.7 }}
           >
             {/* Main image placeholder */}
-            <div className="relative w-full h-[480px] rounded-3xl bg-white/5 backdrop-blur-sm border border-white/10 overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1a3178]/80 to-transparent z-10" />
-              <div className="absolute inset-0 bg-[url('/placeholder-hero.webp')] bg-cover bg-center opacity-40" />
+            <div className="relative w-full h-140 rounded-3xl bg-white/5 backdrop-blur-sm overflow-hidden">
+              <div className="absolute inset-0 bg-linear-to-t from-[#1a3178]/80 to-transparent z-10" />
+              <Image
+                src="/hero.png"
+                alt="Hero Image"
+                fill
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                loading="eager"
+                className="object-contain opacity-80"
+              />
               <div className="absolute bottom-6 left-6 right-6 z-20">
                 <p className="text-lg font-semibold">
                   Real artisans. Real escrow. Real results.
                 </p>
-                <p className="text-sm text-blue-200/70 mt-1">
+                <p className="text-sm text-primary-foreground/70 mt-1">
                   Every payment secured by WorkSure
                 </p>
               </div>

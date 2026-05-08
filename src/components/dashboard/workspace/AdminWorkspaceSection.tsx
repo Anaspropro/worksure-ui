@@ -1,8 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ShieldAlert } from "lucide-react";
+import { ShieldAlert, FileText, ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -26,8 +28,16 @@ export default function AdminWorkspaceSection() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4 text-sm leading-7 text-text-secondary">
-            <p>Jobs, proposals, and contracts here reflect the live contract path in the marketplace.</p>
             <p>Dedicated review flows can reuse the same status colors for verification and disputes.</p>
+            <div className="pt-4">
+              <Button asChild variant="outline" className="gap-2">
+                <Link href="/admin/contracts">
+                  <FileText className="size-4" />
+                  View all system contracts
+                  <ArrowRight className="size-4" />
+                </Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </motion.div>

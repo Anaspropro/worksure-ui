@@ -37,7 +37,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${bodyFont.variable} ${headingFont.variable} ${monoFont.variable} h-full antialiased`}
+      className={`${bodyFont.variable} ${monoFont.variable} ${headingFont.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans flex flex-col bg-background text-foreground">
         <QueryProvider>

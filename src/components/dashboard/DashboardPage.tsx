@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import AppShell from "@/components/app-shell/AppShell";
 import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 import WorkspaceDashboard from "@/components/dashboard/workspace/WorkspaceDashboard";
 import { useUser } from "@/hooks/useAuth";
@@ -40,9 +39,5 @@ export default function DashboardPage({
     return <DashboardLoadingState />;
   }
 
-  return (
-    <AppShell user={user}>
-      <WorkspaceDashboard roleView={role ?? user.role} user={user} />
-    </AppShell>
-  );
+  return <WorkspaceDashboard roleView={role ?? user.role} user={user} />;
 }

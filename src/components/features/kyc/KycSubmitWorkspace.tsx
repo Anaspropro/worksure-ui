@@ -32,83 +32,81 @@ export default function KycSubmitWorkspace() {
       : "";
 
   return (
-    <AppShell user={user}>
-      <main className="space-y-6">
+    <main className="space-y-6">
+      <Card className="border-border/80 bg-white">
+        <CardHeader>
+          <CardTitle className="text-3xl tracking-tight">Verification Submission</CardTitle>
+          <CardDescription className="max-w-3xl text-base leading-7">
+            WorkSure currently uses artisan profile completeness as the verification intake used by admins for review.
+          </CardDescription>
+        </CardHeader>
+      </Card>
+
+      <section className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
         <Card className="border-border/80 bg-white">
           <CardHeader>
-            <CardTitle className="text-3xl tracking-tight">Verification Submission</CardTitle>
-            <CardDescription className="max-w-3xl text-base leading-7">
-              WorkSure currently uses artisan profile completeness as the verification intake used by admins for review.
-            </CardDescription>
+            <CardTitle>Verification details</CardTitle>
+            <CardDescription>Share the information admins need to assess service readiness.</CardDescription>
           </CardHeader>
+          <CardContent className="space-y-3">
+            <Textarea
+              value={bio || kycQuery.data?.bio || ""}
+              onChange={(event) => setBio(event.target.value)}
+              placeholder="Professional bio"
+            />
+            <Input
+              value={skills || initialSkills}
+              onChange={(event) => setSkills(event.target.value)}
+              placeholder="Skills (comma separated)"
+            />
+            <Textarea
+              value={experience || kycQuery.data?.experience || ""}
+              onChange={(event) => setExperience(event.target.value)}
+              placeholder="Experience"
+            />
+            <Textarea
+              value={portfolio}
+              onChange={(event) => setPortfolio(event.target.value)}
+              placeholder="Portfolio links, one per line"
+            />
+            <div className="flex flex-wrap gap-2">
+              <Button
+                disabled={saveKycMutation.status === "pending"}
+                onClick={() =>
+                  saveKycMutation.mutate({
+                    bio: bio || kycQuery.data?.bio || "",
+                    skills: (skills || initialSkills)
+                      .split(",")
+                      .map((item) => item.trim())
+                      .filter(Boolean),
+                    experience: experience || kycQuery.data?.experience || "",
+                    portfolio: portfolio
+                      .split("\n")
+                      .map((item) => item.trim())
+                      .filter(Boolean),
+                  })
+                }
+              >
+                Save verification details
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/kyc/status">View status</Link>
+              </Button>
+            </div>
+          </CardContent>
         </Card>
 
-        <section className="grid gap-4 xl:grid-cols-[1fr_0.9fr]">
-          <Card className="border-border/80 bg-white">
-            <CardHeader>
-              <CardTitle>Verification details</CardTitle>
-              <CardDescription>Share the information admins need to assess service readiness.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <Textarea
-                value={bio || kycQuery.data?.bio || ""}
-                onChange={(event) => setBio(event.target.value)}
-                placeholder="Professional bio"
-              />
-              <Input
-                value={skills || initialSkills}
-                onChange={(event) => setSkills(event.target.value)}
-                placeholder="Skills (comma separated)"
-              />
-              <Textarea
-                value={experience || kycQuery.data?.experience || ""}
-                onChange={(event) => setExperience(event.target.value)}
-                placeholder="Experience"
-              />
-              <Textarea
-                value={portfolio}
-                onChange={(event) => setPortfolio(event.target.value)}
-                placeholder="Portfolio links, one per line"
-              />
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  disabled={saveKycMutation.status === "pending"}
-                  onClick={() =>
-                    saveKycMutation.mutate({
-                      bio: bio || kycQuery.data?.bio || "",
-                      skills: (skills || initialSkills)
-                        .split(",")
-                        .map((item) => item.trim())
-                        .filter(Boolean),
-                      experience: experience || kycQuery.data?.experience || "",
-                      portfolio: portfolio
-                        .split("\n")
-                        .map((item) => item.trim())
-                        .filter(Boolean),
-                    })
-                  }
-                >
-                  Save verification details
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/kyc/status">View status</Link>
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/80 bg-primary-soft/20">
-            <CardHeader>
-              <CardTitle>What admins review</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
-              <p>Clear skills that match the type of work you want to bid on.</p>
-              <p>Enough experience detail to understand delivery quality and reliability.</p>
-              <p>Optional portfolio links that support trust before a client funds escrow.</p>
-            </CardContent>
-          </Card>
-        </section>
-      </main>
-    </AppShell>
+        <Card className="border-border/80 bg-primary-soft/20">
+          <CardHeader>
+            <CardTitle>What admins review</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
+            <p>Clear skills that match the type of work you want to bid on.</p>
+            <p>Enough experience detail to understand delivery quality and reliability.</p>
+            <p>Optional portfolio links that support trust before a client funds escrow.</p>
+          </CardContent>
+        </Card>
+      </section>
+    </main>
   );
 }

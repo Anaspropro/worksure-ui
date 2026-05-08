@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Compass, Home, SearchX } from "lucide-react";
+import { Home, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -33,30 +33,14 @@ export default function NotFound() {
               </div>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid gap-4 md:grid-cols-2">
-                <motion.div
-                  className="rounded-2xl border border-border bg-surface p-4"
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3, duration: 0.4 }}
-                >
-                  <div className="flex items-start gap-3">
-                    <Compass className="mt-0.5 size-5 text-muted-foreground" />
-                    <div>
-                      <p className="font-medium text-foreground">Try a known route</p>
-                      <p className="mt-1 text-sm leading-6 text-text-secondary">
-                        Head back to the dashboard, jobs, wallet, or auth pages from a safe entry point.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
+              <div className="">
                 <motion.div
                   className="rounded-2xl border border-border bg-surface p-4"
                   initial={{ opacity: 0, x: 12 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.4, duration: 0.4 }}
                 >
-                  <div className="flex items-start gap-3">
+                  <div className="flex items-center justify-center gap-3">
                     <Home className="mt-0.5 size-5 text-primary" />
                     <div>
                       <p className="font-medium text-foreground">Start from home</p>

@@ -25,7 +25,9 @@ export type ContractStatus =
   | "PAID_OUT"
   | "CANCELLED"
   | "DISPUTED"
-  | "REFUNDED";
+  | "REFUNDED"
+  | "PAYMENT_FAILED"
+  | "EXPIRED";
 
 export type WalletTransactionStatus = "PENDING" | "COMPLETED" | "FAILED";
 
@@ -47,9 +49,21 @@ export type NotificationType =
 
 export type NotificationPriority = "low" | "medium" | "high" | "urgent";
 
+export enum ErrorCode {
+  UNAUTHORIZED = "UNAUTHORIZED",
+  FORBIDDEN = "FORBIDDEN",
+  NOT_FOUND = "NOT_FOUND",
+  VALIDATION_ERROR = "VALIDATION_ERROR",
+  STATE_VIOLATION = "STATE_VIOLATION",
+  INSUFFICIENT_FUNDS = "INSUFFICIENT_FUNDS",
+  PAYMENT_FAILED = "PAYMENT_FAILED",
+  INTERNAL_ERROR = "INTERNAL_ERROR",
+}
+
 export interface ApiEnvelope<T> {
   data: T;
   message?: string;
+  code?: string;
   meta?: Record<string, unknown>;
 }
 
@@ -126,6 +140,7 @@ export interface Proposal {
 export interface Contract {
   id: string;
   amount: number;
+  currency: string;
   status: ContractStatus | string;
   escrowReleased: boolean;
   clientId: string;
@@ -134,10 +149,15 @@ export interface Contract {
   artisanConfirmedCompletion: boolean;
   job: Job;
   proposal: Proposal;
+  client: Pick<User, "id" | "name" | "email">;
+  artisan: Pick<User, "id" | "name" | "email">;
   fundedAt?: string | null;
   startedAt?: string | null;
   completedAt?: string | null;
   escrowReleasedAt?: string | null;
+  clientName?: string;
+  artisanName?: string;
+  jobTitle?: string;
 }
 
 export type ChatMessageType = "TEXT" | "IMAGE" | "VIDEO" | "AUDIO" | "FILE";
@@ -307,6 +327,7 @@ export interface AdminUserRecord {
   role: UserRole;
   status: string;
   artisanVerified: boolean;
+  phone?: string | null;
   createdAt: string;
 }
 
@@ -393,6 +414,10 @@ export interface AdminDisputeRecord {
   artisanId: string;
   amount: number;
   status: string;
+  createdAt: string;
+  clientName?: string;
+  artisanName?: string;
+  contractTitle?: string;
   evidence?: {
     images?: string[];
     videos?: string[];
@@ -420,4 +445,15 @@ export interface AdminOverviewReport {
     platformFees: number;
     flaggedJobs: number;
   };
+}
+
+export interface AdminContractStats {
+  totalCount: number;
+  statusDistribution: Record<ContractStatus, number>;
+  totalVolume: number;
+  escrowVolume: number;
+  payoutVolume: number;
+  refundVolume: number;
+  averageValue: number;
+  activeContractCount: number;
 }

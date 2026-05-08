@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { getDashboardLinks, sharedLinks } from "@/components/app-shell/navigation";
+import { getDashboardLinks } from "@/components/app-shell/navigation";
 import type { User } from "@/types";
 
 const navItemVariants = {
@@ -17,17 +17,15 @@ const navItemVariants = {
 
 export default function SidebarNav({
   role,
-  unreadCount = 2,
 }: {
   role: User["role"];
-  unreadCount?: number;
 }) {
   const pathname = usePathname();
-  const navItems = [...(getDashboardLinks(role) ?? []), ...sharedLinks];
+  const navItems = [...(getDashboardLinks(role) ?? [])];
 
   return (
-    <nav className="space-y-0.5 flex flex-col">
-      {navItems.map(({ href, label, icon: Icon, badge }, i) => {
+    <nav className="space-y-2 flex flex-col">
+      {navItems.map(({ href, label, icon: Icon }, i) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
           <motion.div
@@ -42,7 +40,7 @@ export default function SidebarNav({
               className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "text-primary"
-                  : "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                  : "text-white hover:text-sidebar-foreground hover:bg-sidebar-accent"
               }`}
             >
               {active && (
@@ -54,11 +52,6 @@ export default function SidebarNav({
               )}
               <Icon className="relative z-10 size-4 flex-shrink-0" />
               <span className="relative z-10 flex-1">{label}</span>
-              {badge && unreadCount > 0 && (
-                <span className="relative z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive text-[10px] font-bold text-white px-1">
-                  {unreadCount > 9 ? "9+" : unreadCount}
-                </span>
-              )}
             </Link>
           </motion.div>
         );

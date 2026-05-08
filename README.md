@@ -29,6 +29,18 @@ The frontend handles:
 
 ---
 
+## Environment & Security
+
+Use `.env` only for local development and never commit it. The frontend expects `API_URL` or `NEXT_PUBLIC_API_URL` to point at the backend, and route protection now runs through `middleware.ts`.
+
+If a frontend or backend credential is exposed, rotate it before reusing the environment. Secret scanning runs in CI with Gitleaks, and you can run it locally with:
+
+```bash
+npx gitleaks dir .
+```
+
+---
+
 ## 3. 👤 User Roles
 
 ### Client

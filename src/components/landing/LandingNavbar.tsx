@@ -33,19 +33,19 @@ export default function LandingNavbar() {
       <header
         className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
           scrolled
-            ? "bg-[#0c1a42]/90 border-white/10 shadow-2xl shadow-black/30 backdrop-blur-xl"
-            : "bg-[#0f1c4d]/70 border-white/[0.08] backdrop-blur-md"
+            ? "bg-[#0c1a42] border-white/10 shadow-2xl shadow-black/30 backdrop-blur-xl"
+            : "bg-[#0f1c4d]/80 border-white/8 backdrop-blur-md"
         }`}
       >
         <div className="px-5 sm:px-6">
-          <div className="flex h-[60px] items-center justify-between">
+          <div className="flex h-15 items-center justify-between">
             {/* ── Logo ── */}
-            <Link href="/" className="flex items-center gap-2.5 flex-shrink-0">
+            <Link href="/" className="flex items-center gap-2.5 shrink-0">
               <div className="flex bg-primary rounded-lg p-1.5 shadow-md shadow-primary/30">
                 <ShieldCheck className="size-5 text-white" />
               </div>
               <span className="text-lg font-bold tracking-tight text-white">
-                Work<span className="text-blue-300">Sure</span>
+                Work<span className="text-info">Sure</span>
               </span>
             </Link>
 
@@ -55,7 +55,7 @@ export default function LandingNavbar() {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  className="relative px-4 py-2 text-[13px] font-medium text-blue-100/70 hover:text-white rounded-lg hover:bg-white/[0.06] transition-colors"
+                  className="relative px-4 py-2 text-[13px] font-medium text-primary-foreground/70 hover:text-white rounded-lg hover:bg-white/6 transition-colors"
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + i * 0.08, duration: 0.3 }}
@@ -66,19 +66,19 @@ export default function LandingNavbar() {
             </nav>
 
             {/* ── Desktop CTAs ── */}
-            <div className="hidden md:flex items-center gap-2.5 flex-shrink-0">
+            <div className="hidden md:flex items-center gap-2.5 shrink-0">
               <Button
                 asChild
                 variant="ghost"
                 size="sm"
-                className="text-[13px] text-blue-100/70 hover:text-white hover:bg-white/[0.06] h-9 px-4 rounded-lg"
+                className="text-[13px] text-primary-foreground/70 hover:text-white hover:bg-white/6 h-9 px-4 rounded-lg"
               >
                 <Link href="/auth/login">Sign In</Link>
               </Button>
               <Button
                 asChild
                 size="sm"
-                className="h-9 px-5 rounded-lg bg-white text-[color:var(--brand-hero-via)] hover:bg-blue-50 font-semibold text-[13px] shadow-lg shadow-black/15"
+                className="h-9 px-5 rounded-lg bg-white text-(--brand-hero-via) hover:bg-muted font-semibold text-[13px] shadow-lg shadow-black/15"
               >
                 <Link href="/auth/register">Get Started</Link>
               </Button>
@@ -104,7 +104,7 @@ export default function LandingNavbar() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              className="md:hidden border-t border-white/[0.08] overflow-hidden"
+              className="md:hidden border-t border-white/8 overflow-hidden"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -115,25 +115,25 @@ export default function LandingNavbar() {
                   <a
                     key={link.label}
                     href={link.href}
-                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-blue-100/80 hover:bg-white/[0.06] hover:text-white transition-colors"
+                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-primary-foreground/80 hover:bg-white/6 hover:text-white transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
                   </a>
                 ))}
-                <div className="pt-2 border-t border-white/[0.08] flex gap-2 mt-1">
+                <div className="pt-2 border-t border-white/8 flex gap-2 mt-1">
                   <Button
                     asChild
                     variant="ghost"
                     size="sm"
-                    className="flex-1 text-blue-100/80 hover:text-white hover:bg-white/[0.06] h-9 rounded-lg"
+                    className="flex-1 text-primary-foreground/80 hover:text-white hover:bg-white/6 h-9 rounded-lg"
                   >
                     <Link href="/auth/login">Sign In</Link>
                   </Button>
                   <Button
                     asChild
                     size="sm"
-                    className="flex-1 bg-white text-[#1a3178] hover:bg-blue-50 font-semibold h-9 rounded-lg"
+                    className="flex-1 bg-white text-[#1a3178] hover:bg-muted font-semibold h-9 rounded-lg"
                   >
                     <Link href="/auth/register">Get Started</Link>
                   </Button>

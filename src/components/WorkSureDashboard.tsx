@@ -109,12 +109,12 @@ export default function WorkSureDashboard({
       };
     }
 
-    return {
-      title: "Admin workspace",
-      description:
-        "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
-      emphasis: "Trust oversight",
-    };
+    // return {
+    //   title: "Admin workspace",
+    //   description:
+    //     "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
+    //   emphasis: "Trust oversight",
+    // };
   }, [roleView]);
 
   const visibleJobs =
@@ -135,24 +135,27 @@ export default function WorkSureDashboard({
   return (
     <main className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="border-border/90 bg-white">
-          <CardHeader className="space-y-4">
-            <Badge variant="outline" className="w-fit rounded-full px-3 py-1">
+        <Card className="relative overflow-hidden border-none bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white shadow-2xl">
+          {/* Decorative radial flare */}
+          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
+          
+          <CardHeader className="relative z-10 space-y-4">
+            <Badge variant="outline" className="w-fit rounded-full border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-md">
               {roleView.toLowerCase()} dashboard
             </Badge>
             <div className="space-y-2">
-              <CardTitle className="text-3xl tracking-tight">{screenCopy.title}</CardTitle>
-              <CardDescription className="max-w-2xl text-base leading-7">
+              <CardTitle className="text-3xl font-bold tracking-tight text-white">{screenCopy.title}</CardTitle>
+              <CardDescription className="max-w-2xl text-base leading-7 text-white/80">
                 {screenCopy.description}
               </CardDescription>
             </div>
-            <div className="grid gap-3 rounded-lg bg-surface-muted/70 p-4 md:grid-cols-4">
+            <div className="grid gap-3 rounded-xl bg-white/5 p-4 backdrop-blur-sm md:grid-cols-4 border border-white/10">
               {workflowSteps.map(({ label, icon: Icon }, index) => (
-                <div key={label} className="flex items-center gap-3 rounded-lg bg-white px-4 py-3 ring-1 ring-border">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary-soft">
-                    <Icon className={`size-4 ${index === workflowSteps.length - 1 ? "text-success" : "text-primary-dark"}`} />
+                <div key={label} className="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-3 border border-white/10 backdrop-blur-md">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 border border-white/20">
+                    <Icon className={`size-4 ${index === workflowSteps.length - 1 ? "text-warning" : "text-white"}`} />
                   </div>
-                  <p className="text-sm font-medium text-foreground">{label}</p>
+                  <p className="text-sm font-medium text-white">{label}</p>
                 </div>
               ))}
             </div>
@@ -160,24 +163,24 @@ export default function WorkSureDashboard({
         </Card>
 
         <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
-          <Card className="border-border/90 bg-white">
-            <CardContent className="px-5 py-5">
-              <p className="text-sm text-text-secondary">Open jobs</p>
-              <p className="mt-2 text-3xl font-semibold text-secondary">{jobs?.length ?? 0}</p>
+          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="px-6 py-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Open jobs</p>
+              <p className="mt-2 text-4xl font-bold text-[#0f1c4d]">{jobs?.length ?? 0}</p>
             </CardContent>
           </Card>
-          <Card className="border-border/90 bg-white">
-            <CardContent className="px-5 py-5">
-              <p className="text-sm text-text-secondary">{screenCopy.emphasis}</p>
-              <p className="mt-2 text-3xl font-semibold text-primary-dark">
+          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="px-6 py-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{screenCopy.emphasis}</p>
+              <p className="mt-2 text-4xl font-bold text-primary">
                 {roleView === "ADMIN" ? activeContracts.length : contracts?.length ?? 0}
               </p>
             </CardContent>
           </Card>
-          <Card className="border-border/90 bg-white">
-            <CardContent className="px-5 py-5">
-              <p className="text-sm text-text-secondary">Ready to release</p>
-              <p className="mt-2 text-3xl font-semibold text-success">{escrowReadyContracts.length}</p>
+          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+            <CardContent className="px-6 py-6">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ready to release</p>
+              <p className="mt-2 text-4xl font-bold text-success">{escrowReadyContracts.length}</p>
             </CardContent>
           </Card>
         </div>
@@ -305,7 +308,7 @@ export default function WorkSureDashboard({
         </section>
       ) : null}
 
-      {roleView === "ADMIN" ? (
+      {/* {roleView === "ADMIN" ? (
         <section className="grid gap-4 lg:grid-cols-3">
           <Card className="border-border/90 bg-white lg:col-span-2">
             <CardHeader>
@@ -334,7 +337,7 @@ export default function WorkSureDashboard({
             </CardContent>
           </Card>
         </section>
-      ) : null}
+      ) : null} */}
 
       <section className="grid gap-4 xl:grid-cols-3">
         <Card className="border-border/90 bg-white">

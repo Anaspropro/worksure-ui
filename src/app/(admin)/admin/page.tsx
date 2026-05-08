@@ -1,5 +1,5 @@
 import AdminDashboardWorkspace from "@/components/features/admin/AdminDashboardWorkspace";
 
-export default function AdminDashboardPage() {
+export default function AdminHomePage() {
   return <AdminDashboardWorkspace />;
 }
