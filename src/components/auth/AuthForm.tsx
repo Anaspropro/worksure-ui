@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { useLogin, useRegister, useUser } from "@/hooks/useAuth";
-import { getDashboardPathForRole } from "@/proxy";
+import { getDashboardPathForRole } from "@/api-client";
 import { Button } from "@/components/ui/button";
 import {
   InputGroup,

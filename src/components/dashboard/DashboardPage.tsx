@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 import WorkspaceDashboard from "@/components/dashboard/workspace/WorkspaceDashboard";
 import { useUser } from "@/hooks/useAuth";
-import { getDashboardPathForRole } from "@/proxy";
+import { getDashboardPathForRole } from "@/api-client";
 import type { UserRole } from "@/types";
 
 export default function DashboardPage({

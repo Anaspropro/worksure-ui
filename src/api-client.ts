@@ -1,37 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import type { ApiEnvelope, AuthSuccess, User, UserRole } from "@/types";
 
-const PROTECTED_PREFIXES = [
-  "/dashboard",
-  "/admin",
-  "/wallet",
-  "/profile",
-  "/jobs",
-  "/contracts",
-  "/kyc",
-  "/reviews",
-  "/notifications",
-];
-const AUTH_PREFIXES = ["/auth/login", "/auth/register"];
-const ADMIN_PREFIX = "/admin";
-const API_URL =
-  process.env.API_URL?.replace(/\/$/, "") ??
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 const INTERNAL_API_PREFIX = "/api/proxy";
 const SESSION_HINT_KEY = "auth_present";
 const SESSION_HINT_VALUE = "1";
-
-function isProtectedPath(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
-
-function isAdminPath(pathname: string): boolean {
-  return pathname.startsWith(ADMIN_PREFIX);
-}
-
-function isAuthPath(pathname: string): boolean {
-  return AUTH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
-}
 
 type MeResponse = {
   data?: {
@@ -52,55 +24,7 @@ export function getDashboardPathForRole(role: UserRole): string {
   }
 }
 
-export async function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const token = request.cookies.get("token");
 
-  if (!API_URL && (isProtectedPath(pathname) || isAuthPath(pathname))) {
-    const response = NextResponse.redirect(new URL("/auth/login", request.url));
-    response.cookies.delete("token");
-    response.cookies.delete("refresh_token");
-    return response;
-  }
-
-  if (isProtectedPath(pathname) || (isAuthPath(pathname) && token?.value)) {
-    if (!token?.value) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
-    }
-
-    try {
-      const meRes = await fetch(`${API_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token.value}` },
-        cache: "no-store",
-      });
-
-      if (!meRes.ok) {
-        const response = NextResponse.redirect(new URL("/auth/login", request.url));
-        response.cookies.delete("token");
-        response.cookies.delete("refresh_token");
-        return response;
-      }
-
-      const body = (await meRes.json()) as MeResponse;
-      const currentRole = body.data?.role;
-
-      if (isAuthPath(pathname) && currentRole) {
-        return NextResponse.redirect(new URL(getDashboardPathForRole(currentRole), request.url));
-      }
-
-      if (isAdminPath(pathname) && currentRole !== "ADMIN") {
-        return NextResponse.redirect(new URL("/dashboard", request.url));
-      }
-    } catch {
-      const response = NextResponse.redirect(new URL("/auth/login", request.url));
-      response.cookies.delete("token");
-      response.cookies.delete("refresh_token");
-      return response;
-    }
-  }
-
-  return NextResponse.next();
-}
 
 export function hasSessionHint(): boolean {
   if (typeof window === "undefined") {
@@ -257,17 +181,4 @@ export async function logoutRequest(): Promise<void> {
   });
 }
 
-export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/admin/:path*",
-    "/wallet/:path*",
-    "/profile/:path*",
-    "/jobs/:path*",
-    "/contracts/:path*",
-    "/kyc/:path*",
-    "/reviews/:path*",
-    "/notifications/:path*",
-    "/auth/:path*",
-  ],
-};
+

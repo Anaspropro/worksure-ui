@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { io, type Socket } from "socket.io-client";
-import { proxyFetch, proxyFetchEnvelope } from "@/proxy";
+import { proxyFetch, proxyFetchEnvelope } from "@/api-client";
 import type { ApiEnvelope, ChatConversation, ChatMessage } from "@/types";
 
 const CHAT_SOCKET_URL =

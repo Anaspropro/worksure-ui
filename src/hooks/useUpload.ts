@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { proxyFetch } from "@/proxy";
+import { proxyFetch } from "@/api-client";
 
 interface SignedParams {
   signature: string;

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch, proxyFetchRaw } from "@/proxy";
+import { proxyFetch, proxyFetchRaw } from "@/api-client";
 import type { ApiPagination, Job, JobStatus, UserRole } from "@/types";
 
 export type JobsQuery = {

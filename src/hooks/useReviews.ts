@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetchRaw } from "@/proxy";
+import { proxyFetchRaw } from "@/api-client";
 import type { ApiPagination, Review, ReviewStats } from "@/types";
 
 export type ReviewsQuery = {

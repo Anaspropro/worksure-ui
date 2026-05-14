@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch } from "@/proxy";
+import { proxyFetch } from "@/api-client";
 
 import { useArtisanProfile, useSaveArtisanProfile } from "./useProfile";
 

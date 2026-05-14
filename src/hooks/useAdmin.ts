@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch, proxyFetchRaw } from "@/proxy";
+import { proxyFetch, proxyFetchRaw } from "@/api-client";
 import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job } from "@/types";
 
 export function useAdminUsers(options: { enabled?: boolean } = {}) {

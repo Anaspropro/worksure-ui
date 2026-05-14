@@ -9,7 +9,7 @@ import {
   markSessionHint,
   logoutRequest,
   register,
-} from "@/proxy";
+} from "@/api-client";
 import type { AuthSuccess, User } from "@/types/index";
 
 export function useUser() {

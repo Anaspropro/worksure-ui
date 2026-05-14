@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch } from "@/proxy";
+import { proxyFetch } from "@/api-client";
 import type { Contract, ContractStatus } from "@/types";
 
 export function useContracts(status?: ContractStatus | string, options: { enabled?: boolean } = {}) {

@@ -1,8 +1,96 @@
-import type { NextRequest } from "next/server";
-import { proxy } from "./src/proxy";
+import { NextRequest, NextResponse } from "next/server";
 
-export function middleware(request: NextRequest) {
-  return proxy(request);
+const PROTECTED_PREFIXES = [
+  "/dashboard",
+  "/admin",
+  "/wallet",
+  "/profile",
+  "/jobs",
+  "/contracts",
+  "/kyc",
+  "/reviews",
+  "/notifications",
+];
+const AUTH_PREFIXES = ["/auth/login", "/auth/register"];
+const ADMIN_PREFIX = "/admin";
+
+function isProtectedPath(pathname: string): boolean {
+  return PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+function isAdminPath(pathname: string): boolean {
+  return pathname.startsWith(ADMIN_PREFIX);
+}
+
+function isAuthPath(pathname: string): boolean {
+  return AUTH_PREFIXES.some((prefix) => pathname.startsWith(prefix));
+}
+
+function getDashboardPathForRole(role: string): string {
+  switch (role) {
+    case "CLIENT":
+      return "/dashboard/client";
+    case "ARTISAN":
+      return "/dashboard/artisan";
+    case "ADMIN":
+      return "/admin";
+    default:
+      return "/dashboard";
+  }
+}
+
+export async function middleware(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const token = request.cookies.get("token");
+
+  const API_URL =
+    process.env.API_URL?.replace(/\/$/, "") ??
+    process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+
+  if (!API_URL && (isProtectedPath(pathname) || isAuthPath(pathname))) {
+    const response = NextResponse.redirect(new URL("/auth/login", request.url));
+    response.cookies.delete("token");
+    response.cookies.delete("refresh_token");
+    return response;
+  }
+
+  if (isProtectedPath(pathname) || (isAuthPath(pathname) && token?.value)) {
+    if (!token?.value) {
+      return NextResponse.redirect(new URL("/auth/login", request.url));
+    }
+
+    try {
+      const meRes = await fetch(`${API_URL}/auth/me`, {
+        headers: { Authorization: `Bearer ${token.value}` },
+        cache: "no-store",
+      });
+
+      if (!meRes.ok) {
+        const response = NextResponse.redirect(new URL("/auth/login", request.url));
+        response.cookies.delete("token");
+        response.cookies.delete("refresh_token");
+        return response;
+      }
+
+      const body = await meRes.json();
+      const currentRole = body?.data?.role;
+
+      if (isAuthPath(pathname) && currentRole) {
+        return NextResponse.redirect(new URL(getDashboardPathForRole(currentRole), request.url));
+      }
+
+      if (isAdminPath(pathname) && currentRole !== "ADMIN") {
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      }
+    } catch {
+      const response = NextResponse.redirect(new URL("/auth/login", request.url));
+      response.cookies.delete("token");
+      response.cookies.delete("refresh_token");
+      return response;
+    }
+  }
+
+  return NextResponse.next();
 }
 
 export const config = {
