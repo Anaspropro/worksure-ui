@@ -22,7 +22,7 @@ The frontend handles:
 * Next.js (App Router)
 * TypeScript
 * Tailwind CSS + ShadCN
-* React Query
+* React Query (Tanstack query)
 * React Hook Form + Zod
 * Fetch API
 * JWT (HttpOnly cookies)
