@@ -60,7 +60,7 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
-      const clientIp = request.ip || request.headers.get("x-forwarded-for") || "";
+      const clientIp = request.headers.get("x-forwarded-for") || "";
       const userAgent = request.headers.get("user-agent") || "";
       const customHeaders: Record<string, string> = { 
         Authorization: `Bearer ${token.value}` 
