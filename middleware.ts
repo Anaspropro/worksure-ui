@@ -60,8 +60,17 @@ export async function middleware(request: NextRequest) {
     }
 
     try {
+      const clientIp = request.ip || request.headers.get("x-forwarded-for") || "";
+      const userAgent = request.headers.get("user-agent") || "";
+      const customHeaders: Record<string, string> = { 
+        Authorization: `Bearer ${token.value}` 
+      };
+      
+      if (clientIp) customHeaders["x-forwarded-for"] = clientIp;
+      if (userAgent) customHeaders["user-agent"] = userAgent;
+
       const meRes = await fetch(`${API_URL}/auth/me`, {
-        headers: { Authorization: `Bearer ${token.value}` },
+        headers: customHeaders,
         cache: "no-store",
       });
 
