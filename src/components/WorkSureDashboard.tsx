@@ -109,12 +109,12 @@ export default function WorkSureDashboard({
       };
     }
 
-    // return {
-    //   title: "Admin workspace",
-    //   description:
-    //     "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
-    //   emphasis: "Trust oversight",
-    // };
+    return {
+      title: "Admin workspace",
+      description:
+        "Monitor live marketplace activity and maintain trust across contracts, users, verification, and disputes.",
+      emphasis: "Trust oversight",
+    };
   }, [roleView]);
 
   const visibleJobs =
