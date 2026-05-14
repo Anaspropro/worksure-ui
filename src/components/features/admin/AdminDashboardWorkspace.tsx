@@ -1,31 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import AppShell from "@/components/app-shell/AppShell";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAdminDisputes, useAdminReports, useAdminUsers } from "@/hooks/useAdmin";
-import { useUser } from "@/hooks/useAuth";
+import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 
 export default function AdminDashboardWorkspace() {
-  const userQuery = useUser();
-  const user = userQuery.data;
-  const canLoadProtectedData = Boolean(user);
-  const usersQuery = useAdminUsers({ enabled: canLoadProtectedData });
-  const disputesQuery = useAdminDisputes({ enabled: canLoadProtectedData });
-  const reportsQuery = useAdminReports("overview", { enabled: canLoadProtectedData });
-
-  if (!user) {
-    return null;
-  }
+  const usersQuery = useAdminUsers();
+  const disputesQuery = useAdminDisputes();
+  const reportsQuery = useAdminReports("overview");
 
   const users = usersQuery.data?.data ?? [];
   const disputes = disputesQuery.data?.data ?? [];
   const report = reportsQuery.data;
 
   return (
-    <AppShell user={user}>
-      <main className="space-y-6">
+    <main className="space-y-6">
         <Card className="border-border/80 bg-[linear-gradient(135deg,#ecfdf5_0%,#ffffff_55%,#eff6ff_100%)]">
           <CardHeader>
             <CardTitle className="text-3xl tracking-tight">
@@ -162,6 +151,5 @@ export default function AdminDashboardWorkspace() {
           </Card>
         </section>
       </main>
-    </AppShell>
   );
 }

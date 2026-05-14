@@ -48,9 +48,17 @@ export function useSendMessage() {
   return useMutation<
     ChatMessage,
     Error,
-    { conversationId: string; content?: string; file?: File | null }
+    {
+      conversationId: string;
+      content?: string;
+      file?: File | null;
+      fileUrl?: string;
+      fileType?: string;
+      fileName?: string;
+      fileSize?: number;
+    }
   >({
-    mutationFn: async ({ conversationId, content, file }) => {
+    mutationFn: async ({ conversationId, content, file, ...preUploaded }) => {
       let uploaded:
         | {
             fileUrl: string;
@@ -58,9 +66,9 @@ export function useSendMessage() {
             fileName?: string | null;
             fileSize?: number | null;
           }
-        | undefined;
+        | undefined = preUploaded.fileUrl ? (preUploaded as any) : undefined;
 
-      if (file) {
+      if (file && !uploaded) {
         const body = new FormData();
         body.append("file", file);
         uploaded = await proxyFetch<{

@@ -19,26 +19,34 @@ export interface NavItem {
   badge?: boolean;
 }
 
-export const sharedLinks: NavItem[] = [
-  { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
-  { href: "/contracts", label: "Contracts", icon: FileText },
-  { href: "/wallet", label: "Payments", icon: CreditCard },
-  { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
-  { href: "/profile", label: "Settings", icon: Settings },
-];
 
-export function getDashboardLinks(role: User["role"]): NavItem[] {
+export function getDashboardLinks(role: User["role"]) {
   return (
     {
-      CLIENT: [{ href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard }],
+      CLIENT: [
+        { href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard },
+        { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
+        { href: "/contracts", label: "Contracts", icon: FileText },
+        { href: "/wallet", label: "Payments", icon: CreditCard },
+        { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
+        { href: "/profile", label: "Settings", icon: Settings },
+      ],
       ARTISAN: [
         { href: "/dashboard/artisan", label: "Dashboard", icon: LayoutDashboard },
         { href: "/kyc/status", label: "Verification", icon: FileUser },
+        { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
+        { href: "/contracts", label: "Contracts", icon: FileText },
+        { href: "/wallet", label: "Payments", icon: CreditCard },
+        { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
+        { href: "/profile", label: "Settings", icon: Settings },
       ],
       ADMIN: [
-        { href: "/dashboard/admin", label: "Dashboard", icon: ShieldCheck },
+        { href: "/admin", label: "Dashboard", icon: ShieldCheck },
         { href: "/admin/users", label: "Users", icon: ShieldPlus },
-        { href: "/admin/disputes", label: "Disputes", icon: FileText },
+        { href: "/admin/kyc", label: "Verification", icon: FileUser },
+        { href: "/admin/jobs", label: "Jobs", icon: BriefcaseBusiness },
+        { href: "/admin/contracts", label: "Contracts", icon: FileText },
+        { href: "/admin/disputes", label: "Disputes", icon: ShieldPlus },
       ],
     }[role] ?? []
   );

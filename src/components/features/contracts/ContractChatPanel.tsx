@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ChatWindow from "@/components/chat/ChatWindow";
 import { useContractConversation, useConversationMessages, useConversationSocket, useSendMessage } from "@/hooks/useChat";
+import { useUpload } from "@/hooks/useUpload";
 import type { Contract, User } from "@/types";
 
 export default function ContractChatPanel({
@@ -14,12 +15,64 @@ export default function ContractChatPanel({
 }) {
   const [draft, setDraft] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const { uploadFile, isUploading } = useUpload();
+  
   const conversationQuery = useContractConversation(contract.id, { enabled: Boolean(user) });
   const conversation = conversationQuery.data;
   const messagesQuery = useConversationMessages(conversation?.id, { enabled: Boolean(conversation?.id) });
   const messages = messagesQuery.data?.data ?? [];
   const sendMessageMutation = useSendMessage();
   const { isConnected, socketReady, socket } = useConversationSocket(conversation?.id, Boolean(conversation?.id));
+
+  const handleSend = async () => {
+    if (!conversation || (!draft.trim() && !file)) {
+      return;
+    }
+
+    let uploadedInfo: any = undefined;
+
+    if (file) {
+      const result = await uploadFile(file);
+      if (result) {
+        uploadedInfo = {
+          fileUrl: result.secure_url,
+          fileType: file.type,
+          fileName: file.name,
+          fileSize: result.bytes,
+        };
+      }
+    }
+
+    if (socketReady && isConnected && socket) {
+      socket.emit("sendMessage", {
+        conversationId: conversation.id,
+        content: draft.trim() || undefined,
+        type: uploadedInfo
+          ? uploadedInfo.fileType?.startsWith("image/")
+            ? "IMAGE"
+            : uploadedInfo.fileType?.startsWith("video/")
+              ? "VIDEO"
+              : uploadedInfo.fileType?.startsWith("audio/")
+                ? "AUDIO"
+                : "FILE"
+          : "TEXT",
+        ...uploadedInfo,
+      });
+      setDraft("");
+      setFile(null);
+      return;
+    }
+
+    await sendMessageMutation.mutateAsync({
+      conversationId: conversation.id,
+      content: draft,
+      file: null, // File is already uploaded or handled
+      ...uploadedInfo,
+    } as any);
+    
+    setDraft("");
+    setFile(null);
+  };
 
   return (
     <ChatWindow
@@ -30,60 +83,11 @@ export default function ContractChatPanel({
       file={file}
       isConnected={isConnected}
       socketReady={socketReady}
-      pending={sendMessageMutation.status === "pending"}
+      pending={sendMessageMutation.status === "pending" || isUploading}
       onDraftChange={setDraft}
       onFileChange={setFile}
       onClearFile={() => setFile(null)}
-      onSend={async () => {
-        if (!conversation) {
-          return;
-        }
-
-        if (socketReady && isConnected && socket) {
-          const uploaded = file
-            ? await (async () => {
-                const body = new FormData();
-                body.append("file", file);
-                const response = await fetch("/api/proxy/upload", {
-                  method: "POST",
-                  body,
-                });
-                return (await response.json()) as {
-                  fileUrl: string;
-                  fileType?: string | null;
-                  fileName?: string | null;
-                  fileSize?: number | null;
-                };
-              })()
-            : undefined;
-
-          socket.emit("sendMessage", {
-            conversationId: conversation.id,
-            content: draft.trim() || undefined,
-            type: uploaded
-              ? uploaded.fileType?.startsWith("image/")
-                ? "IMAGE"
-                : uploaded.fileType?.startsWith("video/")
-                  ? "VIDEO"
-                  : uploaded.fileType?.startsWith("audio/")
-                    ? "AUDIO"
-                    : "FILE"
-              : "TEXT",
-            ...uploaded,
-          });
-          setDraft("");
-          setFile(null);
-          return;
-        }
-
-        await sendMessageMutation.mutateAsync({
-          conversationId: conversation.id,
-          content: draft,
-          file,
-        });
-        setDraft("");
-        setFile(null);
-      }}
+      onSend={handleSend}
     />
   );
 }

@@ -118,7 +118,7 @@ function ContractRow({ contract, user, onFund, onConfirm, onRelease, isBusy }: {
           <StatusBadge status={contract.status} />
         </div>
         <p className="text-xs text-muted-foreground mt-0.5">
-          {isClient ? `with ${contract.proposal.artisan.name}` : `via ${contract.proposal.client.name}`}
+          {isClient ? `with ${contract.artisan?.name}` : `via ${contract.client?.name}`}
         </p>
       </div>
 

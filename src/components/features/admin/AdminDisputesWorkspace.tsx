@@ -1,133 +1,285 @@
 "use client";
 
-import { useState } from "react";
-import { toast } from "sonner";
-import AppShell from "@/components/app-shell/AppShell";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { useState, useMemo } from "react";
+import { 
+  ShieldAlert, 
+  Search, 
+  Filter, 
+  MessageSquare, 
+  CheckCircle2, 
+  XCircle, 
+  AlertTriangle,
+  History
+} from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAdminDisputes, useResolveAdminDispute } from "@/hooks/useAdmin";
-import { useUser } from "@/hooks/useAuth";
-import { formatCurrency, formatDate } from "@/lib/formatters";
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardHeader, 
+  CardTitle, 
+  Button, 
+  Input, 
+  Badge,  
+  Textarea 
+} from "@/components/ui";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { format } from "date-fns";
+
+const cardVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" as const }
+  })
+};
 
 export default function AdminDisputesWorkspace() {
-  const userQuery = useUser();
-  const user = userQuery.data;
-  const disputesQuery = useAdminDisputes({ enabled: Boolean(user) });
-  const resolveDisputeMutation = useResolveAdminDispute();
-  const [notesById, setNotesById] = useState<Record<string, string>>({});
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
+  const [resolutionNotes, setResolutionNotes] = useState("");
 
-  if (!user) {
-    return null;
-  }
+  const { data: disputes, isLoading } = useAdminDisputes();
+  const resolveMutation = useResolveAdminDispute();
+
+  const filteredDisputes = useMemo(() => {
+    return disputes?.data.filter(d => 
+      d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (d as any).contractId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (d as any).clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (d as any).artisanName?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [disputes, searchTerm]);
+
+  const selectedDispute = filteredDisputes?.find(d => d.id === selectedDisputeId);
+
+  const handleResolve = async (decision: "REFUND_CLIENT" | "PAY_ARTISAN") => {
+    if (!selectedDisputeId) return;
+
+    const toastId = toast.loading("Resolving dispute...");
+    try {
+      await resolveMutation.mutateAsync({
+        disputeId: selectedDisputeId,
+        decision,
+        notes: resolutionNotes
+      });
+      toast.success("Dispute resolved successfully", { id: toastId });
+      setSelectedDisputeId(null);
+      setResolutionNotes("");
+    } catch (err) {
+      toast.error("Failed to resolve dispute", { id: toastId });
+    }
+  };
 
   return (
-    <AppShell user={user}>
-      <main className="space-y-6">
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle className="text-3xl tracking-tight">Dispute Resolution Workspace</CardTitle>
-            <CardDescription className="max-w-3xl text-base leading-7">
-              Review open disputes and decide whether escrow should return to the client or pay out to the artisan.
-            </CardDescription>
-          </CardHeader>
-        </Card>
-
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle>Dispute queue</CardTitle>
-            <CardDescription>Admin actions here map directly to backend dispute endpoints.</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {disputesQuery.data?.data.length ? (
-              disputesQuery.data.data.map((dispute) => (
-                <div key={dispute.id} className="rounded-2xl border border-border bg-background/75 p-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="font-semibold text-foreground">Dispute {dispute.id}</p>
-                      <p className="text-sm text-muted-foreground">
-                        Contract: {dispute.contractId ?? "N/A"} - Amount: {formatCurrency(dispute.amount)}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        Client: {dispute.clientId} - Artisan: {dispute.artisanId}
-                      </p>
-                    </div>
-                    <Badge variant={dispute.status === "RESOLVED" ? "secondary" : "warning"}>{dispute.status}</Badge>
-                  </div>
-
-                  <div className="mt-4 grid gap-3 lg:grid-cols-[1fr_auto]">
-                    <Textarea
-                      value={notesById[dispute.id] ?? ""}
-                      onChange={(event) =>
-                        setNotesById((current) => ({
-                          ...current,
-                          [dispute.id]: event.target.value,
-                        }))
-                      }
-                      placeholder="Resolution notes"
-                      className="min-h-24"
-                    />
-                    <div className="flex flex-col gap-2">
-                      <Button
-                        size="sm"
-                        onClick={() => {
-                          const toastId = toast.loading("Resolving dispute...");
-                          resolveDisputeMutation.mutate(
-                            {
-                              disputeId: dispute.id,
-                              decision: "REFUND_CLIENT",
-                              notes: notesById[dispute.id],
-                            },
-                            {
-                              onSuccess: () => toast.success("Client refund approved.", { id: toastId }),
-                              onError: (error) => toast.error(error.message || "Unable to resolve dispute.", { id: toastId }),
-                            },
-                          );
-                        }}
-                        disabled={dispute.status === "RESOLVED" || resolveDisputeMutation.status === "pending"}
-                      >
-                        Refund client
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          const toastId = toast.loading("Resolving dispute...");
-                          resolveDisputeMutation.mutate(
-                            {
-                              disputeId: dispute.id,
-                              decision: "PAY_ARTISAN",
-                              notes: notesById[dispute.id],
-                            },
-                            {
-                              onSuccess: () => toast.success("Artisan payout approved.", { id: toastId }),
-                              onError: (error) => toast.error(error.message || "Unable to resolve dispute.", { id: toastId }),
-                            },
-                          );
-                        }}
-                        disabled={dispute.status === "RESOLVED" || resolveDisputeMutation.status === "pending"}
-                      >
-                        Pay artisan
-                      </Button>
-                    </div>
-                  </div>
-
-                  {dispute.resolution ? (
-                    <p className="mt-3 text-sm text-muted-foreground">
-                      Resolved with {dispute.resolution.decision} on {formatDate(dispute.resolution.resolvedAt)}
-                    </p>
-                  ) : null}
-                </div>
-              ))
-            ) : (
-              <div className="rounded-2xl border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
-                No disputes found right now.
+    <div className="space-y-8">
+        {/* ── Header ─────────────────────────────────────────────────── */}
+        <section className="relative overflow-hidden rounded-2xl border-none bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] p-8 text-white shadow-2xl">
+          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
+          <div className="relative z-10 space-y-4">
+            <Badge variant="outline" className="rounded-full border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-md">
+              Admin Governance
+            </Badge>
+            <div className="flex items-center justify-between">
+              <div className="space-y-2">
+                <h1 className="text-4xl font-bold tracking-tight">Dispute Resolution</h1>
+                <p className="max-w-2xl text-lg text-white/80">
+                  Monitor and resolve conflicts between clients and artisans with fairness and visibility.
+                </p>
               </div>
-            )}
-          </CardContent>
-        </Card>
-      </main>
-    </AppShell>
+              <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md lg:flex">
+                <ShieldAlert className="size-8 text-warning" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ── Main Layout ────────────────────────────────────────────── */}
+        <div className="grid gap-8 lg:grid-cols-[1fr_400px]">
+          <div className="space-y-6">
+            {/* Search & Filters */}
+            <div className="flex gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+                <Input 
+                  placeholder="Search by ID, name, or contract..." 
+                  className="pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <Button variant="outline" className="gap-2">
+                <Filter className="size-4" />
+                Filter
+              </Button>
+            </div>
+
+            {/* Disputes List */}
+            <div className="grid gap-4">
+              {isLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-32 w-full rounded-xl" />
+                ))
+              ) : filteredDisputes?.length === 0 ? (
+                <Card className="flex flex-col items-center justify-center py-12 text-center border-dashed">
+                  <AlertTriangle className="size-12 text-muted-foreground/40 mb-4" />
+                  <p className="text-lg font-medium text-muted-foreground">No active disputes found</p>
+                </Card>
+              ) : (
+                filteredDisputes?.map((dispute, i) => (
+                  <motion.div
+                    key={dispute.id}
+                    custom={i}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                  >
+                    <Card 
+                      className={`cursor-pointer transition-all hover:shadow-md border-border/60 ${selectedDisputeId === dispute.id ? 'ring-2 ring-primary ring-offset-2' : ''}`}
+                      onClick={() => setSelectedDisputeId(dispute.id)}
+                    >
+                      <CardContent className="p-6">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-mono text-muted-foreground uppercase">#{dispute.id.split('-')[0]}</span>
+                              <Badge variant={dispute.status === "RESOLVED" ? "secondary" : "warning"}>{dispute.status}</Badge>
+                            </div>
+                            <h3 className="font-semibold text-lg">{(dispute as any).contractTitle || "Untitled Contract"}</h3>
+                            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1.5"><XCircle className="size-3.5" /> {(dispute as any).clientName || dispute.clientId}</span>
+                              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-3.5" /> {(dispute as any).artisanName || dispute.artisanId}</span>
+                            </div>
+                          </div>
+                          <div className="text-right space-y-1">
+                            <p className="font-bold text-lg text-primary">₦{dispute.amount.toLocaleString()}</p>
+                            <p className="text-xs text-muted-foreground">{format(new Date(dispute.createdAt), "MMM d, yyyy")}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
+                ))
+              )}
+            </div>
+          </div>
+
+          {/* ── Detail Panel ─────────────────────────────────────────── */}
+          <aside className="space-y-6">
+            <AnimatePresence mode="wait">
+              {selectedDispute ? (
+                <motion.div
+                  key={selectedDispute.id}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                >
+                  <Card className="sticky top-8 border-border/60 bg-white shadow-xl">
+                    <CardHeader className="border-b bg-muted/30">
+                      <CardTitle className="text-lg">Dispute Details</CardTitle>
+                      <CardDescription>Review evidence and resolve</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-6">
+                      <div className="space-y-4">
+                        <div className="rounded-lg bg-danger/5 border border-danger/10 p-4">
+                          <p className="text-sm font-medium text-danger mb-1 flex items-center gap-2">
+                            <AlertTriangle className="size-4" />
+                            Complaint Reason
+                          </p>
+                          <p className="text-sm leading-relaxed text-muted-foreground">
+                            {disputeReason(selectedDispute) || "No specific reason provided."}
+                          </p>
+                        </div>
+
+                        <div className="space-y-2">
+                          <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+                            <History className="size-4" />
+                            Context
+                          </p>
+                          <div className="grid gap-2 text-sm">
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Contract ID:</span>
+                              <span className="font-medium">#{(selectedDispute as any).contractId?.split('-')[0]}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="text-muted-foreground">Date Opened:</span>
+                              <span className="font-medium">{format(new Date(selectedDispute.createdAt), "PPp")}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {selectedDispute.status !== "RESOLVED" && (
+                          <div className="space-y-4 pt-4 border-t">
+                            <div className="space-y-2">
+                              <label className="text-sm font-medium flex items-center gap-2">
+                                <MessageSquare className="size-4" />
+                                Resolution Notes
+                              </label>
+                              <Textarea 
+                                placeholder="Explain your decision..."
+                                className="min-h-24 resize-none"
+                                value={resolutionNotes}
+                                onChange={(e) => setResolutionNotes(e.target.value)}
+                              />
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <Button 
+                                variant="destructive" 
+                                className="w-full"
+                                disabled={resolveMutation.isPending}
+                                onClick={() => handleResolve("REFUND_CLIENT")}
+                              >
+                                Refund Client
+                              </Button>
+                              <Button 
+                                className="w-full bg-success hover:bg-success/90"
+                                disabled={resolveMutation.isPending}
+                                onClick={() => handleResolve("PAY_ARTISAN")}
+                              >
+                                Pay Artisan
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+
+                        {selectedDispute.status === "RESOLVED" && (
+                          <div className="rounded-lg bg-success/5 border border-success/10 p-4">
+                            <p className="text-sm font-medium text-success mb-1 flex items-center gap-2">
+                              <CheckCircle2 className="size-4" />
+                              Resolved Decision
+                            </p>
+                            <p className="text-sm font-bold uppercase mb-2">
+                              {(selectedDispute as any).resolution?.decision?.replace('_', ' ')}
+                            </p>
+                            {(selectedDispute as any).resolution?.notes && (
+                              <p className="text-sm text-muted-foreground italic">
+                                "{(selectedDispute as any).resolution.notes}"
+                              </p>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              ) : (
+                <Card className="flex flex-col items-center justify-center py-24 text-center border-dashed bg-muted/10">
+                  <ShieldAlert className="size-12 text-muted-foreground/20 mb-4" />
+                  <p className="text-sm text-muted-foreground max-w-[200px]">
+                    Select a dispute from the list to review details and take action.
+                  </p>
+                </Card>
+              )}
+            </AnimatePresence>
+          </aside>
+        </div>
+    </div>
   );
+}
+
+function disputeReason(dispute: any) {
+  return dispute.reason || dispute.message || "";
 }

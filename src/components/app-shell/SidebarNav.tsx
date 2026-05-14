@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { getDashboardLinks, sharedLinks } from "@/components/app-shell/navigation";
+import { getDashboardLinks } from "@/components/app-shell/navigation";
 import type { User } from "@/types";
 
 const navItemVariants = {
@@ -21,7 +21,7 @@ export default function SidebarNav({
   role: User["role"];
 }) {
   const pathname = usePathname();
-  const navItems = [...(getDashboardLinks(role) ?? []), ...sharedLinks];
+  const navItems = [...(getDashboardLinks(role) ?? [])];
 
   return (
     <nav className="space-y-2 flex flex-col">

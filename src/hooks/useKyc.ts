@@ -1,11 +1,34 @@
 "use client";
 
-import { useArtisanProfile, useSaveArtisanProfile } from "@/hooks/useProfile";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { proxyFetch } from "@/proxy";
 
-export function useKyc(enabled: boolean) {
-  return useArtisanProfile(enabled);
+import { useArtisanProfile, useSaveArtisanProfile } from "./useProfile";
+
+export function useVerifyBvn() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (bvn: string) => {
+      return proxyFetch("/kyc/verify-bvn", {
+        method: "POST",
+        body: JSON.stringify({ bvn }),
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["kyc-status"] });
+    },
+  });
 }
 
-export function useSaveKyc(hasExistingProfile: boolean) {
-  return useSaveArtisanProfile(hasExistingProfile);
+export function useKycStatus() {
+  return useQuery({
+    queryKey: ["kyc-status"],
+    queryFn: async () => {
+      return proxyFetch<{ kycStatus: string; kycVerified: boolean }>("/kyc/status");
+    },
+  });
 }
+
+export const useKyc = useArtisanProfile;
+export const useSaveKyc = useSaveArtisanProfile;

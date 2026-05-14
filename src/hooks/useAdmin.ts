@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch, proxyFetchRaw } from "@/proxy";
-import type { AdminCollection, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord } from "@/types";
+import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job } from "@/types";
 
 export function useAdminUsers(options: { enabled?: boolean } = {}) {
   return useQuery<AdminCollection<AdminUserRecord>>({
@@ -99,5 +99,35 @@ export function useResolveAdminDispute() {
       queryClient.invalidateQueries({ queryKey: ["admin", "disputes"] });
       queryClient.invalidateQueries({ queryKey: ["admin", "reports"] });
     },
+  });
+}
+
+export function useAdminContracts(status?: string, options: { enabled?: boolean } = {}) {
+  const queryKey = status ? ["admin", "contracts", status] : ["admin", "contracts"];
+  const url = status ? `/admin/contracts?status=${status}` : "/admin/contracts";
+
+  return useQuery<AdminCollection<Contract>>({
+    queryKey,
+    queryFn: () => proxyFetchRaw<AdminCollection<Contract>>(url),
+    enabled: options.enabled,
+  });
+}
+
+export function useAdminContractStats(options: { enabled?: boolean } = {}) {
+  return useQuery<AdminContractStats>({
+    queryKey: ["admin", "contracts", "stats"],
+    queryFn: () => proxyFetch<AdminContractStats>("/admin/contracts/stats"),
+    enabled: options.enabled,
+  });
+}
+
+export function useAdminJobs(status?: string, options: { enabled?: boolean } = {}) {
+  const queryKey = status ? ["admin", "jobs", status] : ["admin", "jobs"];
+  const url = status ? `/admin/jobs?status=${status}` : "/admin/jobs";
+
+  return useQuery<AdminCollection<Job>>({
+    queryKey,
+    queryFn: () => proxyFetchRaw<AdminCollection<Job>>(url),
+    enabled: options.enabled,
   });
 }

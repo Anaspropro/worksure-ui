@@ -140,6 +140,7 @@ export interface Proposal {
 export interface Contract {
   id: string;
   amount: number;
+  currency: string;
   status: ContractStatus | string;
   escrowReleased: boolean;
   clientId: string;
@@ -148,10 +149,15 @@ export interface Contract {
   artisanConfirmedCompletion: boolean;
   job: Job;
   proposal: Proposal;
+  client: Pick<User, "id" | "name" | "email">;
+  artisan: Pick<User, "id" | "name" | "email">;
   fundedAt?: string | null;
   startedAt?: string | null;
   completedAt?: string | null;
   escrowReleasedAt?: string | null;
+  clientName?: string;
+  artisanName?: string;
+  jobTitle?: string;
 }
 
 export type ChatMessageType = "TEXT" | "IMAGE" | "VIDEO" | "AUDIO" | "FILE";
@@ -321,6 +327,7 @@ export interface AdminUserRecord {
   role: UserRole;
   status: string;
   artisanVerified: boolean;
+  phone?: string | null;
   createdAt: string;
 }
 
@@ -407,6 +414,10 @@ export interface AdminDisputeRecord {
   artisanId: string;
   amount: number;
   status: string;
+  createdAt: string;
+  clientName?: string;
+  artisanName?: string;
+  contractTitle?: string;
   evidence?: {
     images?: string[];
     videos?: string[];
@@ -434,4 +445,15 @@ export interface AdminOverviewReport {
     platformFees: number;
     flaggedJobs: number;
   };
+}
+
+export interface AdminContractStats {
+  totalCount: number;
+  statusDistribution: Record<ContractStatus, number>;
+  totalVolume: number;
+  escrowVolume: number;
+  payoutVolume: number;
+  refundVolume: number;
+  averageValue: number;
+  activeContractCount: number;
 }
