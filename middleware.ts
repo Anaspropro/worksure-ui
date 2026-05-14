@@ -48,7 +48,7 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
 
   if (!API_URL && (isProtectedPath(pathname) || isAuthPath(pathname))) {
-    const response = NextResponse.redirect(new URL("/auth/login", request.url));
+    const response = NextResponse.redirect(new URL("/auth/login?error=no_api_url", request.url));
     response.cookies.delete("token");
     response.cookies.delete("refresh_token");
     return response;
@@ -56,7 +56,7 @@ export async function middleware(request: NextRequest) {
 
   if (isProtectedPath(pathname) || (isAuthPath(pathname) && token?.value)) {
     if (!token?.value) {
-      return NextResponse.redirect(new URL("/auth/login", request.url));
+      return NextResponse.redirect(new URL("/auth/login?error=no_token", request.url));
     }
 
     try {
@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
       });
 
       if (!meRes.ok) {
-        const response = NextResponse.redirect(new URL("/auth/login", request.url));
+        const response = NextResponse.redirect(new URL(`/auth/login?error=me_not_ok&status=${meRes.status}`, request.url));
         response.cookies.delete("token");
         response.cookies.delete("refresh_token");
         return response;
@@ -82,8 +82,8 @@ export async function middleware(request: NextRequest) {
       if (isAdminPath(pathname) && currentRole !== "ADMIN") {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
-    } catch {
-      const response = NextResponse.redirect(new URL("/auth/login", request.url));
+    } catch (e) {
+      const response = NextResponse.redirect(new URL(`/auth/login?error=catch_error&msg=${e instanceof Error ? e.message : 'unknown'}`, request.url));
       response.cookies.delete("token");
       response.cookies.delete("refresh_token");
       return response;
