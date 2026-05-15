@@ -34,8 +34,8 @@ export default function LandingNavbar() {
       <header
         className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
           scrolled
-            ? "bg-white border-white/10 shadow-2xl shadow-black/30 backdrop-blur-xl"
-            : "bg-white border-white/8 backdrop-blur-md"
+            ? "bg-white border-white/10 shadow-2xl shadow-black/30 backdrop-blur-sm opacity-80"
+            : "bg-muted border-white/8 backdrop-blur-md"
         // bg-[#0c1a42] bg-[#0f1c4d]/80
         }`}
       >
@@ -68,9 +68,8 @@ export default function LandingNavbar() {
             <div className="hidden md:flex items-center gap-2.5 shrink-0">
               <Button
                 asChild
-                variant="ghost"
                 size="sm"
-                className="text-[13px] text-primary-foreground/70 hover:text-white hover:bg-white/6 h-9 px-4 rounded-lg"
+                className="text-[14px] text-white hover:text-primary bg-primary hover:bg-white hover:shadow-xl h-9 px-4 rounded-lg"
               >
                 <Link href="/auth/login">Sign In</Link>
               </Button>
