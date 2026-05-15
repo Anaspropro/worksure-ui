@@ -5,6 +5,7 @@ import { ShieldCheck, Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -33,20 +34,18 @@ export default function LandingNavbar() {
       <header
         className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
           scrolled
-            ? "bg-[#0c1a42] border-white/10 shadow-2xl shadow-black/30 backdrop-blur-xl"
-            : "bg-[#0f1c4d]/80 border-white/8 backdrop-blur-md"
+            ? "bg-white border-white/10 shadow-2xl shadow-black/30 backdrop-blur-xl"
+            : "bg-white border-white/8 backdrop-blur-md"
+        // bg-[#0c1a42] bg-[#0f1c4d]/80
         }`}
       >
         <div className="px-5 sm:px-6">
-          <div className="flex h-15 items-center justify-between">
+          <div className="flex h-18 items-center justify-between">
             {/* ── Logo ── */}
             <Link href="/" className="flex items-center gap-2.5 shrink-0">
-              <div className="flex bg-primary rounded-lg p-1.5 shadow-md shadow-primary/30">
-                <ShieldCheck className="size-5 text-white" />
+              <div className="h-auto">
+                <Image src="/logo.png" alt="Logo" width={100} height={100} className="w-auto h-auto max-h-18" priority />              
               </div>
-              <span className="text-lg font-bold tracking-tight text-white">
-                Work<span className="text-info">Sure</span>
-              </span>
             </Link>
 
             {/* ── Desktop nav links ── */}
@@ -55,7 +54,7 @@ export default function LandingNavbar() {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  className="relative px-4 py-2 text-[13px] font-medium text-primary-foreground/70 hover:text-white rounded-lg hover:bg-white/6 transition-colors"
+                  className="relative px-4 py-2 text-md font-medium text-[#050852] hover:text-accent rounded-lg hover:bg-white/6 transition-colors"
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + i * 0.08, duration: 0.3 }}

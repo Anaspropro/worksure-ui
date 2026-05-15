@@ -29,6 +29,7 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import type { UserRole } from "@/types";
+import Image from "next/image";
 
 type AuthMode = "login" | "register";
 
@@ -182,7 +183,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
         <div className="relative z-10 flex flex-col h-full gap-8">
           <Link href="/" className="flex items-center gap-2 mb-12">
             <div className="flex bg-white/15 backdrop-blur-sm rounded-lg p-1.5 border border-white/20">
-              <ShieldCheck className="size-5 text-white" />
+              <Image src="/logo.png" alt="Logo" width={50} height={50} className="w-auto h-auto max-h-8" priority />
             </div>
             <span className="text-xl font-bold tracking-tight text-white">
               Work<span className="text-blue-200">Sure</span>

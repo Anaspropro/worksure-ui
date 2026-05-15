@@ -47,7 +47,7 @@ export default function LandingHero() {
               transition={{ delay: 0.1, duration: 0.6 }}
             >
               Hire Artisans with{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-50 to-white">
+              <span className="text-accent">
                 Confidence,
               </span>
               <br />
