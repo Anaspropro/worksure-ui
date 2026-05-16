@@ -15,7 +15,7 @@ import {
   useUpdateProfile,
 } from "@/hooks/useProfile";
 import { useReviewStats } from "@/hooks/useReviews";
-import { useVerifyBvn, useKycStatus } from "@/hooks/useKyc";
+import { useKycStatus } from "@/hooks/useKyc";
 import { ShieldCheck, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
@@ -36,30 +36,9 @@ export default function ProfileWorkspace() {
   const [bio, setBio] = useState<string | null>(null);
   const [skills, setSkills] = useState<string | null>(null);
   const [experience, setExperience] = useState<string | null>(null);
-  const [bvn, setBvn] = useState("");
-
-  const verifyBvnMutation = useVerifyBvn();
   const kycStatusQuery = useKycStatus();
 
-  if (!user) {
-    return null;
-  }
-
-  const handleVerifyBvn = () => {
-    if (bvn.length !== 11) {
-      toast.error("BVN must be 11 digits");
-      return;
-    }
-    verifyBvnMutation.mutate(bvn, {
-      onSuccess: () => {
-        toast.success("KYC Verified Successfully!");
-        setBvn("");
-      },
-      onError: (error: Error) => {
-        toast.error(error.message || "Verification failed");
-      }
-    });
-  };
+  if (!user) return null;
 
   const initialSkills = Array.isArray(artisanProfileQuery.data?.skills)
     ? artisanProfileQuery.data.skills.join(", ")
@@ -143,38 +122,19 @@ export default function ProfileWorkspace() {
               </Alert>
             ) : (
               <>
-                <Alert className="border-info/20 bg-info/10 text-info">
+                <Alert className="border-warning/20 bg-warning/10 text-warning">
                   <Info className="size-4" />
-                  <AlertTitle>Action Required</AlertTitle>
+                  <AlertTitle>Verification Pending</AlertTitle>
                   <AlertDescription>
-                    Please provide your Bank Verification Number (BVN) to verify your account.
+                    Your account needs to be verified before you can start bidding on jobs.
                   </AlertDescription>
                 </Alert>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Select Identification Type</label>
-                  <select className="h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                    <option value="bvn">Bank Verification Number (BVN)</option>
-                    <option value="nin" disabled>National ID Number (NIN) - Coming Soon</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">Identification Number</label>
-                  <Input
-                    placeholder="Enter 11-digit BVN"
-                    value={bvn}
-                    maxLength={11}
-                    onChange={(e) => setBvn(e.target.value.replace(/\D/g, ""))}
-                  />
-                </div>
-
                 <Button
                   className="w-full"
-                  onClick={handleVerifyBvn}
-                  disabled={verifyBvnMutation.status === "pending" || bvn.length !== 11}
+                  onClick={() => window.location.href = "/kyc/submit"}
                 >
-                  {verifyBvnMutation.status === "pending" ? "Verifying..." : "Verify Identity"}
+                  Start KYC Verification
                 </Button>
               </>
             )}

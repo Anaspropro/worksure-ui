@@ -2,21 +2,23 @@
 
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { 
-  BriefcaseBusiness, 
-  ChevronRight, 
-  Filter, 
-  Search, 
+import {
+  BriefcaseBusiness,
+  ChevronRight,
+  Filter,
+  Search,
   Calendar,
   User,
-  Tag
+  Tag,
+  X,
+  MapPin
 } from "lucide-react";
 import { useAdminJobs } from "@/hooks/useAdmin";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
   CardTitle,
   Button,
   Input,
@@ -37,12 +39,13 @@ const cardVariants = {
 export default function AdminJobsWorkspace() {
   const [statusFilter] = useState<string | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { data: jobsResponse, isLoading: jobsLoading } = useAdminJobs(statusFilter);
   const jobs = jobsResponse?.data || [];
 
   const filteredJobs = useMemo(() => {
-    return jobs.filter((j: Job) => 
+    return jobs.filter((j: Job) =>
       j.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       j.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       j.id.toLowerCase().includes(searchTerm.toLowerCase())
@@ -241,7 +244,12 @@ export default function AdminJobsWorkspace() {
                         </Badge>
                       </td>
                       <td className="px-4 py-4 text-right">
-                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => setSelectedJob(job)}
+                        >
                           View details
                           <ChevronRight className="ml-1 h-3 w-3" />
                         </Button>
@@ -254,6 +262,97 @@ export default function AdminJobsWorkspace() {
           </div>
         </CardContent>
       </Card>
+
+      {/* ── Job Details Modal ──────────────────────────────────────── */}
+      {selectedJob && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-2xl bg-card border border-border rounded-xl shadow-lg overflow-hidden"
+          >
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <div>
+                <h2 className="text-xl font-bold">{selectedJob.title}</h2>
+                <p className="text-sm text-muted-foreground font-mono mt-1">ID: {selectedJob.id}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedJob(null)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-6 max-h-[70vh] overflow-y-auto">
+              <div>
+                <h3 className="text-sm font-semibold text-muted-foreground mb-2">Description</h3>
+                <p className="text-sm leading-relaxed">{selectedJob.description}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Status</span>
+                  <div>
+                    <Badge variant="secondary" className={`capitalize ${getStatusBg(selectedJob.status)}`}>
+                      {selectedJob.status.toLowerCase().replace(/_/g, ' ')}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Budget</span>
+                  <div className="font-semibold">₦{(selectedJob.budget ?? 0).toLocaleString()}</div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Category</span>
+                  <div className="flex items-center text-sm">
+                    <Tag className="h-3 w-3 mr-1" />
+                    {selectedJob.category || 'N/A'}
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Location</span>
+                  <div className="flex items-center text-sm">
+                    <MapPin className="h-3 w-3 mr-1" />
+                    {selectedJob.location || 'Remote'}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="text-sm font-semibold text-muted-foreground">Client Details</h3>
+                <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-5 w-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{selectedJob.client?.name}</p>
+                    <p className="text-xs text-muted-foreground">{selectedJob.client?.email}</p>
+                  </div>
+                </div>
+              </div>
+
+              {selectedJob.artisan?.id && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-semibold text-muted-foreground">Assigned Artisan</h3>
+                  <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border">
+                    <div className="h-10 w-10 rounded-full bg-info/10 flex items-center justify-center">
+                      <BriefcaseBusiness className="h-5 w-5 text-info" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">{selectedJob.artisan?.name || 'Assigned Artisan'}</p>
+                      <p className="text-xs text-muted-foreground font-mono">ID: {selectedJob.artisan?.id}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="p-4 border-t border-border bg-muted/20 flex justify-end">
+              <Button variant="outline" onClick={() => setSelectedJob(null)}>
+                Close
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

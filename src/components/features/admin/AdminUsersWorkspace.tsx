@@ -3,11 +3,11 @@
 import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Search, 
-  Filter, 
-  ChevronRight, 
-  User as UserIcon, 
+import {
+  Search,
+  Filter,
+  ChevronRight,
+  User as UserIcon,
   X,
   ShieldAlert,
   ShieldCheck,
@@ -20,13 +20,13 @@ import {
 } from "lucide-react";
 import { useAdminUserDetail, useAdminUsers, useBanUser, useUnbanUser, useVerifyArtisan } from "@/hooks/useAdmin";
 import { formatCurrency, formatDate } from "@/lib/formatters";
-import { 
-  Badge, 
-  Button, 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
+import {
+  Badge,
+  Button,
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
   CardTitle,
   Input
 } from "@/components/ui";
@@ -43,14 +43,14 @@ export default function AdminUsersWorkspace() {
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
 
-  const detailQuery = useAdminUserDetail(selectedUserId ?? undefined, { 
-    enabled: Boolean(selectedUserId) && isModalOpen 
+  const detailQuery = useAdminUserDetail(selectedUserId ?? undefined, {
+    enabled: Boolean(selectedUserId) && isModalOpen
   });
 
   const users = usersResponse?.data || [];
 
   const filteredUsers = useMemo(() => {
-    return users.filter((u: AdminUserRecord) => 
+    return users.filter((u: AdminUserRecord) =>
       u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -67,7 +67,7 @@ export default function AdminUsersWorkspace() {
   };
 
   const getStatusBadge = (status: string) => {
-    switch(status) {
+    switch (status) {
       case "ACTIVE": return <Badge variant="secondary" className="bg-success-50 text-success-700 border-success-200">Active</Badge>;
       case "BANNED": return <Badge variant="destructive">Banned</Badge>;
       default: return <Badge variant="outline">{status}</Badge>;
@@ -174,9 +174,9 @@ export default function AdminUsersWorkspace() {
                         {formatDate(user.createdAt)}
                       </td>
                       <td className="px-4 py-4 text-right">
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleReviewClick(user.id)}
                           className="opacity-0 group-hover:opacity-100 transition-opacity"
                         >
@@ -225,22 +225,22 @@ export default function AdminUsersWorkspace() {
                 </CardHeader>
                 <CardContent className="p-6">
                   {detailQuery.isLoading ? (
-                     <div className="space-y-4">
-                       <Skeleton className="h-24 w-full" />
-                       <Skeleton className="h-40 w-full" />
-                     </div>
+                    <div className="space-y-4">
+                      <Skeleton className="h-24 w-full" />
+                      <Skeleton className="h-40 w-full" />
+                    </div>
                   ) : detailQuery.data?.data ? (
                     <div className="space-y-8">
                       {/* Top Action Bar */}
                       <div className="flex flex-wrap items-center justify-between gap-4 bg-muted/30 p-4 rounded-xl border border-border">
                         <div className="flex items-center gap-4">
-                           <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center">
-                              <UserIcon className="size-6 text-primary" />
-                           </div>
-                           <div>
-                             <h3 className="font-semibold text-lg">{detailQuery.data.data.name}</h3>
-                             <p className="text-sm text-muted-foreground">{detailQuery.data.data.email}</p>
-                           </div>
+                          <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center">
+                            <UserIcon className="size-6 text-primary" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-lg">{detailQuery.data.data.name}</h3>
+                            <p className="text-sm text-muted-foreground">{detailQuery.data.data.email}</p>
+                          </div>
                         </div>
                         <div className="flex flex-wrap gap-2">
                           {detailQuery.data.data.role === "ARTISAN" && !detailQuery.data.data.artisanVerified && (
@@ -323,7 +323,7 @@ export default function AdminUsersWorkspace() {
                             {detailQuery.data.data.transactions.length} total
                           </p>
                         </div>
-                         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
+                        <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
                           <div className="flex items-center gap-2 mb-2 text-muted-foreground">
                             <BriefcaseBusiness className="size-4" />
                             <p className="text-sm font-medium">Platform Role</p>
@@ -398,7 +398,7 @@ export default function AdminUsersWorkspace() {
 
                         {/* Marketplace Activity */}
                         <div className="rounded-xl border border-border bg-card overflow-hidden">
-                           <div className="bg-muted/30 px-4 py-3 border-b border-border">
+                          <div className="bg-muted/30 px-4 py-3 border-b border-border">
                             <h4 className="font-semibold text-foreground text-sm">Marketplace Activity</h4>
                           </div>
                           <div className="p-4 space-y-4">
