@@ -8,6 +8,9 @@ import {
   Settings,
   ShieldCheck,
   ShieldPlus,
+  History,
+  Scale,
+  Activity,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { User } from "@/types";
@@ -47,6 +50,9 @@ export function getDashboardLinks(role: User["role"]) {
         { href: "/admin/jobs", label: "Jobs", icon: BriefcaseBusiness },
         { href: "/admin/contracts", label: "Contracts", icon: FileText },
         { href: "/admin/disputes", label: "Disputes", icon: ShieldPlus },
+        { href: "/admin/audit", label: "Audit Trail", icon: History },
+        { href: "/admin/reconciliation", label: "Reconciliation", icon: Scale },
+        { href: "/admin/monitoring", label: "Monitoring", icon: Activity },
       ],
     }[role] ?? []
   );

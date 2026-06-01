@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { ApiEnvelope, AuthSuccess, User, UserRole } from "@/types";
+import type { ApiEnvelope, AuthSuccess, User, UserRole, AuditLog, SystemLog, SystemHealth, ReconciliationReport } from "@/types";
 
 const INTERNAL_API_PREFIX = "/api/proxy";
 const SESSION_HINT_KEY = "auth_present";
@@ -181,4 +181,24 @@ export async function logoutRequest(): Promise<void> {
   });
 }
 
+export async function getAuditLogs(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
+  return proxyFetchEnvelope<AuditLog[]>(`/admin/audit?page=${page}&limit=${limit}`);
+}
 
+export async function getReconciliationReports(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
+  return proxyFetchEnvelope<AuditLog[]>(`/admin/reconciliation/reports?page=${page}&limit=${limit}`);
+}
+
+export async function triggerReconciliation(): Promise<ReconciliationReport> {
+  return proxyFetch<ReconciliationReport>("/admin/reconciliation/trigger", {
+    method: "POST",
+  });
+}
+
+export async function getSystemHealth(): Promise<SystemHealth> {
+  return proxyFetch<SystemHealth>("/admin/monitoring/health");
+}
+
+export async function getSystemLogs(page = 1, limit = 20): Promise<ApiEnvelope<SystemLog[]>> {
+  return proxyFetchEnvelope<SystemLog[]>(`/admin/monitoring/logs?page=${page}&limit=${limit}`);
+}

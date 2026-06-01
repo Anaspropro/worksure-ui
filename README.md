@@ -67,7 +67,7 @@ The frontend handles:
 ## ⚙️ Quick Start
 
 ### Prerequisites
-* Node.js ≥ 18
+* Node.js  20
 * Backend server running locally (or deployed)
 
 ### Install Dependencies

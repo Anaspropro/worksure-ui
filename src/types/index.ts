@@ -457,3 +457,46 @@ export interface AdminContractStats {
   averageValue: number;
   activeContractCount: number;
 }
+
+export interface AuditLog {
+  id: string;
+  action: string;
+  entityType: string;
+  entityId: string;
+  performedBy: string;
+  performedAt: string;
+  metadata?: Record<string, unknown> | null;
+}
+
+export interface SystemLog {
+  id: string;
+  level: string;
+  context: string;
+  message: string;
+  trace?: string | null;
+  metadata?: Record<string, unknown> | null;
+  timestamp: string;
+}
+
+export interface SystemHealth {
+  status: string;
+  timestamp: string;
+  uptime: number;
+  memory: {
+    rss: number;
+    heapTotal: number;
+    heapUsed: number;
+    external: number;
+    arrayBuffers: number;
+  };
+  database: {
+    status: string;
+  };
+}
+
+export interface ReconciliationReport {
+  status: string;
+  totalObligations: number;
+  actualPaystackBalance: number;
+  discrepancy: number;
+}

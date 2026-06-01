@@ -2,7 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch, proxyFetchRaw } from "@/api-client";
-import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job } from "@/types";
+import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job, AuditLog, SystemLog, SystemHealth, ReconciliationReport, ApiEnvelope } from "@/types";
+import { getAuditLogs, getReconciliationReports, triggerReconciliation, getSystemHealth, getSystemLogs } from "@/api-client";
 
 export function useAdminUsers(options: { enabled?: boolean } = {}) {
   return useQuery<AdminCollection<AdminUserRecord>>({
@@ -131,3 +132,47 @@ export function useAdminJobs(status?: string, options: { enabled?: boolean } = {
     enabled: options.enabled,
   });
 }
+
+export function useAdminAuditLogs(page = 1, limit = 20, options: { enabled?: boolean } = {}) {
+  return useQuery<ApiEnvelope<AuditLog[]>>({
+    queryKey: ["admin", "audit", page, limit],
+    queryFn: () => getAuditLogs(page, limit),
+    enabled: options.enabled,
+  });
+}
+
+export function useAdminReconciliationReports(page = 1, limit = 20, options: { enabled?: boolean } = {}) {
+  return useQuery<ApiEnvelope<AuditLog[]>>({
+    queryKey: ["admin", "reconciliation", page, limit],
+    queryFn: () => getReconciliationReports(page, limit),
+    enabled: options.enabled,
+  });
+}
+
+export function useTriggerReconciliation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: () => triggerReconciliation(),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "reconciliation"] });
+    },
+  });
+}
+
+export function useAdminSystemHealth(options: { enabled?: boolean; refetchInterval?: number } = {}) {
+  return useQuery<SystemHealth>({
+    queryKey: ["admin", "monitoring", "health"],
+    queryFn: () => getSystemHealth(),
+    enabled: options.enabled,
+    refetchInterval: options.refetchInterval,
+  });
+}
+
+export function useAdminSystemLogs(page = 1, limit = 20, options: { enabled?: boolean } = {}) {
+  return useQuery<ApiEnvelope<SystemLog[]>>({
+    queryKey: ["admin", "monitoring", "logs", page, limit],
+    queryFn: () => getSystemLogs(page, limit),
+    enabled: options.enabled,
+  });
+}
+
