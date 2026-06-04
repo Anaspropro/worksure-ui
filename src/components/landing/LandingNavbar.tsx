@@ -26,16 +26,16 @@ export default function LandingNavbar() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-6 lg:px-10 pt-4"
+      className="fixed top-0 left-0 right-0 z-100 border-primary border-b-[0.5]"
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
       <header
-        className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
+        className={`mx-auto transition-all duration-300 px-2 ${
           scrolled
-            ? "bg-background/80 border-border shadow-2xl shadow-black/40 backdrop-blur-md opacity-95"
-            : "bg-transparent border-transparent"
+            ? "bg-background/80 border-border shadow-2xl shadow-black/40 backdrop-blur-lg opacity-100"
+            : "border-transparent"
         }`}
       >
         <div className="px-5 sm:px-6">

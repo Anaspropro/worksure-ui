@@ -26,10 +26,10 @@ function AnimatedCounter({ target, suffix = "" }: { target: number; suffix?: str
 }
 
 const stats = [
-  { value: 8500, suffix: "+", label: "Clients served" },
-  { value: 15, suffix: "M+", label: "Escrow processed (₦)" },
-  { value: 220, suffix: "+", label: "Verified artisans" },
-  { value: 98, suffix: "%", label: "Completion rate" },
+  { value: 12500, suffix: "+", label: "Clients served" },
+  { value: 450, suffix: "M+", label: "Escrow processed (₦)" },
+  { value: 3400, suffix: "+", label: "Verified professionals" },
+  { value: 99, suffix: "%", label: "Dispute-free rate" },
 ];
 
 export default function LandingStats() {

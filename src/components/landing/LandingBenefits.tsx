@@ -17,19 +17,19 @@ import {
 } from "lucide-react";
 
 const clientBenefits = [
-  { icon: Search, text: "Access to verified, rated artisans" },
-  { icon: Lock, text: "100% escrow-protected payments" },
-  { icon: FileText, text: "Transparent contracts with milestones" },
-  { icon: ShieldCheck, text: "Admin-mediated dispute resolution" },
-  { icon: Star, text: "Post-completion reviews and ratings" },
+  { icon: Search, text: "Access an exclusive network of verified professionals" },
+  { icon: Lock, text: "100% bank-grade escrow-protected payments" },
+  { icon: FileText, text: "Legally binding smart contracts with clear milestones" },
+  { icon: ShieldCheck, text: "Fair, impartial, and expert dispute arbitration" },
+  { icon: Star, text: "Data-driven post-completion reviews and ratings" },
 ];
 
 const artisanBenefits = [
-  { icon: BriefcaseBusiness, text: "Browse and bid on real jobs" },
-  { icon: Wallet, text: "Guaranteed payment via escrow" },
-  { icon: BadgeCheck, text: "Build a verified, trustworthy profile" },
-  { icon: TrendingUp, text: "Grow your reputation with reviews" },
-  { icon: Banknote, text: "Instant payout on completion" },
+  { icon: BriefcaseBusiness, text: "Access high-value, guaranteed-pay projects" },
+  { icon: Wallet, text: "Never chase invoices again with escrow protection" },
+  { icon: BadgeCheck, text: "Build a premium, verified professional profile" },
+  { icon: TrendingUp, text: "Boost your earning potential through verified reviews" },
+  { icon: Banknote, text: "Instant, automated bank payouts upon completion" },
 ];
 
 export default function LandingBenefits() {

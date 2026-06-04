@@ -8,23 +8,23 @@ import { Button } from "@/components/ui/button";
 const steps = [
   {
     num: "01",
-    title: "Post a Job",
-    desc: "Describe what you need done, set your budget, and publish. It takes less than 2 minutes.",
+    title: "Define Your Project",
+    desc: "Draft a clear project brief outlining your requirements, budget, and timeline. Publish it instantly to our curated network.",
   },
   {
     num: "02",
-    title: "Get Proposals",
-    desc: "Verified artisans submit proposals. Compare profiles, ratings, and prices.",
+    title: "Select the Best Talent",
+    desc: "Receive applications from vetted professionals. Review their past work, client ratings, and proposed terms before making a decision.",
   },
   {
     num: "03",
-    title: "Fund Escrow",
-    desc: "Your payment is locked safely in escrow. The artisan sees the funds are secured before starting.",
+    title: "Secure the Funds",
+    desc: "Deposit the agreed amount into our secure escrow vault. The artisan is notified that funds are guaranteed, motivating them to start.",
   },
   {
     num: "04",
-    title: "Confirm & Pay",
-    desc: "Once you're happy with the work, confirm completion. Payment is released instantly.",
+    title: "Approve and Release",
+    desc: "Review the delivered work. Once you are 100% satisfied, approve the milestone and we release the payment instantly.",
   },
 ];
 

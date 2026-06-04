@@ -6,28 +6,28 @@ import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    q: "How does the escrow system work?",
-    a: "When a client funds a contract, the money is held securely in WorkSure's escrow. The artisan can see the funds are available, which gives them confidence to start. Payment is only released when both parties confirm the work is complete.",
+    q: "How does the digital escrow system work?",
+    a: "When a client funds a contract, the capital is held securely in WorkSure's digital escrow vault. The artisan is notified that funds are guaranteed, providing confidence to begin work. Payment is only disbursed when both parties approve the completed milestone.",
   },
   {
-    q: "How are artisans verified?",
-    a: "Every artisan goes through a KYC process including identity verification, skill assessment, and portfolio review. Only verified artisans can submit proposals and accept contracts.",
+    q: "How are artisans and freelancers verified?",
+    a: "Every professional undergoes a rigorous KYC protocol, which includes government ID verification (NIN/BVN), skill assessments, and portfolio reviews. We ensure you only collaborate with legitimate, top-tier talent.",
   },
   {
-    q: "What happens if there's a dispute?",
-    a: "WorkSure has a built-in dispute resolution system. An admin reviews the evidence from both parties and makes a fair decision. Funds remain in escrow until the dispute is resolved.",
+    q: "What happens in the event of a dispute?",
+    a: "WorkSure provides an impartial arbitration service. If a disagreement arises, our dedicated team reviews all contract terms, communications, and deliverables to issue a fair, binding resolution. Funds remain locked in escrow until the dispute is settled.",
   },
   {
-    q: "How much does WorkSure charge?",
-    a: "WorkSure charges a small platform fee (5%) on completed contracts. There are no hidden fees — the exact amounts are shown before you fund escrow.",
+    q: "What is WorkSure's fee structure?",
+    a: "WorkSure charges a transparent platform fee (5%) on successfully completed contracts. There are absolutely no hidden charges—all costs are explicitly detailed before you fund the escrow.",
   },
   {
-    q: "How fast do artisans get paid?",
-    a: "Once the client confirms work completion, payment is released instantly to the artisan's WorkSure wallet. They can withdraw to their bank at any time.",
+    q: "How quickly are payouts processed?",
+    a: "The moment a client approves a milestone, the funds are automatically disbursed to the artisan's verified local bank account. Payouts are instantaneous, completely eliminating invoice chasing.",
   },
   {
-    q: "Is my money safe?",
-    a: "Yes. All escrow funds are held in segregated accounts and protected by our financial infrastructure. Your money is never mixed with WorkSure operating funds.",
+    q: "Is my capital truly safe?",
+    a: "Absolutely. All escrow funds are maintained in strictly segregated accounts managed by our licensed financial partners. Client funds are never commingled with WorkSure's operational capital, ensuring 100% safety.",
   },
 ];
 
