@@ -104,6 +104,8 @@ export async function proxyFetchEnvelope<T>(
   return { data: payload as T };
 }
 
+import apiClient from "./api/client";
+
 export async function proxyFetch<T>(
   path: string,
   init: RequestInit = {},
@@ -141,16 +143,11 @@ export async function proxyFetchRaw<T>(
 }
 
 export async function login(email: string, password: string): Promise<AuthSuccess> {
-  const data = await proxyFetch<AuthSuccess>("/auth/login", {
-    method: "POST",
-    body: JSON.stringify({ email, password }),
+  const { data, error } = await apiClient.POST("/auth/login", {
+    body: { email, password }
   });
-
-  if (!data?.accessToken) {
-    throw new Error("Login failed: missing access token");
-  }
-
-  return data;
+  if (error) throw new ApiError("Login failed", 401);
+  return data as unknown as AuthSuccess;
 }
 
 export async function register(
@@ -159,46 +156,56 @@ export async function register(
   password: string,
   role: UserRole,
 ): Promise<AuthSuccess> {
-  const data = await proxyFetch<AuthSuccess>("/auth/register", {
-    method: "POST",
-    body: JSON.stringify({ name, email, password, role }),
+  const { data, error } = await apiClient.POST("/auth/register", {
+    body: { name, email, password, role }
   });
-
-  if (!data?.accessToken) {
-    throw new Error("Register failed: missing access token");
-  }
-
-  return data;
+  if (error) throw new ApiError("Register failed", 400);
+  return data as unknown as AuthSuccess;
 }
 
 export async function getProfile(): Promise<User> {
-  return proxyFetch<User>("/auth/me");
+  const { data, error, response } = await apiClient.GET("/auth/me");
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return (data as any).data as User;
 }
 
 export async function logoutRequest(): Promise<void> {
-  await proxyFetch("/auth/logout", {
-    method: "POST",
-  });
+  const { error, response } = await apiClient.POST("/auth/logout");
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
 }
 
 export async function getAuditLogs(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
-  return proxyFetchEnvelope<AuditLog[]>(`/admin/audit?page=${page}&limit=${limit}`);
+  const { data, error, response } = await apiClient.GET("/admin/audit", {
+    params: { query: { page: String(page), limit: String(limit) } as any }
+  });
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return data as unknown as ApiEnvelope<AuditLog[]>;
 }
 
 export async function getReconciliationReports(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
-  return proxyFetchEnvelope<AuditLog[]>(`/admin/reconciliation/reports?page=${page}&limit=${limit}`);
+  const { data, error, response } = await apiClient.GET("/admin/reconciliation/reports", {
+    params: { query: { page: String(page), limit: String(limit) } as any }
+  });
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return data as unknown as ApiEnvelope<AuditLog[]>;
 }
 
 export async function triggerReconciliation(): Promise<ReconciliationReport> {
-  return proxyFetch<ReconciliationReport>("/admin/reconciliation/trigger", {
-    method: "POST",
-  });
+  const { data, error, response } = await apiClient.POST("/admin/reconciliation/trigger");
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return data as unknown as ReconciliationReport;
 }
 
 export async function getSystemHealth(): Promise<SystemHealth> {
-  return proxyFetch<SystemHealth>("/admin/monitoring/health");
+  const { data, error, response } = await apiClient.GET("/admin/monitoring/health");
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return data as unknown as SystemHealth;
 }
 
 export async function getSystemLogs(page = 1, limit = 20): Promise<ApiEnvelope<SystemLog[]>> {
-  return proxyFetchEnvelope<SystemLog[]>(`/admin/monitoring/logs?page=${page}&limit=${limit}`);
+  const { data, error, response } = await apiClient.GET("/admin/monitoring/logs", {
+    params: { query: { page: String(page), limit: String(limit) } as any }
+  });
+  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  return data as unknown as ApiEnvelope<SystemLog[]>;
 }
