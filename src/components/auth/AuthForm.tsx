@@ -167,26 +167,26 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   return (
     <main className="min-h-screen flex">
       {/* ── Brand side panel ───────────────────────────────────── */}
-      <aside className="hidden lg:flex lg:w-[45%] relative border-r border-border overflow-hidden flex-col justify-between p-12 bg-gradient-to-br from-[#1a2a6e] via-[#2d4a9e] to-[#4168d0]">
+      <aside className="hidden lg:flex lg:w-[45%] relative border-r border-border overflow-hidden flex-col justify-between p-12 bg-sidebar">
         {/* Floating decorative orbs */}
         <motion.div
-          className="absolute top-20 right-16 size-40 rounded-full bg-white/8 blur-2xl"
+          className="absolute top-20 right-16 size-40 rounded-full bg-primary/5 blur-2xl"
           animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-32 left-10 size-56 rounded-full bg-white/5 blur-3xl"
+          className="absolute bottom-32 left-10 size-56 rounded-full bg-primary/5 blur-3xl"
           animate={{ y: [0, 15, 0], scale: [1.1, 1, 1.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="relative z-10 flex flex-col h-full gap-8">
           <Link href="/" className="flex items-center gap-2 mb-12">
-            <div className="flex bg-white/15 backdrop-blur-sm rounded-lg p-1.5 border border-white/20">
-              <Image src="/logo.png" alt="Logo" width={50} height={50} className="w-auto h-auto max-h-8" priority />
+            <div className="flex bg-primary/10 backdrop-blur-sm rounded-lg p-1.5 border border-primary/20">
+              <ShieldCheck className="size-5 text-primary" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white">
-              Work<span className="text-blue-200">Sure</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              Work<span className="text-primary">Sure</span>
             </span>
           </Link>
 
@@ -196,10 +196,10 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <h1 className="text-3xl font-bold tracking-tight text-white">
+            <h1 className="text-3xl font-bold tracking-tight text-sidebar-foreground">
               {mode === "login" ? "Welcome back!" : "Create your account"}
             </h1>
-            <p className="text-base text-blue-200/80 flex max-w-[280px]">
+            <p className="text-base text-muted-foreground flex max-w-[280px]">
                {mode === "login" ? "Log in to your account to continue." : "Join WorkSure and start connecting today."}
             </p>
           </motion.div>
@@ -215,17 +215,17 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               {trustFeatures.map((feature, i) => (
                 <motion.div
                   key={feature.title}
-                  className="flex items-start gap-3 rounded-xl bg-white/8 backdrop-blur-sm border border-white/10 p-4"
+                  className="flex items-start gap-3 rounded-xl bg-card backdrop-blur-sm border border-border p-4 shadow-sm"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + i * 0.12, duration: 0.4 }}
                 >
-                  <div className="rounded-lg bg-white/15 p-2 flex-shrink-0">
-                    <feature.icon className="size-4 text-blue-200" />
+                  <div className="rounded-lg bg-primary/10 p-2 flex-shrink-0">
+                    <feature.icon className="size-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-white">{feature.title}</p>
-                    <p className="text-xs text-blue-200/70 mt-0.5">{feature.description}</p>
+                    <p className="text-sm font-semibold text-foreground">{feature.title}</p>
+                    <p className="text-xs text-muted-foreground mt-0.5">{feature.description}</p>
                   </div>
                 </motion.div>
               ))}
@@ -241,8 +241,8 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.9 + i * 0.1, duration: 0.4 }}
                 >
-                  <p className="text-lg font-bold text-white">{stat.value}</p>
-                  <p className="text-[11px] text-blue-200/60">{stat.label}</p>
+                  <p className="text-lg font-bold text-sidebar-foreground">{stat.value}</p>
+                  <p className="text-[11px] text-muted-foreground">{stat.label}</p>
                 </motion.div>
               ))}
             </div>
@@ -294,7 +294,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                 <label className="text-sm font-medium text-foreground" htmlFor="full-name">
                   Full name
                 </label>
-                <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
+                <InputGroup className="h-11 rounded-lg border-border bg-input">
                   <InputGroupAddon>
                     <InputGroupText>
                       <User2 className="size-4 text-muted-foreground" />
@@ -322,7 +322,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               <label className="text-sm font-medium text-foreground" htmlFor="email">
                 Email address
               </label>
-              <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
+              <InputGroup className="h-11 rounded-lg border-border bg-input">
                 <InputGroupAddon>
                   <InputGroupText>
                     <Mail className="size-4 text-muted-foreground" />
@@ -360,7 +360,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                   </Link>
                 )}
               </div>
-              <InputGroup className="h-11 rounded-lg border-border bg-card dark:bg-input/30">
+              <InputGroup className="h-11 rounded-lg border-border bg-input">
                 <InputGroupAddon>
                   <InputGroupText>
                     <LockKeyhole className="size-4 text-muted-foreground" />
@@ -410,7 +410,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                         className={`group relative flex flex-col gap-2 rounded-xl border p-3.5 text-left transition-all duration-200 ${
                           selected
                             ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
-                            : "border-border bg-card dark:bg-input/20 hover:border-primary/40 hover:bg-primary/3"
+                            : "border-border bg-input hover:border-primary/40 hover:bg-primary/10"
                         }`}
                       >
                         <div className="flex items-center justify-between">
@@ -444,24 +444,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               </motion.fieldset>
             )}
 
-            {/* Error */}
-            <AnimatePresence>
-              {authError && (
-                <motion.div
-                  initial={{ opacity: 0, height: 0, marginTop: 0 }}
-                  animate={{ opacity: 1, height: "auto", marginTop: 16 }}
-                  exit={{ opacity: 0, height: 0, marginTop: 0 }}
-                  className="flex items-start gap-2.5 rounded-lg border border-danger/20 bg-danger/10 px-4 py-3 overflow-hidden"
-                >
-                  <span className="mt-0.5 shrink-0 text-danger">
-                    <svg className="size-4" viewBox="0 0 16 16" fill="currentColor">
-                      <path d="M8 1a7 7 0 1 0 0 14A7 7 0 0 0 8 1zm-.75 3.5a.75.75 0 0 1 1.5 0v3.25a.75.75 0 0 1-1.5 0V4.5zm.75 7a.875.875 0 1 1 0-1.75.875.875 0 0 1 0 1.75z" />
-                    </svg>
-                  </span>
-                  <p className="text-sm text-danger">{authError}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+
 
             {/* Submit */}
             <motion.div
@@ -472,7 +455,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
             >
               <Button
                 type="submit"
-                className="h-11 w-full rounded-lg font-semibold shadow-lg shadow-primary/15"
+                className="h-11 w-full rounded-lg font-semibold shadow-sm"
                 disabled={
                   isBusy ||
                   !email.trim() ||

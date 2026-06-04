@@ -135,27 +135,27 @@ export default function WorkSureDashboard({
   return (
     <main className="space-y-6">
       <section className="grid gap-4 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="relative overflow-hidden border-none bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white shadow-2xl">
-          {/* Decorative radial flare */}
-          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
+        <Card className="relative overflow-hidden border-none bg-card text-card-foreground shadow-xl shadow-black/40">
+          <div className="absolute -right-20 -top-20 size-64 rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-10 -left-10 size-48 rounded-full bg-primary/10 blur-2xl" />
           
           <CardHeader className="relative z-10 space-y-4">
-            <Badge variant="outline" className="w-fit rounded-full border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-md">
+            <Badge variant="outline" className="w-fit rounded-full border-border bg-card px-3 py-1">
               {roleView.toLowerCase()} dashboard
             </Badge>
             <div className="space-y-2">
-              <CardTitle className="text-3xl font-bold tracking-tight text-white">{screenCopy.title}</CardTitle>
-              <CardDescription className="max-w-2xl text-base leading-7 text-white/80">
+              <CardTitle className="text-3xl font-bold tracking-tight">{screenCopy.title}</CardTitle>
+              <CardDescription className="text-base text-muted-foreground mt-2 max-w-xl">
                 {screenCopy.description}
               </CardDescription>
             </div>
-            <div className="grid gap-3 rounded-xl bg-white/5 p-4 backdrop-blur-sm md:grid-cols-4 border border-white/10">
+            <div className="grid gap-3 rounded-xl bg-card/50 p-4 border border-border md:grid-cols-4">
               {workflowSteps.map(({ label, icon: Icon }, index) => (
-                <div key={label} className="flex items-center gap-3 rounded-lg bg-white/10 px-4 py-3 border border-white/10 backdrop-blur-md">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 border border-white/20">
-                    <Icon className={`size-4 ${index === workflowSteps.length - 1 ? "text-warning" : "text-white"}`} />
+                <div key={label} className="flex items-center gap-3 rounded-lg bg-card px-4 py-3 border border-border">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                    <Icon className={`size-4 ${index === workflowSteps.length - 1 ? "text-warning" : "text-primary"}`} />
                   </div>
-                  <p className="text-sm font-medium text-white">{label}</p>
+                  <p className="text-sm font-medium">{label}</p>
                 </div>
               ))}
             </div>
@@ -163,13 +163,13 @@ export default function WorkSureDashboard({
         </Card>
 
         <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
-          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border-border bg-card">
             <CardContent className="px-6 py-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Open jobs</p>
-              <p className="mt-2 text-4xl font-bold text-[#0f1c4d]">{jobs?.length ?? 0}</p>
+              <p className="mt-2 text-4xl font-bold text-primary">{jobs?.length ?? 0}</p>
             </CardContent>
           </Card>
-          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border-border bg-card">
             <CardContent className="px-6 py-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{screenCopy.emphasis}</p>
               <p className="mt-2 text-4xl font-bold text-primary">

@@ -82,22 +82,23 @@ export default function AdminKycWorkspace() {
   return (
     <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-2xl border-none bg-linear-to-br from-[#0f172a] via-[#1e293b] to-[#334155] p-8 text-white shadow-2xl">
-          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_20%_80%,rgba(59,130,246,0.1),transparent_50%)]" />
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-4">
-              <Badge variant="outline" className="rounded-full border-blue-400/20 bg-blue-500/10 px-3 py-1 text-blue-300 backdrop-blur-md">
+              <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 px-3 py-1 text-primary backdrop-blur-md">
                 Identity & Trust
               </Badge>
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold tracking-tight">Artisan KYC Verification</h1>
-                <p className="max-w-xl text-lg text-slate-400">
+                <CardDescription className="max-w-2xl text-base text-muted-foreground leading-relaxed">
                   Review documents and verify the identity of artisans to maintain platform integrity.
-                </p>
+                </CardDescription>
               </div>
             </div>
             <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
-              <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-blue-500/20 text-blue-400">
+              <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-primary/20 text-primary">
                 <UserCheck className="size-6" />
               </div>
               <div>

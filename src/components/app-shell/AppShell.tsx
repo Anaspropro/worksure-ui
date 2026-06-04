@@ -35,14 +35,14 @@ export default function AppShell({
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-sidebar-border bg-[#0f1c4d] text-white lg:flex">
+      <aside className="hidden w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
         <div className="p-6">
           <Link href="/" className="flex items-center gap-2">
-            <div className="flex bg-white/10 border border-white/20 rounded-lg p-1.5 shadow-sm">
-              <ShieldCheck className="size-5 " />
+            <div className="flex bg-primary/10 border border-primary/20 rounded-lg p-1.5 shadow-sm">
+              <ShieldCheck className="size-5 text-primary" />
             </div>
-            <span className="text-xl font-bold tracking-tight text-white">
-              Work<span className="text-primary-foreground/90">Sure</span>
+            <span className="text-xl font-bold tracking-tight text-foreground">
+              Work<span className="text-primary">Sure</span>
             </span>
           </Link>
         </div>
@@ -53,15 +53,15 @@ export default function AppShell({
         
         <div className="p-4 border-t border-sidebar-border mt-auto space-y-3">
            <div className="flex items-center gap-3 px-1">
-             <div className="size-9 rounded-full bg-white/10 border border-white/10 flex items-center justify-center flex-shrink-0">
-               <span className="text-sm font-bold text-white">{user.name.charAt(0)}</span>
+             <div className="size-9 rounded-full bg-primary/10 border border-primary/10 flex items-center justify-center flex-shrink-0">
+               <span className="text-sm font-bold text-primary">{user.name.charAt(0)}</span>
              </div>
              <div className="min-w-0 flex-1">
-               <p className="truncate text-sm font-semibold text-white">{user.name}</p>
-               <p className="truncate text-[11px] text-white/50 capitalize">{user.role.toLowerCase()}</p>
+               <p className="truncate text-sm font-semibold text-sidebar-foreground">{user.name}</p>
+               <p className="truncate text-[11px] text-muted-foreground capitalize">{user.role.toLowerCase()}</p>
              </div>
            </div>
-           <Button variant="ghost" className="w-full justify-start text-white hover:text-sidebar-foreground hover:bg-sidebar-accent text-sm" onClick={handleLogout} disabled={logoutMutation.status === "pending"}>
+           <Button variant="ghost" className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent text-sm" onClick={handleLogout} disabled={logoutMutation.status === "pending"}>
               <LogOut className="size-4 mr-3" /> Logout
            </Button>
         </div>
@@ -69,7 +69,7 @@ export default function AppShell({
       
       {/* Main Content */}
       <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
-         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-glass-bg backdrop-blur-xl px-4 sm:px-6">
+         <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-border bg-card px-4 sm:px-6">
             <div className="flex items-center gap-4">
                <Button variant="ghost" size="icon" className="lg:hidden -ml-2" onClick={() => setMobileMenuOpen(true)}>
                   <Menu className="size-5 text-foreground" />
@@ -118,11 +118,11 @@ export default function AppShell({
             >
               <div className="flex items-center justify-between p-6">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
-                  <div className="flex bg-white/10 border border-white/20 rounded-lg p-1.5 shadow-sm">
-                    <ShieldCheck className="size-5 text-white" />
+                  <div className="flex bg-primary/10 border border-primary/20 rounded-lg p-1.5 shadow-sm">
+                    <ShieldCheck className="size-5 text-primary" />
                   </div>
-                  <span className="text-xl font-bold tracking-tight text-white">
-                    Work<span className="text-primary-foreground/90">Sure</span>
+                  <span className="text-xl font-bold tracking-tight text-foreground">
+                    Work<span className="text-primary">Sure</span>
                   </span>
                 </Link>
 

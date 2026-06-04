@@ -34,9 +34,8 @@ export default function LandingNavbar() {
       <header
         className={`mx-auto max-w-7xl rounded-2xl border transition-all duration-300 ${
           scrolled
-            ? "bg-white border-white/10 shadow-2xl shadow-black/30 backdrop-blur-sm opacity-80"
-            : "bg-muted border-white/8 backdrop-blur-md"
-        // bg-[#0c1a42] bg-[#0f1c4d]/80
+            ? "bg-background/80 border-border shadow-2xl shadow-black/40 backdrop-blur-md opacity-95"
+            : "bg-transparent border-transparent"
         }`}
       >
         <div className="px-5 sm:px-6">
@@ -54,7 +53,7 @@ export default function LandingNavbar() {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  className="relative px-4 py-2 text-md font-medium text-[#050852] hover:text-accent rounded-lg hover:bg-white/6 transition-colors"
+                  className="relative px-4 py-2 text-md font-medium text-muted-foreground hover:text-foreground rounded-lg transition-colors"
                   initial={{ opacity: 0, y: -6 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 + i * 0.08, duration: 0.3 }}
@@ -69,14 +68,15 @@ export default function LandingNavbar() {
               <Button
                 asChild
                 size="sm"
-                className="text-[14px] text-white hover:text-primary bg-primary hover:bg-white hover:shadow-xl h-9 px-4 rounded-lg"
+                variant="ghost"
+                className="text-[14px] text-muted-foreground hover:text-foreground h-9 px-4 rounded-lg"
               >
                 <Link href="/auth/login">Sign In</Link>
               </Button>
               <Button
                 asChild
                 size="sm"
-                className="h-9 px-5 rounded-lg bg-white text-(--brand-hero-via) hover:bg-muted font-semibold text-[13px] shadow-lg shadow-black/15"
+                className="h-9 px-5 rounded-lg shadow-sm font-semibold text-[13px]"
               >
                 <Link href="/auth/register">Get Started</Link>
               </Button>
@@ -86,7 +86,7 @@ export default function LandingNavbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden text-white hover:bg-white/10 size-9 rounded-lg"
+              className="md:hidden text-foreground hover:bg-muted size-9 rounded-lg"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
               {mobileMenuOpen ? (
@@ -102,7 +102,7 @@ export default function LandingNavbar() {
         <AnimatePresence>
           {mobileMenuOpen && (
             <motion.div
-              className="md:hidden border-t border-white/8 overflow-hidden"
+              className="md:hidden border-t border-border overflow-hidden bg-card rounded-b-2xl"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
@@ -113,25 +113,25 @@ export default function LandingNavbar() {
                   <a
                     key={link.label}
                     href={link.href}
-                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-primary-foreground/80 hover:bg-white/6 hover:text-white transition-colors"
+                    className="block rounded-lg px-3 py-2.5 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {link.label}
                   </a>
                 ))}
-                <div className="pt-2 border-t border-white/8 flex gap-2 mt-1">
+                <div className="pt-2 border-t border-border flex gap-2 mt-1">
                   <Button
                     asChild
                     variant="ghost"
                     size="sm"
-                    className="flex-1 text-primary-foreground/80 hover:text-white hover:bg-white/6 h-9 rounded-lg"
+                    className="flex-1 text-muted-foreground hover:text-foreground hover:bg-muted h-9 rounded-lg"
                   >
                     <Link href="/auth/login">Sign In</Link>
                   </Button>
                   <Button
                     asChild
                     size="sm"
-                    className="flex-1 bg-white text-[#1a3178] hover:bg-muted font-semibold h-9 rounded-lg"
+                    className="flex-1 font-semibold h-9 rounded-lg"
                   >
                     <Link href="/auth/register">Get Started</Link>
                   </Button>

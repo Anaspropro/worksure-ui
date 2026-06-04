@@ -143,11 +143,21 @@ export async function proxyFetchRaw<T>(
 }
 
 export async function login(email: string, password: string): Promise<AuthSuccess> {
-  const { data, error } = await apiClient.POST("/auth/login", {
-    body: { email, password }
-  });
-  if (error) throw new ApiError("Login failed", 401);
-  return data as unknown as AuthSuccess;
+  try {
+    const { data, error, response } = await apiClient.POST("/auth/login", {
+      body: { email, password }
+    });
+    if (error) {
+      throw new ApiError((error as any).message || "Invalid credentials provided. Please check your email and password.", response?.status || 401);
+    }
+    if (!data || !(data as any).user) {
+      throw new ApiError("Server not available. Please try again later.", 503);
+    }
+    return data as unknown as AuthSuccess;
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    throw new ApiError("Server not available. Please check your connection.", 503);
+  }
 }
 
 export async function register(
@@ -156,22 +166,41 @@ export async function register(
   password: string,
   role: UserRole,
 ): Promise<AuthSuccess> {
-  const { data, error } = await apiClient.POST("/auth/register", {
-    body: { name, email, password, role }
-  });
-  if (error) throw new ApiError("Register failed", 400);
-  return data as unknown as AuthSuccess;
+  try {
+    const { data, error, response } = await apiClient.POST("/auth/register", {
+      body: { name, email, password, role }
+    });
+    if (error) {
+      throw new ApiError((error as any).message || "Registration failed. This email might already be in use.", (response as any)?.status || 400);
+    }
+    if (!data || !(data as any).user) {
+      throw new ApiError("Server not available. Please try again later.", 503);
+    }
+    return data as unknown as AuthSuccess;
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    throw new ApiError("Server not available. Please check your connection.", 503);
+  }
 }
 
 export async function getProfile(): Promise<User> {
-  const { data, error, response } = await apiClient.GET("/auth/me");
-  if (!response.ok) throw new ApiError(response.statusText, response.status);
-  return (data as any).data as User;
+  try {
+    const { data, error, response } = await apiClient.GET("/auth/me");
+    if (error || !data) throw new ApiError("Session expired or server not available.", response?.status || 401);
+    return (data as any).data as User;
+  } catch (e) {
+    if (e instanceof ApiError) throw e;
+    throw new ApiError("Server not available.", 503);
+  }
 }
 
 export async function logoutRequest(): Promise<void> {
-  const { error, response } = await apiClient.POST("/auth/logout");
-  if (!response.ok) throw new ApiError(response.statusText, response.status);
+  try {
+    const { error, response } = await apiClient.POST("/auth/logout");
+    if (error) throw new ApiError("Logout failed", response?.status || 500);
+  } catch (e) {
+    // Ignore logout network errors
+  }
 }
 
 export async function getAuditLogs(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {

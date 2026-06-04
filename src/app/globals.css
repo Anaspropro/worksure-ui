@@ -59,173 +59,117 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-:root {
-  /* Background System — blue-tinted */
-  --background: #EFF3FB;
-  --foreground: #0F172A;
-  --card: #FFFFFF;
-  --card-foreground: #0F172A;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F172A;
+:root, .dark {
+  /* Background System — Premium Dark */
+  --background: #0F1117;
+  --foreground: #F8FAFC;
+  --card: #161A22;
+  --card-foreground: #F8FAFC;
+  --popover: #161A22;
+  --popover-foreground: #F8FAFC;
   
-  /* Primary Colors — vibrant blue */
-  --primary: #3B6CF4;
-  --primary-700: #2D5AE0;
-  --primary-600: #3B6CF4;
-  --primary-50: #EBF0FF;
+  /* Primary Colors — Emerald Green */
+  --primary: #10B981;
+  --primary-700: #047857;
+  --primary-600: #059669;
+  --primary-50: rgba(16, 185, 129, 0.1);
   --primary-foreground: #FFFFFF;
-  --primary-dark: #2D5AE0;
-  --primary-soft: rgba(59, 108, 244, 0.14);
+  --primary-dark: #047857;
+  --primary-soft: rgba(16, 185, 129, 0.15);
   
   /* Success Colors */
-  --success: #16A34A;
+  --success: #22C55E;
   --success-500: #22C55E;
   --success-600: #16A34A;
-  --success-50: #ECFDF5;
+  --success-50: rgba(34, 197, 94, 0.1);
   
   /* Warning Colors */
   --warning: #F59E0B;
   --warning-500: #F59E0B;
   --warning-600: #D97706;
-  --warning-50: #FFFBEB;
+  --warning-50: rgba(245, 158, 11, 0.1);
   
   /* Danger Colors */
-  --danger: #DC2626;
+  --danger: #EF4444;
   --danger-500: #EF4444;
   --danger-600: #DC2626;
-  --danger-50: #FEF2F2;
-  --destructive: #DC2626;
+  --danger-50: rgba(239, 68, 68, 0.1);
+  --destructive: #EF4444;
   
-  /* Neutral Colors — blue-tinted */
-  --secondary: #FFFFFF;
-  --secondary-foreground: #0F172A;
-  --secondary-light: #475569;
-  --muted: #E2E8F4;
-  --muted-foreground: #64748B;
-  --accent: #DBE3F2;
-  --accent-foreground: #0F172A;
+  /* Neutral Colors */
+  --secondary: #1D2430;
+  --secondary-foreground: #F8FAFC;
+  --secondary-light: #94A3B8;
+  --muted: #1D2430;
+  --muted-foreground: #94A3B8;
+  --accent: #2A3441;
+  --accent-foreground: #F8FAFC;
   
   /* Text Colors */
-  --text-primary: #0F172A;
-  --text-secondary: #334155;
+  --text-primary: #F8FAFC;
+  --text-secondary: #94A3B8;
   --text-muted: #64748B;
   
-  /* Border & Input Colors — slate */
-  --border: #CBD5E1;
-  --input-border: #CBD5E1;
-  --input: #FFFFFF;
-  --input-focus: #3B6CF4;
-  --input-error: #DC2626;
-  --input-success: #16A34A;
-  --ring: #3B6CF4;
+  /* Border & Input Colors */
+  --border: #2A3441;
+  --input-border: #2A3441;
+  --input: #161A22;
+  --input-focus: #10B981;
+  --input-error: #EF4444;
+  --input-success: #22C55E;
+  --ring: #10B981;
   
   /* Surface */
-  --surface: #F1F5FB;
-  --surface-muted: #E8EDF6;
+  --surface: #161A22;
+  --surface-muted: #0F1117;
 
-  /* Glass */
-  --glass-bg: rgba(255, 255, 255, 0.72);
+  /* Glass - minimal use */
+  --glass-bg: rgba(22, 26, 34, 0.85);
 
-  /* Gradient tokens */
-  --gradient-start: #3B6CF4;
-  --gradient-end: #6C8FFA;
-  
   /* Financial Colors */
-  --amount-primary: #0F172A;
-  --positive-balance: #16A34A;
-  --negative-fee: #DC2626;
-  --neutral-amount: #334155;
+  --amount-primary: #F8FAFC;
+  --positive-balance: #22C55E;
+  --negative-fee: #EF4444;
+  --neutral-amount: #94A3B8;
   
   /* State-Specific Colors */
-  --state-draft: #64748B;
+  --state-draft: #94A3B8;
   --state-pending-payment: #F59E0B;
   --state-funded: #3B82F6;
   --state-in-progress: #8B5CF6;
   --state-client-confirmed: #6366F1;
   --state-ready-for-payout: #F97316;
-  --state-paid-out: #16A34A;
-  --state-disputed: #DC2626;
-  --state-cancelled: #94A3B8;
+  --state-paid-out: #22C55E;
+  --state-disputed: #EF4444;
+  --state-cancelled: #64748B;
   --state-refunded: #14B8A6;
   
   /* Interactive States */
-  --button-hover: #2D5AE0;
-  --button-active: #1E40AF;
-  --button-disabled: #93AAFD;
+  --button-hover: #059669;
+  --button-active: #047857;
+  --button-disabled: #0F1117;
   
   /* Chart Colors */
-  --chart-1: #3B6CF4;
-  --chart-2: #16A34A;
+  --chart-1: #10B981;
+  --chart-2: #3B82F6;
   --chart-3: #F59E0B;
-  --chart-4: #DC2626;
-  --chart-5: #6C8FFA;
+  --chart-4: #EF4444;
+  --chart-5: #8B5CF6;
 
   /* Info */
   --info: #3B82F6;
   
-  /* Radius — more modern, softer */
-  --radius: 0.625rem;
+  /* Radius */
+  --radius: 0.5rem;
   
-  /* Sidebar Colors — Dark Blue (matches landing page) */
-  --sidebar: #0f1c4d;
-  --sidebar-foreground: rgba(255, 255, 255, 0.8);
-  --sidebar-primary: #3B6CF4;
+  /* Sidebar Colors */
+  --sidebar: #161A22;
+  --sidebar-foreground: #94A3B8;
+  --sidebar-primary: #10B981;
   --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: rgba(255, 255, 255, 0.1);
-  --sidebar-accent-foreground: #FFFFFF;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: #3B6CF4;
-}
-
-.dark {
-  --background: #0C1222;
-  --foreground: #F1F5F9;
-  --card: #162032;
-  --card-foreground: #F1F5F9;
-  --popover: #162032;
-  --popover-foreground: #F1F5F9;
-  --primary: #6C8FFA;
-  --primary-dark: #3B6CF4;
-  --primary-soft: rgba(108, 143, 250, 0.16);
-  --primary-foreground: #FFFFFF;
-  --secondary: #162032;
-  --secondary-light: #334155;
-  --secondary-foreground: #F1F5F9;
-  --muted: #1E3050;
-  --muted-foreground: #94A3B8;
-  --accent: #1E3050;
-  --accent-foreground: #F1F5F9;
-  --destructive: #DC2626;
-  --success: #16A34A;
-  --warning: #F59E0B;
-  --info: #6C8FFA;
-  --danger: #DC2626;
-  --border: #1E3050;
-  --input: #162032;
-  --ring: #6C8FFA;
-  --text-secondary: #94A3B8;
-  --surface: #162032;
-  --surface-muted: #0C1222;
-  --glass-bg: rgba(22, 32, 50, 0.72);
-  --gradient-start: #3B6CF4;
-  --gradient-end: #6C8FFA;
-  --brand-hero-from: #0f1c4d;
-  --brand-hero-via: #1a3178;
-  --brand-hero-to: #2d5ae0;
-  --brand-footer: #0a1333;
-  --chart-1: #6C8FFA;
-  --chart-2: #16A34A;
-  --chart-3: #F59E0B;
-  --chart-4: #DC2626;
-  --chart-5: #3B6CF4;
-  --sidebar: #0C1222;
-  --sidebar-foreground: #CBD5E1;
-  --sidebar-primary: #6C8FFA;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #162032;
-  --sidebar-accent-foreground: #CBD5E1;
-  --sidebar-border: #1E3050;
-  --sidebar-ring: #6C8FFA;
+  --sidebar-accent: #1D2430;
+  --sidebar-border: #2A3441;
+  --sidebar-ring: #10B981;
 }
 
 @layer base {

@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 
 export function LandingCTA() {
   return (
-    <section className="py-20 bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white relative overflow-hidden">
-      <div className="absolute inset-0">
-        <div className="absolute w-150 h-150 rounded-full bg-primary/10 -top-60 -right-40 blur-3xl" />
-        <div className="absolute w-96 h-96 rounded-full bg-white/5 -bottom-40 -left-20 blur-3xl" />
+    <section className="py-20 bg-background text-foreground relative overflow-hidden border-t border-border">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute w-150 h-150 rounded-full bg-primary/20 -top-60 -right-40 blur-3xl" />
+        <div className="absolute w-96 h-96 rounded-full bg-primary/20 -bottom-40 -left-20 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">
@@ -20,13 +20,13 @@ export function LandingCTA() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="mx-auto mb-6 size-16 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center">
-            <Mail className="size-7 text-primary-foreground" />
+          <div className="mx-auto mb-6 size-16 rounded-2xl bg-card border border-border shadow-[0_10px_30px_rgba(0,0,0,0.3)] flex items-center justify-center">
+            <Mail className="size-7 text-primary" />
           </div>
           <h2 className="text-3xl font-bold sm:text-4xl">
             Ready to Work with Confidence?
           </h2>
-          <p className="mt-4 text-primary-foreground/70 max-w-xl mx-auto text-lg">
+          <p className="mt-4 text-muted-foreground max-w-xl mx-auto text-lg">
             Join thousands of clients and artisans who trust WorkSure for
             secure, transparent work.
           </p>
@@ -34,7 +34,7 @@ export function LandingCTA() {
             <Button
               asChild
               size="lg"
-              className="h-12 rounded-xl px-8 text-base bg-white text-primary-dark hover:bg-muted shadow-xl shadow-black/20 font-semibold"
+              className="h-12 rounded-xl px-8 text-base shadow-sm font-semibold"
             >
               <Link href="/auth/register">
                 Create Free Account <ArrowRight className="ml-2 size-4" />
@@ -44,7 +44,7 @@ export function LandingCTA() {
               asChild
               size="lg"
               variant="outline"
-              className="h-12 rounded-xl px-8 text-base bg-transparent border-white/30 text-white hover:bg-white/10"
+              className="h-12 rounded-xl px-8 text-base bg-transparent border-border text-foreground hover:bg-accent"
             >
               <Link href="/auth/login">Sign In</Link>
             </Button>
@@ -87,20 +87,20 @@ export function LandingFooter() {
   ];
 
   return (
-    <footer className="bg-[#0a1333] text-white pt-16 pb-8">
+    <footer className="bg-card border-t border-border text-foreground pt-16 pb-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="flex bg-primary rounded-lg p-1.5">
-                <ShieldCheck className="size-5 text-white" />
+                <ShieldCheck className="size-5 text-primary-foreground" />
               </div>
               <span className="text-xl font-bold">
-                Work<span className="text-info">Sure</span>
+                Work<span className="text-primary">Sure</span>
               </span>
             </div>
-            <p className="text-sm text-primary-foreground/60 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               The secure escrow marketplace that connects clients with verified
               artisans. Trust built in.
             </p>
@@ -114,7 +114,7 @@ export function LandingFooter() {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-sm text-primary-foreground/60 hover:text-white transition-colors"
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.label}
                     </Link>
@@ -125,18 +125,18 @@ export function LandingFooter() {
           ))}
         </div>
 
-        <div className="mt-14 pt-6 border-t border-white/10 flex flex-col sm:flex-row justify-between items-center gap-4">
-          <p className="text-xs text-primary-foreground/40">
+        <div className="mt-14 pt-6 border-t border-border flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} WorkSure. All rights reserved.
           </p>
-          <div className="flex gap-4 text-xs text-primary-foreground/40">
-            <Link href="#" className="hover:text-white transition-colors">
+          <div className="flex gap-4 text-xs text-muted-foreground">
+            <Link href="#" className="hover:text-foreground transition-colors">
               Terms
             </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="#" className="hover:text-foreground transition-colors">
               Privacy
             </Link>
-            <Link href="#" className="hover:text-white transition-colors">
+            <Link href="#" className="hover:text-foreground transition-colors">
               Cookies
             </Link>
           </div>

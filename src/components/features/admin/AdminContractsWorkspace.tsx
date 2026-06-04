@@ -177,14 +177,14 @@ export default function AdminContractsWorkspace() {
             <CardContent className="flex flex-col justify-center h-full pb-8">
               <div className="grid grid-cols-2 gap-8 text-center">
                 <div className="space-y-1">
-                  <div className="flex items-center justify-center gap-1 text-success">
+                  <div className="flex items-center justify-center gap-1 text-primary">
                     <ArrowUpRight className="size-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">Payouts</span>
                   </div>
                   <div className="text-xl font-bold">₦{stats.payoutVolume.toLocaleString()}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="flex items-center justify-center gap-1 text-danger">
+                  <div className="flex items-center justify-center gap-1 text-primary">
                     <ArrowDownRight className="size-4" />
                     <span className="text-xs font-bold uppercase tracking-wider">Refunds</span>
                   </div>
@@ -294,7 +294,7 @@ export default function AdminContractsWorkspace() {
 
 function getStatusColor(status: string) {
   switch (status) {
-    case "FUNDED": return "bg-blue-500";
+    case "FUNDED": return "bg-info";
     case "ACTIVE":
     case "IN_PROGRESS": return "bg-success";
     case "DISPUTED": return "bg-danger";
@@ -307,7 +307,7 @@ function getStatusColor(status: string) {
 
 function getStatusBg(status: string) {
   switch (status) {
-    case "FUNDED": return "bg-blue-100 text-blue-700 border-blue-200 dark:bg-blue-900/30 dark:text-blue-400";
+    case "FUNDED": return "bg-info/20 text-info border-info/30";
     case "ACTIVE":
     case "IN_PROGRESS": return "bg-success-50 text-success-700 border-success-200 dark:bg-success-900/30 dark:text-success-400";
     case "DISPUTED": return "bg-danger-50 text-danger-700 border-danger-200 dark:bg-danger-900/30 dark:text-danger-400";

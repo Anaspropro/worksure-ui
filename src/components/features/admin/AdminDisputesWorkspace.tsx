@@ -77,8 +77,9 @@ export default function AdminDisputesWorkspace() {
   return (
     <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
-        <section className="relative overflow-hidden rounded-2xl border-none bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] p-8 text-white shadow-2xl">
-          <div className="absolute top-0 right-0 h-full w-full bg-[radial-gradient(circle_at_80%_20%,rgba(255,255,255,0.08),transparent_50%)]" />
+        <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative z-10 space-y-4">
             <Badge variant="outline" className="rounded-full border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-md">
               Admin Governance
@@ -86,9 +87,9 @@ export default function AdminDisputesWorkspace() {
             <div className="flex items-center justify-between">
               <div className="space-y-2">
                 <h1 className="text-4xl font-bold tracking-tight">Dispute Resolution</h1>
-                <p className="max-w-2xl text-lg text-white/80">
+                <CardDescription className="max-w-2xl text-base text-muted-foreground leading-relaxed">
                   Monitor and resolve conflicts between clients and artisans with fairness and visibility.
-                </p>
+                </CardDescription>
               </div>
               <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md lg:flex">
                 <ShieldAlert className="size-8 text-warning" />

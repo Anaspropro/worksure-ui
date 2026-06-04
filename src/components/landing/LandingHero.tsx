@@ -17,11 +17,10 @@ import Image from "next/image";
 
 export default function LandingHero() {
   return (
-    <section className="relative overflow-hidden bg-linear-to-br from-[#0f1c4d] via-[#1a3178] to-[#2d5ae0] text-white">
+    <section className="relative overflow-hidden bg-background text-foreground border-b border-border">
       {/* Decorative elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(255,255,255,0.15),transparent_50%)]" />
-        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(108,143,250,0.2),transparent_50%)]" />
+      <div className="absolute inset-0 opacity-40">
+        <div className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_20%,rgba(79,70,229,0.08),transparent_50%)]" />
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-28 pb-20 lg:pt-36 lg:pb-28">
@@ -29,36 +28,36 @@ export default function LandingHero() {
           {/* Left content */}
           <div className="space-y-8">
             <motion.div
-              className="flex items-center gap-2 w-fit rounded-full bg-white/10 border border-white/20 px-4 py-1.5 backdrop-blur-sm"
+              className="flex items-center gap-2 w-fit rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 backdrop-blur-sm"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Sparkles className="size-4 text-warning" />
-              <span className="text-sm font-medium text-white/90">
+              <Sparkles className="size-4 text-primary" />
+              <span className="text-sm font-medium text-primary">
                 Trusted escrow marketplace
               </span>
             </motion.div>
 
             <motion.h1
-              className="text-4xl font-bold leading-[1.15] sm:text-5xl lg:text-6xl"
+              className="text-4xl font-bold leading-[1.15] sm:text-5xl lg:text-6xl text-foreground"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
             >
               Hire Artisans with{" "}
-              <span className="text-accent">
+              <span className="text-primary">
                 Confidence,
               </span>
               <br />
               Pay with{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-warning/80 to-warning">
+              <span className="text-primary">
                 Security
               </span>
             </motion.h1>
 
             <motion.p
-              className="max-w-lg text-lg text-primary-foreground/80 leading-relaxed"
+              className="max-w-lg text-lg text-muted-foreground leading-relaxed"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.5 }}
@@ -76,7 +75,7 @@ export default function LandingHero() {
               <Button
                 asChild
                 size="lg"
-                className="h-12 rounded-xl px-8 text-base bg-white text-primary-dark hover:bg-muted shadow-xl shadow-black/20 font-semibold"
+                className="h-12 rounded-xl px-8 text-base shadow-sm font-semibold"
               >
                 <Link href="/auth/register">
                   Get Started <ArrowRight className="ml-1 size-4" />
@@ -86,7 +85,7 @@ export default function LandingHero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-xl px-8 text-base bg-transparent border-white/30 text-white hover:bg-white/10"
+                className="h-12 rounded-xl px-8 text-base bg-transparent border-border text-foreground hover:bg-accent"
               >
                 <Link href="#how-it-works">How it Works</Link>
               </Button>
@@ -103,9 +102,9 @@ export default function LandingHero() {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="size-9 rounded-full bg-linear-to-br from-info to-primary border-2 border-primary-dark flex items-center justify-center"
+                    className="size-9 rounded-full bg-surface-muted border-2 border-background flex items-center justify-center"
                   >
-                    <Users className="size-4 text-white" />
+                    <Users className="size-4 text-primary" />
                   </div>
                 ))}
               </div>
@@ -118,7 +117,7 @@ export default function LandingHero() {
                     />
                   ))}
                 </div>
-                <p className="text-xs text-primary-foreground/70 mt-0.5">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   Trusted by 8,500+ clients across Nigeria
                 </p>
               </div>
@@ -133,21 +132,21 @@ export default function LandingHero() {
             transition={{ delay: 0.3, duration: 0.7 }}
           >
             {/* Main image placeholder */}
-            <div className="relative w-full h-140 rounded-3xl bg-white/5 backdrop-blur-sm overflow-hidden">
-              <div className="absolute inset-0 bg-linear-to-t from-[#1a3178]/80 to-transparent z-10" />
+            <div className="relative w-full h-140 rounded-3xl bg-surface-muted overflow-hidden border border-border">
+              <div className="absolute inset-0 bg-linear-to-t from-background/80 to-transparent z-10" />
               <Image
                 src="/hero.png"
-                alt="Hero Image"
+                alt="Abstract Security Visual"
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
                 loading="eager"
-                className="object-contain opacity-80"
+                className="object-cover opacity-60 mix-blend-overlay"
               />
               <div className="absolute bottom-6 left-6 right-6 z-20">
-                <p className="text-lg font-semibold">
+                <p className="text-lg font-semibold text-foreground">
                   Real artisans. Real escrow. Real results.
                 </p>
-                <p className="text-sm text-primary-foreground/70 mt-1">
+                <p className="text-sm text-muted-foreground mt-1">
                   Every payment secured by WorkSure
                 </p>
               </div>
@@ -155,7 +154,7 @@ export default function LandingHero() {
 
             {/* Floating card — Escrow */}
             <motion.div
-              className="absolute -left-10 top-12 z-30 rounded-2xl bg-white text-foreground shadow-2xl p-4 w-56 border border-border"
+              className="absolute -left-10 top-12 z-30 rounded-2xl bg-card text-card-foreground shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 w-56 border border-border"
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.8, duration: 0.5 }}
@@ -178,7 +177,7 @@ export default function LandingHero() {
 
             {/* Floating card — Progress */}
             <motion.div
-              className="absolute -right-6 bottom-20 z-30 rounded-2xl bg-white text-foreground shadow-2xl p-4 w-52 border border-border"
+              className="absolute -right-6 bottom-20 z-30 rounded-2xl bg-card text-card-foreground shadow-[0_20px_50px_rgba(0,0,0,0.5)] p-4 w-52 border border-border"
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 1.0, duration: 0.5 }}
@@ -202,7 +201,7 @@ export default function LandingHero() {
 
             {/* Floating card — Verified */}
             <motion.div
-              className="absolute right-20 top-6 z-30 rounded-xl bg-white text-foreground shadow-xl px-3 py-2 border border-border"
+              className="absolute right-20 top-6 z-30 rounded-xl bg-card text-card-foreground shadow-[0_10px_30px_rgba(0,0,0,0.5)] px-3 py-2 border border-border"
               initial={{ opacity: 0, y: -15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 1.2, duration: 0.4 }}
@@ -214,16 +213,6 @@ export default function LandingHero() {
             </motion.div>
           </motion.div>
         </div>
-      </div>
-
-      {/* Wave divider */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 60" fill="none" className="w-full">
-          <path
-            d="M0 60V20C240 0 480 40 720 30C960 20 1200 0 1440 20V60H0Z"
-            className="fill-background"
-          />
-        </svg>
       </div>
     </section>
   );

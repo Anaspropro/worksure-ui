@@ -54,24 +54,15 @@ export default function AdminDashboardWorkspace() {
     >
       {/* ── Hero Section ── */}
       <motion.div variants={itemVariants}>
-        <Card className="relative overflow-hidden border-border/80 bg-gradient-to-br from-[#1a2a6e] via-[#2d4a9e] to-[#4168d0] text-white">
-          {/* Floating decorative orbs */}
-          <motion.div
-            className="absolute -top-20 -right-20 size-64 rounded-full bg-white/10 blur-3xl"
-            animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
-            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.div
-            className="absolute -bottom-32 left-10 size-56 rounded-full bg-white/10 blur-3xl"
-            animate={{ y: [0, 15, 0], scale: [1.1, 1, 1.1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
-          />
+        <Card className="relative overflow-hidden border-border bg-card shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
           
           <CardHeader className="relative z-10 pb-8 pt-10 px-8">
-            <CardTitle className="text-3xl font-bold tracking-tight text-white mb-2">
+            <CardTitle className="text-3xl font-bold tracking-tight mb-2">
               Operations Center
             </CardTitle>
-            <CardDescription className="max-w-2xl text-base text-blue-100/90 leading-relaxed">
+            <CardDescription className="max-w-2xl text-base text-muted-foreground leading-relaxed">
               Monitor platform health, resolve disputes, and verify artisans from a single, unified operational dashboard. Keep the marketplace running smoothly.
             </CardDescription>
           </CardHeader>
