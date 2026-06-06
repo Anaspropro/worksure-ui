@@ -150,10 +150,10 @@ export async function login(email: string, password: string): Promise<AuthSucces
     if (error) {
       throw new ApiError((error as any).message || "Invalid credentials provided. Please check your email and password.", response?.status || 401);
     }
-    if (!data || !(data as any).user) {
+    if (!data || !(data as any).data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
     }
-    return data as unknown as AuthSuccess;
+    return (data as any).data as AuthSuccess;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available. Please check your connection.", 503);
@@ -173,10 +173,10 @@ export async function register(
     if (error) {
       throw new ApiError((error as any).message || "Registration failed. This email might already be in use.", (response as any)?.status || 400);
     }
-    if (!data || !(data as any).user) {
+    if (!data || !(data as any).data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
     }
-    return data as unknown as AuthSuccess;
+    return (data as any).data as AuthSuccess;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available. Please check your connection.", 503);

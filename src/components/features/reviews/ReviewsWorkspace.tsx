@@ -47,7 +47,7 @@ export default function ReviewsWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle className="text-3xl tracking-tight">Reviews and Reputation</CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
@@ -58,7 +58,7 @@ export default function ReviewsWorkspace() {
 
       {user.role === "CLIENT" ? (
         <section className="grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-          <Card className="border-border/80 bg-white">
+          <Card className="border-border/80 bg-card">
             <CardHeader>
               <CardTitle>Leave a review</CardTitle>
               <CardDescription>Reviews should follow a completed contract so they stay tied to real work.</CardDescription>
@@ -117,7 +117,7 @@ export default function ReviewsWorkspace() {
         </section>
       ) : null}
 
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle>{user.role === "ARTISAN" ? "Reviews about your work" : "Your submitted reviews"}</CardTitle>
           <CardDescription>Review history is grouped here so it is easy to reference during future work.</CardDescription>

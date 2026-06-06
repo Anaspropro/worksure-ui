@@ -40,7 +40,7 @@ export default function ContractsWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle className="text-3xl tracking-tight">Contracts and Escrow</CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
@@ -72,7 +72,7 @@ export default function ContractsWorkspace() {
         </Card>
       </section>
 
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle>Contract queue</CardTitle>
           <CardDescription>Every payment action stays attached to a visible contract state.</CardDescription>

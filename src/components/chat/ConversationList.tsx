@@ -22,7 +22,7 @@ export default function ConversationList({
             type="button"
             onClick={() => onSelect(conversation.id)}
             className={`w-full rounded-lg border px-4 py-3 text-left transition ${
-              isActive ? "border-primary bg-primary-soft" : "border-border/70 bg-white hover:bg-muted/40"
+              isActive ? "border-primary bg-primary-soft" : "border-border/70 bg-card hover:bg-muted/40"
             }`}
           >
             <p className="font-medium text-foreground">{conversation.contract?.job.title || "Conversation"}</p>

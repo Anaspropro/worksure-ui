@@ -7,6 +7,7 @@ import { Check, ChevronRight, FileUp, Loader2, ShieldCheck, User as UserIcon } f
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useAuth";
 import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument, useKycStatus } from "@/hooks/useKyc";
+import { useBanks } from "@/hooks/useWallet";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -15,27 +16,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 
-const NIGERIAN_BANKS = [
-  { code: "044", name: "Access Bank" },
-  { code: "011", name: "First Bank of Nigeria" },
-  { code: "058", name: "Guaranty Trust Bank (GTB)" },
-  { code: "033", name: "United Bank for Africa (UBA)" },
-  { code: "032", name: "Union Bank" },
-  { code: "057", name: "Zenith Bank" },
-  { code: "070", name: "Fidelity Bank" },
-  { code: "214", name: "First City Monument Bank (FCMB)" },
-  { code: "030", name: "Heritage Bank" },
-  { code: "082", name: "Keystone Bank" },
-  { code: "221", name: "Stanbic IBTC Bank" },
-  { code: "232", name: "Sterling Bank" },
-  { code: "032", name: "Union Bank of Nigeria" },
-  { code: "215", name: "Unity Bank" },
-  { code: "035", name: "Wema Bank" },
-];
-
 export default function KycSubmitWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
+  
+  const banksQuery = useBanks({ enabled: true });
+  const NIGERIAN_BANKS = banksQuery.data ?? [];
   
   const kycStatusQuery = useKycStatus();
   const kycStatus = kycStatusQuery.data?.kycStatus || "UNVERIFIED";
@@ -183,8 +169,11 @@ export default function KycSubmitWorkspace() {
                 </div>
                 
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">Bank Name</label>
-                  <Select value={bankCode} onValueChange={setBankCode}>
+                  <label className="text-sm font-medium flex justify-between items-center">
+                    <span>Bank Name</span>
+                    {banksQuery.isLoading && <Loader2 className="size-3 animate-spin text-muted-foreground" />}
+                  </label>
+                  <Select value={bankCode} onValueChange={setBankCode} disabled={banksQuery.isLoading}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select your bank" />
                     </SelectTrigger>

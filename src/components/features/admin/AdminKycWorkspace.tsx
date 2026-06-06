@@ -97,7 +97,7 @@ export default function AdminKycWorkspace() {
                 </CardDescription>
               </div>
             </div>
-            <div className="flex items-center gap-3 bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+            <div className="flex items-center gap-3 bg-card/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
               <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-primary/20 text-primary">
                 <UserCheck className="size-6" />
               </div>
@@ -110,7 +110,7 @@ export default function AdminKycWorkspace() {
         </section>
 
         {/* ── Toolbar ────────────────────────────────────────────────── */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-white p-4 rounded-xl border shadow-sm">
+        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between bg-card p-4 rounded-xl border shadow-sm">
           <div className="flex gap-2 w-full sm:w-auto">
             {["PENDING", "VERIFIED", "ALL"].map((f) => (
               <Button
@@ -161,7 +161,7 @@ export default function AdminKycWorkspace() {
           >
             {filteredArtisans.map((artisan) => (
               <motion.div key={artisan.id} variants={itemVariants}>
-                <Card className="group relative overflow-hidden border-border/60 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-white">
+                <Card className="group relative overflow-hidden border-border/60 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-card">
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
                       <div className="h-14 w-14 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-bold text-xl border border-white">

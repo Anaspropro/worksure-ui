@@ -48,7 +48,7 @@ export default function ProfileWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle className="text-3xl tracking-tight">Profile and Trust Signals</CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
@@ -58,7 +58,7 @@ export default function ProfileWorkspace() {
       </Card>
 
       <section className="grid gap-4 xl:grid-cols-2">
-        <Card className="border-border/80 bg-white">
+        <Card className="border-border/80 bg-card">
           <CardHeader>
             <CardTitle>Account details</CardTitle>
             <CardDescription>Keep your contact and trust details current for contracts and support.</CardDescription>
@@ -142,7 +142,7 @@ export default function ProfileWorkspace() {
         </Card>
 
         {user.role === "ARTISAN" ? (
-          <Card className="border-border/80 bg-white">
+          <Card className="border-border/80 bg-card">
             <CardHeader>
               <CardTitle>Artisan marketplace profile</CardTitle>
               <CardDescription>This profile powers your discoverability, verification readiness, and reviews.</CardDescription>

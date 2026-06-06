@@ -177,7 +177,7 @@ export default function WorkSureDashboard({
               </p>
             </CardContent>
           </Card>
-          <Card className="border-border/60 bg-white/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
+          <Card className="border-border/60 bg-card/80 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="px-6 py-6">
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Ready to release</p>
               <p className="mt-2 text-4xl font-bold text-success">{escrowReadyContracts.length}</p>
@@ -188,7 +188,7 @@ export default function WorkSureDashboard({
 
       {roleView === "CLIENT" ? (
         <section className="grid gap-4 lg:grid-cols-2">
-          <Card className="border-border/90 bg-white">
+          <Card className="border-border/90 bg-card">
             <CardHeader>
               <CardTitle>Post a job</CardTitle>
               <CardDescription>
@@ -246,7 +246,7 @@ export default function WorkSureDashboard({
 
       {roleView === "ARTISAN" ? (
         <section className="grid gap-4 lg:grid-cols-2">
-          <Card className="border-border/90 bg-white">
+          <Card className="border-border/90 bg-card">
             <CardHeader>
               <CardTitle>Submit a proposal</CardTitle>
               <CardDescription>
@@ -310,7 +310,7 @@ export default function WorkSureDashboard({
 
       {/* {roleView === "ADMIN" ? (
         <section className="grid gap-4 lg:grid-cols-3">
-          <Card className="border-border/90 bg-white lg:col-span-2">
+          <Card className="border-border/90 bg-card lg:col-span-2">
             <CardHeader>
               <CardTitle>Platform activity snapshot</CardTitle>
               <CardDescription>
@@ -340,7 +340,7 @@ export default function WorkSureDashboard({
       ) : null} */}
 
       <section className="grid gap-4 xl:grid-cols-3">
-        <Card className="border-border/90 bg-white">
+        <Card className="border-border/90 bg-card">
           <CardHeader>
             <CardTitle>{roleView === "CLIENT" ? "Your jobs" : "Open jobs"}</CardTitle>
           </CardHeader>
@@ -367,7 +367,7 @@ export default function WorkSureDashboard({
             </CardContent>
         </Card>
 
-        <Card className="border-border/90 bg-white">
+        <Card className="border-border/90 bg-card">
           <CardHeader>
             <CardTitle>Proposals</CardTitle>
             <CardDescription>
@@ -424,7 +424,7 @@ export default function WorkSureDashboard({
           </CardContent>
         </Card>
 
-        <Card className="border-border/90 bg-white">
+        <Card className="border-border/90 bg-card">
           <CardHeader>
             <CardTitle>Contracts</CardTitle>
             <CardDescription>Current contract status and escrow actions.</CardDescription>

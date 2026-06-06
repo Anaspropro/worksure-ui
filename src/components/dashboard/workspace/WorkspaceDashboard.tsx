@@ -306,7 +306,7 @@ export default function WorkspaceDashboard({
               <Button
                 asChild
                 size="sm"
-                className="gap-1.5 bg-white ] hover:bg-muted shadow-xl shadow-black/20 font-semibold"
+                className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-black/20 font-semibold"
               >
                 <Link href="/jobs/create">
                   <Plus className="size-4" /> Post a Job
@@ -328,6 +328,100 @@ export default function WorkspaceDashboard({
           </div>
         </div>
       </motion.div>
+
+      {/* ── Getting Started Onboarding ── */}
+      {(!contracts || contracts.length === 0) && roleView !== "ADMIN" && (
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.15, duration: 0.4 }}
+        >
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                  <TrendingUp className="size-5 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg">Getting Started</CardTitle>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    {roleView === "CLIENT"
+                      ? "Follow these steps to hire your first artisan with escrow protection."
+                      : "Complete these steps to start earning on WorkSure."}
+                  </p>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {roleView === "CLIENT" ? (
+                  <>
+                    <Link href="/wallet" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">1</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Set up wallet</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Add funds to your wallet for escrow payments.</p>
+                      </div>
+                    </Link>
+                    <Link href="/jobs/create" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">2</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Post a job</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Describe the work you need done and set a budget.</p>
+                      </div>
+                    </Link>
+                    <Link href="/jobs" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">3</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Review proposals</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Artisans will apply with their price and plan.</p>
+                      </div>
+                    </Link>
+                    <Link href="/contracts" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">4</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Create contract</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Accept a proposal and fund secure escrow.</p>
+                      </div>
+                    </Link>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/kyc/status" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">1</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Get verified</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Complete KYC to unlock proposal submission.</p>
+                      </div>
+                    </Link>
+                    <Link href="/jobs" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">2</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Browse jobs</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Find work that matches your skills.</p>
+                      </div>
+                    </Link>
+                    <Link href="/jobs" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">3</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Submit proposals</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Send your price and delivery plan.</p>
+                      </div>
+                    </Link>
+                    <Link href="/contracts" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+                      <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">4</span>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Get paid</p>
+                        <p className="text-xs text-muted-foreground mt-0.5">Escrow guarantees payment on completion.</p>
+                      </div>
+                    </Link>
+                  </>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
 
       {/* ── Stat cards ── */}
       <motion.div

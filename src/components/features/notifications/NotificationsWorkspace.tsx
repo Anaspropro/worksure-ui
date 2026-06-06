@@ -28,7 +28,7 @@ export default function NotificationsWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle className="text-3xl tracking-tight">Notifications</CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
@@ -58,7 +58,7 @@ export default function NotificationsWorkspace() {
         </Card>
       </section>
 
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle>Event feed</CardTitle>
           <CardDescription>Important state changes appear here with priority and timestamp context.</CardDescription>

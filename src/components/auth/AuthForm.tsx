@@ -105,19 +105,26 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   const activeMutation = mode === "login" ? loginMutation : registerMutation;
   const isBusy = activeMutation.status === "pending";
+  const [formError, setFormError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!hasHydrated) return;
+    // Don't redirect while a mutation is in flight — prevents race condition
+    if (isBusy) return;
     if (userQuery.data?.role) {
       router.replace(getDashboardPathForRole(userQuery.data.role));
     }
-  }, [hasHydrated, router, userQuery.data?.role]);
+  }, [hasHydrated, router, userQuery.data?.role, isBusy]);
 
-  const authError =
-    activeMutation.error instanceof Error ? activeMutation.error.message : null;
+  // Clear form error when user starts typing
+  useEffect(() => {
+    if (formError) setFormError(null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [name, email, password, role]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setFormError(null);
     const trimmedName = name.trim();
     const normalizedEmail = email.trim().toLowerCase();
 
@@ -133,6 +140,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
           },
           onError: (error) => {
             toast.error(error.message || "Login failed.", { id: toastId });
+            setFormError(error.message || "Login failed. Please check your credentials.");
           },
         },
       );
@@ -144,7 +152,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       { name: trimmedName, email: normalizedEmail, password, role },
       {
         onSuccess: ({ user }) => {
-          toast.success("Account created. You're signed in now.", { id: toastId });
+          toast.success("Account created! Redirecting to your dashboard...", { id: toastId });
           setName("");
           setEmail("");
           setPassword("");
@@ -153,6 +161,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
         },
         onError: (error) => {
           toast.error(error.message || "Registration failed.", { id: toastId });
+          setFormError(error.message || "Registration failed. Please try again.");
         },
       },
     );
@@ -282,6 +291,20 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
           {/* Form */}
           <form className="space-y-4" onSubmit={handleSubmit}>
+            {/* Inline error banner */}
+            <AnimatePresence>
+              {formError && (
+                <motion.div
+                  className="rounded-lg border border-destructive/30 bg-destructive/5 px-4 py-3 text-sm text-destructive"
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {formError}
+                </motion.div>
+              )}
+            </AnimatePresence>
             {/* Name — register only */}
             {mode === "register" && (
               <motion.div

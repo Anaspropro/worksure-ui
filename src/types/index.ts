@@ -95,6 +95,8 @@ export interface User {
   updatedAt?: string;
   lastLoginAt?: string | null;
   artisanProfile?: ArtisanProfile | null;
+  payoutBankCode?: string | null;
+  payoutAccountNumber?: string | null;
 }
 
 export interface AuthSuccess {

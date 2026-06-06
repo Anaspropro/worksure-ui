@@ -15,8 +15,11 @@ import {
   useFundContract,
   useRefundContract,
   useReleaseEscrow,
+  useVerifyContractPayment,
 } from "@/hooks/useContracts";
 import { formatCurrency, formatDate } from "@/lib/formatters";
+import { useEffect, useRef } from "react";
+import { toast } from "sonner";
 
 const sectionVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -39,6 +42,33 @@ export default function ContractDetailWorkspace({
   const confirmCompletionMutation = useConfirmCompletion();
   const releaseEscrowMutation = useReleaseEscrow();
   const refundContractMutation = useRefundContract();
+  const verifyPaymentMutation = useVerifyContractPayment();
+  const paystackProcessedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const searchParams = new URLSearchParams(window.location.search);
+    const reference = searchParams.get("reference") ?? searchParams.get("trxref");
+    const status = searchParams.get("status");
+
+    if (reference && !paystackProcessedRef.current && (!status || status === "success")) {
+      paystackProcessedRef.current = true;
+      verifyPaymentMutation.mutate(
+        { reference },
+        {
+          onSuccess: () => {
+            toast.success("Contract payment verified and escrow funded.");
+            window.history.replaceState({}, "", window.location.pathname);
+            void contractQuery.refetch();
+          },
+          onError: (error: Error) => {
+            toast.error(error.message || "Contract payment verification failed.");
+          },
+        },
+      );
+    }
+  }, [verifyPaymentMutation, contractQuery]);
 
   if (!user) {
     return null;
@@ -120,13 +150,24 @@ export default function ContractDetailWorkspace({
               <CardContent className="flex flex-wrap gap-2">
                 {contract.status === "DRAFT" && user.id === contract.clientId ? (
                   <Button
-                    onClick={() =>
+                    onClick={() => {
+                      const toastId = toast.loading("Initializing payment...");
                       fundContractMutation.mutate({
                         contractId: contract.id,
                         email: user.email,
                         callbackUrl: window.location.href,
-                      })
-                    }
+                      }, {
+                        onSuccess: (data) => {
+                          toast.dismiss(toastId);
+                          if (data.authorizationUrl) {
+                            window.location.href = data.authorizationUrl;
+                          }
+                        },
+                        onError: (error) => {
+                          toast.error(error.message || "Failed to initialize payment.", { id: toastId });
+                        }
+                      });
+                    }}
                     disabled={fundContractMutation.status === "pending"}
                   >
                     Fund escrow

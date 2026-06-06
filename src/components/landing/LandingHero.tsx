@@ -33,7 +33,7 @@ export default function LandingHero() {
             >
               <Sparkles className="size-4 text-primary" />
               <span className="text-sm font-medium text-primary">
-                Africa's leading escrow marketplace
+                Trusted by thousands across Nigeria
               </span>
             </motion.div>
 
@@ -43,9 +43,9 @@ export default function LandingHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1, duration: 0.6 }}
             >
-              Hire Artisans with{" "}<span className="text-primary">Confidence,</span>
+              Find Skilled Artisans.{" "}<span className="text-primary">Pay Only</span>
               <br />
-              Pay with{" "}<span className="text-primary">Total Security</span>
+              When the Job is{" "}<span className="text-primary">Done Right.</span>
             </motion.h1>
 
             <motion.p
@@ -54,7 +54,7 @@ export default function LandingHero() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.25, duration: 0.5 }}
             >
-              WorkSure is the premier digital escrow platform. We protect your funds until the job is done perfectly, connecting businesses with top-tier, verified professionals.
+              WorkSure connects you with verified professionals and holds your payment in secure escrow until you're 100% satisfied with the work. No more risk, no more chasing refunds.
             </motion.p>
 
             <motion.div

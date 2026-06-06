@@ -6,7 +6,7 @@ import type { WalletBalance, WalletSummary, WalletTransactionsResponse } from "@
 
 type WalletMutationInput = {
   amount: number;
-  reference: string;
+  reference?: string;
   metadata?: Record<string, unknown>;
 };
 
@@ -51,12 +51,22 @@ export function useCreateWallet() {
   });
 }
 
-export function useAddFunds() {
+export function useWalletDepositInit() {
+  return useMutation({
+    mutationFn: (input: { amount: number }) =>
+      proxyFetch<{ authorizationUrl: string; reference: string }>("/wallet/deposit/init", {
+        method: "POST",
+        body: JSON.stringify(input),
+      }),
+  });
+}
+
+export function useWalletDepositVerify() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: WalletMutationInput) =>
-      proxyFetch("/wallet/add-funds", {
+    mutationFn: (input: { reference: string }) =>
+      proxyFetch("/wallet/deposit/verify", {
         method: "POST",
         body: JSON.stringify(input),
       }),
@@ -66,12 +76,12 @@ export function useAddFunds() {
   });
 }
 
-export function useWithdrawFunds() {
+export function useWalletPayoutRequest() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (input: WalletMutationInput) =>
-      proxyFetch("/wallet/withdraw-funds", {
+    mutationFn: (input: { amount: number; bankCode: string; accountNumber: string }) =>
+      proxyFetch("/wallet/payout/request", {
         method: "POST",
         body: JSON.stringify(input),
       }),
@@ -120,5 +130,23 @@ export function usePaystackVerify() {
       queryClient.invalidateQueries({ queryKey: ["wallet"] });
       queryClient.refetchQueries({ queryKey: ["wallet"] });
     },
+  });
+}
+
+export function useBanks(options: { enabled?: boolean } = {}) {
+  return useQuery<{ name: string; code: string; id: number }[]>({
+    queryKey: ["banks"],
+    queryFn: async () => {
+      const banks = await proxyFetch<{ name: string; code: string; id: number }[]>("/payments/banks");
+      const uniqueBanks = new Map();
+      for (const bank of banks) {
+        if (!uniqueBanks.has(bank.code)) {
+          uniqueBanks.set(bank.code, bank);
+        }
+      }
+      return Array.from(uniqueBanks.values());
+    },
+    enabled: options.enabled,
+    staleTime: 1000 * 60 * 60 * 24, // 24 hours
   });
 }

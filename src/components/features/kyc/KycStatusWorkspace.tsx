@@ -19,7 +19,7 @@ export default function KycStatusWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader>
           <CardTitle className="text-3xl tracking-tight">KYC and Verification Status</CardTitle>
           <CardDescription className="max-w-3xl text-base leading-7">
@@ -29,7 +29,7 @@ export default function KycStatusWorkspace() {
       </Card>
 
       <section className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
-        <Card className="border-border/80 bg-white">
+        <Card className="border-border/80 bg-card">
           <CardHeader>
             <CardTitle>Current status</CardTitle>
           </CardHeader>
@@ -48,7 +48,7 @@ export default function KycStatusWorkspace() {
           </CardContent>
         </Card>
 
-        <Card className="border-border/80 bg-white">
+        <Card className="border-border/80 bg-card">
           <CardHeader>
             <CardTitle>Readiness checklist</CardTitle>
             <CardDescription>These checks mirror the actual backend-backed artisan profile data.</CardDescription>

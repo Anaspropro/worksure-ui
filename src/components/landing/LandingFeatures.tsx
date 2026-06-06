@@ -61,7 +61,7 @@ const item = {
 
 export default function LandingFeatures() {
   return (
-    <section className="py-20 lg:py-28 bg-background">
+    <section id="features" className="py-20 lg:py-28 bg-background">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-14"

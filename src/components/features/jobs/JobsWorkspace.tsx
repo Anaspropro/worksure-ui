@@ -2,9 +2,17 @@
 
 import Link from "next/link";
 import { useDeferredValue, useMemo, useState } from "react";
-import { ArrowRight, BriefcaseBusiness, FilePlus2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  ArrowRight,
+  BriefcaseBusiness,
+  FilePlus2,
+  Loader2,
+  Search,
+  Send,
+  Sparkles,
+} from "lucide-react";
 import { toast } from "sonner";
-import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,114 +30,134 @@ import {
 } from "@/hooks/useProposals";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
+/* ─── Loading Skeleton ─── */
+function CardSkeleton() {
+  return (
+    <div className="rounded-lg border border-border bg-background/70 p-4 animate-pulse">
+      <div className="flex items-start justify-between gap-3">
+        <div className="space-y-2 flex-1">
+          <div className="h-4 bg-muted rounded w-3/4" />
+          <div className="h-3 bg-muted rounded w-full" />
+        </div>
+        <div className="h-6 w-16 bg-muted rounded-full" />
+      </div>
+      <div className="mt-4 flex gap-3">
+        <div className="h-3 bg-muted rounded w-20" />
+        <div className="h-3 bg-muted rounded w-16" />
+      </div>
+    </div>
+  );
+}
+
+/* ─── Empty State ─── */
 function EmptyState({
+  icon: Icon,
   title,
   description,
+  action,
 }: {
+  icon: typeof BriefcaseBusiness;
   title: string;
   description: string;
+  action?: React.ReactNode;
 }) {
   return (
-    <div className="round-lg border border-dashed border-border bg-surface-muted/50 p-6 text-sm text-muted-foreground">
-      <p className="font-medium text-foreground">{title}</p>
-      <p className="mt-1 leading-6">{description}</p>
+    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-border bg-surface-muted/30 p-10 text-center">
+      <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4">
+        <Icon className="size-6 text-primary" />
+      </div>
+      <p className="font-semibold text-foreground">{title}</p>
+      <p className="mt-1.5 text-sm text-muted-foreground max-w-sm leading-relaxed">
+        {description}
+      </p>
+      {action && <div className="mt-4">{action}</div>}
     </div>
+  );
+}
+
+/* ─── Tab Button ─── */
+function TabButton({
+  active,
+  label,
+  count,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  count?: number;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className={`px-4 py-2 text-sm font-medium rounded-lg transition-all ${
+        active
+          ? "bg-primary text-primary-foreground shadow-sm"
+          : "text-muted-foreground hover:text-foreground hover:bg-muted"
+      }`}
+    >
+      {label}
+      {count !== undefined && (
+        <span
+          className={`ml-1.5 text-xs ${
+            active ? "text-primary-foreground/70" : "text-muted-foreground"
+          }`}
+        >
+          ({count})
+        </span>
+      )}
+    </button>
   );
 }
 
 export default function JobsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
+  const router = useRouter();
   const canLoadProtectedData = Boolean(user);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("ALL");
-  const [categoryFilter, setCategoryFilter] = useState("ALL");
+  const [activeTab, setActiveTab] = useState<"jobs" | "proposals">("jobs");
   const deferredSearch = useDeferredValue(search);
+
   const jobsQuery = useJobs(
     {
       clientId: user?.role === "CLIENT" ? user.id : undefined,
-      status:
-        user?.role === "ARTISAN"
-          ? "OPEN"
-          : statusFilter !== "ALL"
-            ? statusFilter
-            : undefined,
-      category: categoryFilter !== "ALL" ? categoryFilter : undefined,
+      status: user?.role === "ARTISAN" ? "OPEN" : undefined,
       search: deferredSearch.trim() || undefined,
       limit: 50,
     },
     { enabled: canLoadProtectedData },
   );
+
   const proposalsQuery = useProposals(
     { role: user?.role, userId: user?.id },
     { enabled: canLoadProtectedData },
   );
-  const createJobMutation = useCreateJob();
-  const createProposalMutation = useCreateProposal();
+
   const acceptProposalMutation = useAcceptProposal();
   const rejectProposalMutation = useRejectProposal();
   const withdrawProposalMutation = useWithdrawProposal();
   const createContractMutation = useCreateContract();
+  const createProposalMutation = useCreateProposal();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [budgetInput, setBudgetInput] = useState("");
-  const [category, setCategory] = useState("general");
   const [proposalJobId, setProposalJobId] = useState("");
   const [proposalAmountInput, setProposalAmountInput] = useState("");
   const [proposalMessage, setProposalMessage] = useState("");
-  const budget = Number(budgetInput || 0);
   const proposalAmount = Number(proposalAmountInput || 0);
+
   const jobs = useMemo(() => jobsQuery.data ?? [], [jobsQuery.data]);
-  const proposals = useMemo(
-    () => proposalsQuery.data ?? [],
-    [proposalsQuery.data],
-  );
+  const proposals = useMemo(() => proposalsQuery.data ?? [], [proposalsQuery.data]);
 
   const pendingProposals = useMemo(
-    () => proposals.filter((proposal) => proposal.status === "PENDING"),
+    () => proposals.filter((p) => p.status === "PENDING"),
     [proposals],
   );
 
-  const categoryOptions = useMemo(
-    () =>
-      Array.from(
-        new Set(
-          jobs
-            .map((job) => job.category)
-            .filter((value): value is string => Boolean(value)),
-        ),
-      ),
-    [jobs],
-  );
+  if (!user) return null;
 
-  if (!user) {
-    return null;
-  }
-
-  const handleCreateJob = () => {
-    const toastId = toast.loading("Publishing job...");
-    createJobMutation.mutate(
-      {
-        title: title.trim(),
-        description: description.trim(),
-        budget,
-        category: category.trim() || "general",
-      },
-      {
-        onSuccess: () => {
-          toast.success("Job published successfully.", { id: toastId });
-          setTitle("");
-          setDescription("");
-          setBudgetInput("");
-          setCategory("general");
-        },
-        onError: (error) => {
-          toast.error(error.message || "Unable to publish job.", { id: toastId });
-        },
-      },
-    );
-  };
+  const isLoading = jobsQuery.isLoading;
+  const isClient = user.role === "CLIENT";
+  const isArtisan = user.role === "ARTISAN";
 
   const handleCreateProposal = () => {
     const toastId = toast.loading("Submitting proposal...");
@@ -141,10 +169,11 @@ export default function JobsWorkspace() {
       },
       {
         onSuccess: () => {
-          toast.success("Proposal submitted successfully.", { id: toastId });
+          toast.success("Proposal submitted! The client will review it shortly.", { id: toastId });
           setProposalJobId("");
           setProposalAmountInput("");
           setProposalMessage("");
+          setActiveTab("proposals");
         },
         onError: (error) => {
           toast.error(error.message || "Unable to submit proposal.", { id: toastId });
@@ -155,64 +184,57 @@ export default function JobsWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white/95">
+      {/* ─── Page Header ─── */}
+      <Card className="border-border/80 bg-card/95">
         <CardHeader className="gap-3 md:flex md:flex-row md:items-start md:justify-between">
           <div className="space-y-1">
             <CardTitle className="text-3xl tracking-tight">
-              {user.role === "CLIENT"
-                ? "Client Jobs Workspace"
-                : "Open Jobs and Proposals"}
+              {isClient ? "Your Jobs" : "Find Work"}
             </CardTitle>
-            <CardDescription className="max-w-3xl text-base leading-7">
-              {user.role === "CLIENT"
-                ? "Create jobs, review incoming proposals, and turn accepted work into escrow-backed contracts."
-                : "Browse open opportunities, send proposals, and keep your pipeline moving toward funded work."}
+            <CardDescription className="max-w-2xl text-base leading-7">
+              {isClient
+                ? "Manage your posted jobs and review proposals from artisans. Accept a proposal to start the escrow-backed contract process."
+                : "Browse available jobs and submit proposals. Once accepted, you'll move into a secure escrow-backed contract."}
             </CardDescription>
           </div>
-          {user.role === "CLIENT" ? (
-            <Button asChild>
+          {isClient && (
+            <Button asChild className="shrink-0">
               <Link href="/jobs/create">
                 <FilePlus2 className="size-4" />
-                New job
+                Post a new job
               </Link>
             </Button>
-          ) : null}
+          )}
         </CardHeader>
       </Card>
 
+      {/* ─── Stats Row ─── */}
       <section className="grid gap-4 grid-cols-2 md:grid-cols-3">
         <Card size="sm">
           <CardContent className="space-y-1 py-2">
-            <p className="text-sm text-muted-foreground">Visible jobs</p>
-            <p className="text-3xl font-semibold text-foreground">
-              {jobs.length}
+            <p className="text-sm text-muted-foreground">
+              {isClient ? "Jobs posted" : "Available jobs"}
             </p>
+            <p className="text-3xl font-semibold text-foreground">{jobs.length}</p>
           </CardContent>
         </Card>
         <Card size="sm">
           <CardContent className="space-y-1 py-2">
             <p className="text-sm text-muted-foreground">
-              {user.role === "CLIENT"
-                ? "Pending proposals"
-                : "Submitted proposals"}
+              {isClient ? "Pending proposals" : "Your proposals"}
             </p>
             <p className="text-3xl font-semibold text-foreground">
-              {user.role === "CLIENT"
-                ? pendingProposals.length
-                : proposals.length}
+              {isClient ? pendingProposals.length : proposals.length}
             </p>
           </CardContent>
         </Card>
-        <Card size="sm" className="col-span-2 lg:col-span-1">
+        <Card size="sm" className="col-span-2 md:col-span-1">
           <CardContent className="space-y-1 py-2">
             <p className="text-sm text-muted-foreground">Average budget</p>
             <p className="text-3xl font-semibold text-foreground">
               {formatCurrency(
                 jobs.length
-                  ? jobs.reduce(
-                      (sum, job) => sum + Number(job.budget ?? 0),
-                      0,
-                    ) / jobs.length
+                  ? jobs.reduce((sum, job) => sum + Number(job.budget ?? 0), 0) / jobs.length
                   : 0,
               )}
             </p>
@@ -220,398 +242,384 @@ export default function JobsWorkspace() {
         </Card>
       </section>
 
-      <Card className="border-border/80 bg-white">
-        <CardHeader>
-          <CardTitle>Search and filter jobs</CardTitle>
-          <CardDescription>
-            Narrow the visible job list by keyword, category, or status.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-3 md:grid-cols-3">
-          <Input
-            placeholder="Search jobs"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-          />
-          <select
-            className="h-11 w-full rounded-lg border border-border bg-background px-4 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            value={categoryFilter}
-            onChange={(event) => setCategoryFilter(event.target.value)}
-          >
-            <option value="ALL">All categories</option>
-            {categoryOptions.map((option) => (
-              <option key={option} value={option}>
-                {option}
-              </option>
-            ))}
-          </select>
-          <select
-            className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-            value={statusFilter}
-            onChange={(event) => setStatusFilter(event.target.value)}
-            disabled={user.role === "ARTISAN"}
-          >
-            <option value="ALL">
-              {user.role === "CLIENT" ? "All statuses" : "Open jobs only"}
-            </option>
-            <option value="OPEN">Open</option>
-            <option value="IN_PROGRESS">In progress</option>
-            <option value="COMPLETED">Completed</option>
-          </select>
+      {/* ─── Tabs + Search ─── */}
+      <Card className="border-border/80 bg-card">
+        <CardContent className="pt-5">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="flex gap-1 bg-muted/50 p-1 rounded-lg w-fit">
+              <TabButton
+                active={activeTab === "jobs"}
+                label={isClient ? "My Jobs" : "Available Jobs"}
+                count={jobs.length}
+                onClick={() => setActiveTab("jobs")}
+              />
+              <TabButton
+                active={activeTab === "proposals"}
+                label={isClient ? "Proposals" : "My Proposals"}
+                count={proposals.length}
+                onClick={() => setActiveTab("proposals")}
+              />
+            </div>
+            {activeTab === "jobs" && (
+              <div className="relative max-w-xs w-full">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Input
+                  placeholder="Search jobs..."
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-9"
+                />
+              </div>
+            )}
+          </div>
         </CardContent>
       </Card>
 
-      {user.role === "CLIENT" ? (
-        <section className="grid gap-4 xl:grid-cols-[0.85fr_1.15fr]">
-          <Card className="border-border/80 bg-white">
+      {/* ─── Jobs Tab ─── */}
+      {activeTab === "jobs" && (
+        <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          <Card className="border-border/80 bg-card">
             <CardHeader>
-              <CardTitle>Quick job intake</CardTitle>
+              <CardTitle>
+                {isClient ? "Your posted jobs" : "Open jobs in the marketplace"}
+              </CardTitle>
               <CardDescription>
-                Capture a concise brief and publish it directly to the
-                marketplace.
+                {isClient
+                  ? "Jobs you've published. Artisans will submit proposals to these."
+                  : "Select a job to submit your proposal with a price and delivery plan."}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-3">
-              <Input
-                placeholder="Job title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-              />
-              <Textarea
-                placeholder="Describe the scope, deliverables, and timing."
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-              />
-              <div className="grid gap-3 md:grid-cols-2">
-                <Input
-                  type="number"
-                  placeholder="Budget"
-                  value={budgetInput}
-                  onChange={(event) => setBudgetInput(event.target.value)}
+              {isLoading ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : jobs.length ? (
+                jobs.map((job) => (
+                  <div
+                    key={job.id}
+                    className="rounded-lg border border-border bg-background/70 p-4 hover:border-primary/20 transition-colors"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-1 flex-1 min-w-0">
+                        <p className="font-semibold text-foreground">{job.title}</p>
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {job.description}
+                        </p>
+                      </div>
+                      <StatusBadge status={job.status} />
+                    </div>
+                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">
+                        {formatCurrency(job.budget)}
+                      </span>
+                      <span className="text-xs px-2 py-0.5 rounded-full bg-muted">
+                        {job.category ?? "General"}
+                      </span>
+                      <span>{formatDate(job.createdAt)}</span>
+                    </div>
+                    {isArtisan && job.status === "OPEN" && (
+                      <div className="mt-3">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setProposalJobId(job.id);
+                            setActiveTab("proposals");
+                          }}
+                        >
+                          <Send className="size-3.5 mr-1.5" />
+                          Apply to this job
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                ))
+              ) : (
+                <EmptyState
+                  icon={BriefcaseBusiness}
+                  title={isClient ? "No jobs posted yet" : "No open jobs available"}
+                  description={
+                    isClient
+                      ? "Post your first job to start receiving proposals from verified artisans."
+                      : "Check back soon — new jobs are posted regularly."
+                  }
+                  action={
+                    isClient ? (
+                      <Button asChild size="sm">
+                        <Link href="/jobs/create">
+                          <FilePlus2 className="size-4" />
+                          Post your first job
+                        </Link>
+                      </Button>
+                    ) : undefined
+                  }
                 />
-                <Input
-                  placeholder="Category"
-                  value={category}
-                  onChange={(event) => setCategory(event.target.value)}
-                />
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Guidance panel */}
+          <Card className="border-border/80 bg-primary/5">
+            <CardHeader>
+              <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center mb-2">
+                <Sparkles className="size-5 text-primary" />
               </div>
-              <Button
-                disabled={
-                  !title.trim() ||
-                  !description.trim() ||
-                  budget <= 0 ||
-                  createJobMutation.status === "pending"
-                }
-                onClick={handleCreateJob}
-              >
-                Publish job
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/80 bg-primary-soft/20">
-            <CardHeader>
-              <CardTitle>Client workflow guardrails</CardTitle>
-              <CardDescription>
-                Keep money decisions obvious and attached to a visible job
-                state.
-              </CardDescription>
+              <CardTitle>
+                {isClient ? "What happens next?" : "How to get hired"}
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
-              <p>
-                Review proposals inside the context of the original job brief.
-              </p>
-              <p>
-                Accept only when scope and amount are clear enough to
-                contract.
-              </p>
-              <p>
-                Move from proposal to contract so escrow and completion
-                history stay auditable.
-              </p>
-            </CardContent>
-          </Card>
-        </section>
-      ) : (
-        <section className="grid gap-4 lg:grid-cols-[0.9fr_1.1fr]">
-          <Card className="border-border/80 bg-white">
-            <CardHeader>
-              <CardTitle>Submit a proposal</CardTitle>
-              <CardDescription>
-                Pick an open job and send a clear price with a short delivery
-                note.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {!user.artisanVerified ? (
-                <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
-                  Artisan verification is required before you can submit
-                  proposals.
-                </div>
-              ) : null}
-              <select
-                className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                value={proposalJobId}
-                onChange={(event) => setProposalJobId(event.target.value)}
-              >
-                <option value="">Select an open job</option>
-                {jobs.map((job) => (
-                  <option key={job.id} value={job.id}>
-                    {job.title} ({formatCurrency(job.budget)})
-                  </option>
-                ))}
-              </select>
-              <Input
-                type="number"
-                placeholder="Proposed amount"
-                value={proposalAmountInput}
-                onChange={(event) =>
-                  setProposalAmountInput(event.target.value)
-                }
-              />
-              <Textarea
-                placeholder="How will you handle this work?"
-                value={proposalMessage}
-                onChange={(event) => setProposalMessage(event.target.value)}
-              />
-              <Button
-                disabled={
-                  !user.artisanVerified ||
-                  !proposalJobId ||
-                  !proposalMessage.trim() ||
-                  proposalAmount <= 0 ||
-                  createProposalMutation.status === "pending"
-                }
-                onClick={handleCreateProposal}
-              >
-                Send proposal
-              </Button>
-            </CardContent>
-          </Card>
-
-          <Card className="border-border/80 bg-secondary-light/20">
-            <CardHeader>
-              <CardTitle>How artisans win good work</CardTitle>
-              <CardDescription>
-                Proposal quality matters as much as price in trust-based
-                hiring.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-7 text-muted-foreground">
-              <p>Lead with a delivery plan, not only an amount.</p>
-              <p>
-                Prioritize jobs with realistic budgets so funded contracts
-                happen faster.
-              </p>
-              <p>
-                Track accepted proposals closely because they become your
-                escrow pipeline.
-              </p>
+            <CardContent className="space-y-4 text-sm leading-7 text-muted-foreground">
+              {isClient ? (
+                <>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">1</span>
+                    <p>Artisans will see your job and submit proposals with their price and plan.</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">2</span>
+                    <p>Review proposals in the "Proposals" tab, then accept the best one.</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">3</span>
+                    <p>Create a contract from the accepted proposal. Funds go into secure escrow.</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">1</span>
+                    <p>Browse open jobs and click "Apply" on the ones that match your skills.</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">2</span>
+                    <p>Submit a clear proposal with a realistic price and delivery timeline.</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">3</span>
+                    <p>If accepted, the client funds escrow and you start working with payment guaranteed.</p>
+                  </div>
+                </>
+              )}
             </CardContent>
           </Card>
         </section>
       )}
 
-      <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle>
-              {user.role === "CLIENT" ? "Your jobs" : "Open marketplace jobs"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {jobs.length ? (
-              jobs.map((job) => (
-                <div
-                  key={job.id}
-                  className="rounded-lg border border-border bg-background/70 p-4"
+      {/* ─── Proposals Tab ─── */}
+      {activeTab === "proposals" && (
+        <section className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
+          {/* Proposal Form for Artisans */}
+          {isArtisan && (
+            <Card className="border-border/80 bg-card xl:order-2">
+              <CardHeader>
+                <CardTitle>Submit a proposal</CardTitle>
+                <CardDescription>
+                  Pick a job and send your price with a delivery plan.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {!user.artisanVerified && (
+                  <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
+                    <p className="font-medium">Verification required</p>
+                    <p className="mt-1">
+                      Complete your KYC verification before submitting proposals.{" "}
+                      <Link href="/kyc/status" className="underline font-medium">
+                        Go to verification →
+                      </Link>
+                    </p>
+                  </div>
+                )}
+                <select
+                  className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  value={proposalJobId}
+                  onChange={(e) => setProposalJobId(e.target.value)}
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="font-semibold text-foreground">
-                        {job.title}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {job.description}
-                      </p>
-                    </div>
-                    <StatusBadge status={job.status} />
-                  </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span>{formatCurrency(job.budget)}</span>
-                    <span>{job.category ?? "General"}</span>
-                    <span>{formatDate(job.createdAt)}</span>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <EmptyState
-                title={
-                  user.role === "CLIENT"
-                    ? "No jobs posted yet"
-                    : "No open jobs yet"
-                }
-                description={
-                  user.role === "CLIENT"
-                    ? "Start with your first job brief so artisans can send proposals."
-                    : "Check back soon or broaden your category focus when more work is posted."
-                }
-              />
-            )}
-          </CardContent>
-        </Card>
+                  <option value="">Select a job to apply to</option>
+                  {jobs.map((job) => (
+                    <option key={job.id} value={job.id}>
+                      {job.title} ({formatCurrency(job.budget)})
+                    </option>
+                  ))}
+                </select>
+                <Input
+                  type="number"
+                  placeholder="Your proposed price (₦)"
+                  value={proposalAmountInput}
+                  onChange={(e) => setProposalAmountInput(e.target.value)}
+                />
+                <Textarea
+                  placeholder="Describe how you'll handle this work, your timeline, and relevant experience..."
+                  value={proposalMessage}
+                  onChange={(e) => setProposalMessage(e.target.value)}
+                  rows={4}
+                />
+                <Button
+                  disabled={
+                    !user.artisanVerified ||
+                    !proposalJobId ||
+                    !proposalMessage.trim() ||
+                    proposalAmount <= 0 ||
+                    createProposalMutation.status === "pending"
+                  }
+                  onClick={handleCreateProposal}
+                  className="w-full"
+                >
+                  {createProposalMutation.status === "pending" ? (
+                    <><Loader2 className="size-4 animate-spin" /> Submitting...</>
+                  ) : (
+                    <><Send className="size-4" /> Submit proposal</>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          )}
 
-        <Card className="border-border/80 bg-white">
-          <CardHeader>
-            <CardTitle>
-              {user.role === "CLIENT" ? "Proposal inbox" : "Your proposals"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {proposals.length ? (
-              proposals.map((proposal) => (
-                <div
-                  key={proposal.id}
-                  className="rounded-lg border border-border bg-background/70 p-4"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1">
-                      <p className="font-semibold text-foreground">
-                        {proposal.job.title}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {user.role === "CLIENT"
-                          ? `From ${proposal.artisan.name}`
-                          : `For ${proposal.client.name}`}
-                      </p>
+          {/* Proposal List */}
+          <Card className={`border-border/80 bg-card ${isClient ? "xl:col-span-2" : ""}`}>
+            <CardHeader>
+              <CardTitle>
+                {isClient ? "Proposals from artisans" : "Your submitted proposals"}
+              </CardTitle>
+              <CardDescription>
+                {isClient
+                  ? "Review, accept, or reject proposals. Accepted proposals can be turned into escrow-backed contracts."
+                  : "Track the status of your proposals. Accepted proposals will become contracts."}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {proposalsQuery.isLoading ? (
+                <>
+                  <CardSkeleton />
+                  <CardSkeleton />
+                </>
+              ) : proposals.length ? (
+                proposals.map((proposal) => (
+                  <div
+                    key={proposal.id}
+                    className="rounded-lg border border-border bg-background/70 p-4"
+                  >
+                    <div className="flex flex-wrap items-start justify-between gap-3">
+                      <div className="space-y-1">
+                        <p className="font-semibold text-foreground">
+                          {proposal.job.title}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {isClient
+                            ? `From ${proposal.artisan.name}`
+                            : `For ${proposal.client.name}`}
+                        </p>
+                      </div>
+                      <StatusBadge status={proposal.status} />
                     </div>
-                    <StatusBadge status={proposal.status} />
-                  </div>
-                  <p className="mt-3 text-sm text-muted-foreground">
-                    {proposal.message}
-                  </p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span>{formatCurrency(proposal.amount)}</span>
-                    <span>{formatDate(proposal.createdAt)}</span>
-                  </div>
-                  <div className="mt-4 flex flex-wrap gap-2">
-                    {user.role === "CLIENT" &&
-                    proposal.status === "PENDING" ? (
-                      <>
+                    <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
+                      {proposal.message}
+                    </p>
+                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                      <span className="font-medium text-foreground">
+                        {formatCurrency(proposal.amount)}
+                      </span>
+                      <span>{formatDate(proposal.createdAt)}</span>
+                    </div>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {isClient && proposal.status === "PENDING" && (
+                        <>
+                          <Button
+                            size="sm"
+                            onClick={() =>
+                              acceptProposalMutation.mutate(proposal.id, {
+                                onSuccess: () => toast.success("Proposal accepted!"),
+                                onError: (e) => toast.error(e.message || "Unable to accept."),
+                              })
+                            }
+                            disabled={acceptProposalMutation.status === "pending"}
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() =>
+                              rejectProposalMutation.mutate(proposal.id, {
+                                onSuccess: () => toast.success("Proposal rejected."),
+                                onError: (e) => toast.error(e.message || "Unable to reject."),
+                              })
+                            }
+                            disabled={rejectProposalMutation.status === "pending"}
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
+                      {isClient && proposal.status === "ACCEPTED" && (
                         <Button
                           size="sm"
                           onClick={() =>
-                            acceptProposalMutation.mutate(proposal.id, {
-                              onSuccess: () =>
-                                toast.success("Proposal accepted."),
-                              onError: (error) =>
-                                toast.error(
-                                  error.message ||
-                                    "Unable to accept proposal.",
-                                ),
+                            createContractMutation.mutate(proposal.id, {
+                              onSuccess: () => {
+                                toast.success("Contract created! Go to Contracts to fund escrow.");
+                                router.push("/contracts");
+                              },
+                              onError: (e) => toast.error(e.message || "Unable to create contract."),
                             })
                           }
-                          disabled={
-                            acceptProposalMutation.status === "pending"
-                          }
+                          disabled={createContractMutation.status === "pending"}
                         >
-                          Accept
+                          Create contract →
                         </Button>
+                      )}
+                      {isArtisan && proposal.status === "PENDING" && (
                         <Button
                           size="sm"
                           variant="outline"
                           onClick={() =>
-                            rejectProposalMutation.mutate(proposal.id, {
-                              onSuccess: () =>
-                                toast.success("Proposal rejected."),
-                              onError: (error) =>
-                                toast.error(
-                                  error.message ||
-                                    "Unable to reject proposal.",
-                                ),
+                            withdrawProposalMutation.mutate(proposal.id, {
+                              onSuccess: () => toast.success("Proposal withdrawn."),
+                              onError: (e) => toast.error(e.message || "Unable to withdraw."),
                             })
                           }
-                          disabled={
-                            rejectProposalMutation.status === "pending"
-                          }
+                          disabled={withdrawProposalMutation.status === "pending"}
                         >
-                          Reject
+                          Withdraw
                         </Button>
-                      </>
-                    ) : null}
-                    {user.role === "CLIENT" &&
-                    proposal.status === "ACCEPTED" ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          createContractMutation.mutate(proposal.id, {
-                            onSuccess: () =>
-                              toast.success("Contract created."),
-                            onError: (error) =>
-                              toast.error(
-                                error.message || "Unable to create contract.",
-                              ),
-                          })
-                        }
-                        disabled={createContractMutation.status === "pending"}
-                      >
-                        Create contract
-                      </Button>
-                    ) : null}
-                    {user.role === "ARTISAN" &&
-                    proposal.status === "PENDING" ? (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() =>
-                          withdrawProposalMutation.mutate(proposal.id, {
-                            onSuccess: () =>
-                              toast.success("Proposal withdrawn."),
-                            onError: (error) =>
-                              toast.error(
-                                error.message ||
-                                  "Unable to withdraw proposal.",
-                              ),
-                          })
-                        }
-                        disabled={
-                          withdrawProposalMutation.status === "pending"
-                        }
-                      >
-                        Withdraw
-                      </Button>
-                    ) : null}
+                      )}
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <EmptyState
-                title="No proposals yet"
-                description={
-                  user.role === "CLIENT"
-                    ? "Incoming bids for your jobs will appear here."
-                    : "Your sent proposals will start showing up here once you apply to jobs."
-                }
-              />
-            )}
-          </CardContent>
-        </Card>
-      </section>
+                ))
+              ) : (
+                <EmptyState
+                  icon={Send}
+                  title="No proposals yet"
+                  description={
+                    isClient
+                      ? "Once artisans apply to your jobs, their proposals will appear here."
+                      : "Browse the available jobs tab and apply to get started."
+                  }
+                  action={
+                    isArtisan ? (
+                      <Button size="sm" variant="outline" onClick={() => setActiveTab("jobs")}>
+                        Browse available jobs
+                      </Button>
+                    ) : undefined
+                  }
+                />
+              )}
+            </CardContent>
+          </Card>
+        </section>
+      )}
 
-      <Card className="border-border/80 bg-white">
-        <CardHeader>
-          <CardTitle>Next step</CardTitle>
-          <CardDescription>
-            Move accepted work into an escrow-backed contract detail page.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-wrap items-center justify-between gap-4">
+      {/* ─── Next Step CTA ─── */}
+      <Card className="border-border/80 bg-card">
+        <CardContent className="flex flex-wrap items-center justify-between gap-4 py-5">
           <div className="flex items-center gap-3 text-sm text-muted-foreground">
             <BriefcaseBusiness className="size-4 text-primary" />
             <span>
-              Accepted proposals should become contracts before any money
-              changes hands.
+              {isClient
+                ? "Accepted proposals become escrow-backed contracts. Manage them in Contracts."
+                : "Once your proposal is accepted, the client creates a contract and funds escrow."}
             </span>
           </div>
           <Button asChild variant="outline">

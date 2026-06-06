@@ -81,7 +81,7 @@ export default function AdminDisputesWorkspace() {
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
           <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
           <div className="relative z-10 space-y-4">
-            <Badge variant="outline" className="rounded-full border-white/20 bg-white/10 px-3 py-1 text-white backdrop-blur-md">
+            <Badge variant="outline" className="rounded-full border-white/20 bg-card/10 px-3 py-1 text-white backdrop-blur-md">
               Admin Governance
             </Badge>
             <div className="flex items-center justify-between">
@@ -91,7 +91,7 @@ export default function AdminDisputesWorkspace() {
                   Monitor and resolve conflicts between clients and artisans with fairness and visibility.
                 </CardDescription>
               </div>
-              <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md lg:flex">
+              <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-card/10 border border-white/20 backdrop-blur-md lg:flex">
                 <ShieldAlert className="size-8 text-warning" />
               </div>
             </div>
@@ -178,7 +178,7 @@ export default function AdminDisputesWorkspace() {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: 20 }}
                 >
-                  <Card className="sticky top-8 border-border/60 bg-white shadow-xl">
+                  <Card className="sticky top-8 border-border/60 bg-card shadow-xl">
                     <CardHeader className="border-b bg-muted/30">
                       <CardTitle className="text-lg">Dispute Details</CardTitle>
                       <CardDescription>Review evidence and resolve</CardDescription>

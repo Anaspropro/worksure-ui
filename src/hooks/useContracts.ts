@@ -37,11 +37,23 @@ export function useCreateContract() {
 
 export function useFundContract() {
   const qc = useQueryClient();
-  return useMutation<Contract, Error, { contractId: string; email: string; callbackUrl?: string }>({
+  return useMutation<{ payment: any, authorizationUrl: string, reference: string }, Error, { contractId: string; email: string; callbackUrl?: string }>({
     mutationFn: ({ contractId, email, callbackUrl }) =>
-      proxyFetch<Contract>(`/contracts/${contractId}/fund`, {
+      proxyFetch<{ payment: any, authorizationUrl: string, reference: string }>(`/contracts/${contractId}/fund`, {
         method: "POST",
         body: JSON.stringify({ contractId, email, callbackUrl }),
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["contracts"] }),
+  });
+}
+
+export function useVerifyContractPayment() {
+  const qc = useQueryClient();
+  return useMutation<any, Error, { reference: string }>({
+    mutationFn: ({ reference }) =>
+      proxyFetch<any>("/payments/paystack/verify", {
+        method: "POST",
+        body: JSON.stringify({ reference }),
       }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["contracts"] }),
   });

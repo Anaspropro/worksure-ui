@@ -42,7 +42,7 @@ export default function ChatWindow({
   const canSend = draft.trim().length > 0 || Boolean(file);
 
   return (
-    <Card className="border-border/80 bg-white">
+    <Card className="border-border/80 bg-card">
       <CardHeader className="gap-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="space-y-1">

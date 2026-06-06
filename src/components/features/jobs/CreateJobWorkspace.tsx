@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -16,6 +17,7 @@ export default function CreateJobWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
   const createJobMutation = useCreateJob();
+  const router = useRouter();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -42,13 +44,14 @@ export default function CreateJobWorkspace() {
       },
       {
         onSuccess: () => {
-          toast.success("Job published successfully.", { id: toastId });
+          toast.success("Job published! Artisans can now see and apply to it.", { id: toastId });
           setTitle("");
           setDescription("");
           setBudgetInput("");
           setCategory("general");
           setLocation("");
           setRequirements("");
+          router.push("/jobs");
         },
         onError: (error) => {
           toast.error(error.message || "Unable to publish job.", { id: toastId });
@@ -59,7 +62,7 @@ export default function CreateJobWorkspace() {
 
   return (
     <main className="space-y-6">
-      <Card className="border-border/80 bg-white">
+      <Card className="border-border/80 bg-card">
         <CardHeader className="gap-3">
           <Button asChild variant="ghost" size="sm" className="w-fit">
             <Link href="/jobs">
@@ -77,7 +80,7 @@ export default function CreateJobWorkspace() {
       </Card>
 
       <section className="grid gap-4 xl:grid-cols-[0.95fr_1.05fr]">
-        <Card className="border-border/80 bg-white">
+        <Card className="border-border/80 bg-card">
           <CardHeader>
             <CardTitle>Job brief</CardTitle>
             <CardDescription>Keep it specific enough that funding and completion are easy to verify later.</CardDescription>

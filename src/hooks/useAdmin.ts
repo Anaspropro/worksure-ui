@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch, proxyFetchRaw } from "@/api-client";
-import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job, AuditLog, SystemLog, SystemHealth, ReconciliationReport, ApiEnvelope } from "@/types";
+import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job, AuditLog, SystemLog, SystemHealth, ReconciliationReport, ApiEnvelope, WalletTransaction } from "@/types";
 import { getAuditLogs, getReconciliationReports, triggerReconciliation, getSystemHealth, getSystemLogs } from "@/api-client";
 
 export function useAdminUsers(options: { enabled?: boolean } = {}) {
@@ -176,3 +176,29 @@ export function useAdminSystemLogs(page = 1, limit = 20, options: { enabled?: bo
   });
 }
 
+export function useAdminTransactions(type?: string, options: { enabled?: boolean } = {}) {
+  const queryKey = type ? ["admin", "transactions", type] : ["admin", "transactions"];
+  const url = type ? `/admin/transactions?type=${type}` : "/admin/transactions";
+
+  return useQuery<AdminCollection<WalletTransaction>>({
+    queryKey,
+    queryFn: () => proxyFetchRaw<AdminCollection<WalletTransaction>>(url),
+    enabled: options.enabled,
+  });
+}
+
+export function useAdminProcessPayout() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (transactionId: string) =>
+      proxyFetch("/wallet/payout/process", {
+        method: "POST",
+        body: JSON.stringify({ transactionId }),
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "reports"] });
+    },
+  });
+}

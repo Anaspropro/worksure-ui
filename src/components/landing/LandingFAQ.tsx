@@ -35,7 +35,7 @@ export default function LandingFAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section className="py-20 lg:py-28 bg-muted/30">
+    <section id="faq" className="py-20 lg:py-28 bg-muted/30">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-14"
