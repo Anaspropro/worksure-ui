@@ -25,8 +25,7 @@ export default function VerifyEmailWorkspace() {
   const [isEditingEmail, setIsEditingEmail] = useState(!queryEmail);
   const [otp, setOtp] = useState("");
   const [status, setStatus] = useState<"idle" | "verifying" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [resendCooldown, setResendCooldown] = useState(0);
+  const [resendCooldown, setResendCooldown] = useState(10);
   const [isResending, setIsResending] = useState(false);
 
   // Autofill code if token is passed in query string (fallback support for links)
@@ -57,7 +56,6 @@ export default function VerifyEmailWorkspace() {
     }
 
     setStatus("verifying");
-    setErrorMessage("");
 
     try {
       await proxyFetch("/auth/verify-email", {
@@ -71,7 +69,6 @@ export default function VerifyEmailWorkspace() {
       toast.success("Email verified successfully!");
     } catch (err: any) {
       setStatus("error");
-      setErrorMessage(err.message || "Failed to verify email. The code may be invalid or expired.");
       toast.error(err.message || "Verification failed");
     }
   };
@@ -99,11 +96,10 @@ export default function VerifyEmailWorkspace() {
         body: JSON.stringify({ email: email.trim().toLowerCase() }),
       });
       toast.success("A new verification code has been sent to your email!");
-      setResendCooldown(60); // 60 seconds cooldown
+      setResendCooldown(10); // 10 seconds cooldown
       setOtp("");
       if (status === "error") {
         setStatus("idle");
-        setErrorMessage("");
       }
     } catch (err: any) {
       toast.error(err.message || "Failed to resend verification code");
@@ -250,17 +246,6 @@ export default function VerifyEmailWorkspace() {
                     </InputOTP>
                   </div>
                 </div>
-
-                {errorMessage && (
-                  <motion.div
-                    className="flex gap-2 items-start bg-destructive/5 border border-destructive/20 text-destructive text-xs p-3 rounded-lg"
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                  >
-                    <XCircle className="size-4 shrink-0 mt-0.5" />
-                    <p className="leading-relaxed">{errorMessage}</p>
-                  </motion.div>
-                )}
 
                 <Button
                   type="submit"
