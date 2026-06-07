@@ -102,7 +102,7 @@ export default function AdminKycWorkspace() {
                 <UserCheck className="size-6" />
               </div>
               <div>
-                <p className="text-sm text-slate-400">Pending Review</p>
+                <p className="text-sm text-muted-foreground">Pending Review</p>
                 <p className="text-2xl font-bold">{artisans.filter(a => !a.artisanVerified).length}</p>
               </div>
             </div>
@@ -129,7 +129,7 @@ export default function AdminKycWorkspace() {
               <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input 
                 placeholder="Search by name or email..." 
-                className="pl-10 rounded-full bg-slate-50 border-none ring-1 ring-slate-200"
+                className="pl-10 rounded-full bg-muted/50 border-none ring-1 ring-border"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -146,11 +146,11 @@ export default function AdminKycWorkspace() {
           </div>
         ) : filteredArtisans.length === 0 ? (
           <Card className="flex flex-col items-center justify-center py-24 text-center border-dashed">
-            <div className="h-16 w-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
-              <User className="size-8 text-slate-300" />
+            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mb-4">
+              <User className="size-8 text-muted-foreground/50" />
             </div>
-            <p className="text-lg font-medium text-slate-600">No artisans found</p>
-            <p className="text-sm text-slate-400">Try adjusting your search or filters</p>
+            <p className="text-lg font-medium text-foreground">No artisans found</p>
+            <p className="text-sm text-muted-foreground">Try adjusting your search or filters</p>
           </Card>
         ) : (
           <motion.div 
@@ -164,7 +164,7 @@ export default function AdminKycWorkspace() {
                 <Card className="group relative overflow-hidden border-border/60 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 bg-card">
                   <CardHeader className="pb-4">
                     <div className="flex items-start justify-between">
-                      <div className="h-14 w-14 rounded-2xl bg-linear-to-br from-slate-100 to-slate-200 flex items-center justify-center text-slate-500 font-bold text-xl border border-white">
+                      <div className="h-14 w-14 rounded-2xl bg-linear-to-br from-muted to-muted/80 flex items-center justify-center text-muted-foreground font-bold text-xl border border-border/50">
                         {artisan.name.charAt(0)}
                       </div>
                       <Badge variant={artisan.artisanVerified ? "default" : "secondary"} className="rounded-full">
@@ -184,15 +184,15 @@ export default function AdminKycWorkspace() {
                     </div>
 
                     <div className="grid grid-cols-2 gap-3 pt-2">
-                      <div className="rounded-lg bg-slate-50 p-3 border border-slate-100">
-                        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Joined</p>
+                      <div className="rounded-lg bg-muted/30 p-3 border border-border/50">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-1">Joined</p>
                         <p className="text-xs font-semibold flex items-center gap-1.5">
                           <Calendar className="size-3" />
                           {format(new Date(artisan.createdAt), "MMM yyyy")}
                         </p>
                       </div>
-                      <div className="rounded-lg bg-slate-50 p-3 border border-slate-100">
-                        <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold mb-1">Phone</p>
+                      <div className="rounded-lg bg-muted/30 p-3 border border-border/50">
+                        <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-1">Phone</p>
                         <p className="text-xs font-semibold flex items-center gap-1.5">
                           <Phone className="size-3" />
                           {artisan.phone || "N/A"}
