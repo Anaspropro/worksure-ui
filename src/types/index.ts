@@ -104,6 +104,10 @@ export interface AuthSuccess {
   user: User;
 }
 
+export interface RegisterSuccess {
+  user: User;
+}
+
 export interface Job {
   id: string;
   title: string;

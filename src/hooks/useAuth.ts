@@ -10,7 +10,7 @@ import {
   logoutRequest,
   register,
 } from "@/api-client";
-import type { AuthSuccess, User } from "@/types/index";
+import type { AuthSuccess, RegisterSuccess, User } from "@/types/index";
 
 export function useUser() {
   const hasToken = hasSessionHint();
@@ -42,17 +42,12 @@ export function useRegister() {
   const queryClient = useQueryClient();
 
   return useMutation<
-    AuthSuccess,
+    RegisterSuccess,
     Error,
     { name: string; email: string; password: string; role: User["role"] }
   >({
     mutationFn: async ({ name, email, password, role }: { name: string; email: string; password: string; role: User["role"] }) =>
       register(name, email, password, role),
-    onSuccess(data) {
-      markSessionHint();
-      queryClient.setQueryData(["user"], data.user);
-      queryClient.invalidateQueries({ queryKey: ["user"] });
-    },
   });
 }
 

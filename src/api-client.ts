@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { ApiEnvelope, AuthSuccess, User, UserRole, AuditLog, SystemLog, SystemHealth, ReconciliationReport } from "@/types";
+import type { ApiEnvelope, AuthSuccess, RegisterSuccess, User, UserRole, AuditLog, SystemLog, SystemHealth, ReconciliationReport } from "@/types";
 
 const INTERNAL_API_PREFIX = "/api/proxy";
 const SESSION_HINT_KEY = "auth_present";
@@ -165,7 +165,7 @@ export async function register(
   email: string,
   password: string,
   role: UserRole,
-): Promise<AuthSuccess> {
+): Promise<RegisterSuccess> {
   try {
     const { data, error, response } = await apiClient.POST("/auth/register", {
       body: { name, email, password, role }
@@ -176,7 +176,7 @@ export async function register(
     if (!data || !(data as any).data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
     }
-    return (data as any).data as AuthSuccess;
+    return (data as any).data as RegisterSuccess;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available. Please check your connection.", 503);

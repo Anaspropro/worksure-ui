@@ -152,12 +152,12 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       { name: trimmedName, email: normalizedEmail, password, role },
       {
         onSuccess: ({ user }) => {
-          toast.success("Account created! Redirecting to your dashboard...", { id: toastId });
+          toast.success("Account created! Redirecting to verification...", { id: toastId });
           setName("");
           setEmail("");
           setPassword("");
           setRole("CLIENT");
-          window.location.replace(getDashboardPathForRole(user.role));
+          window.location.replace(`/auth/verify-email?email=${encodeURIComponent(user.email)}`);
         },
         onError: (error) => {
           toast.error(error.message || "Registration failed.", { id: toastId });

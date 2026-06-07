@@ -73,9 +73,9 @@ export default function PayoutRequestsPage() {
                       <p className="text-sm text-muted-foreground">
                         Requested on {formatDate(tx.createdAt)}
                       </p>
-                      {tx.metadata?.bankCode && tx.metadata?.accountNumber && (
+                      {(tx.metadata as any)?.bankCode && (tx.metadata as any)?.accountNumber && (
                         <p className="text-xs font-mono bg-muted/50 p-1.5 rounded inline-block mt-2">
-                          Bank: {tx.metadata.bankCode} • Acct: {tx.metadata.accountNumber}
+                          Bank: {(tx.metadata as any).bankCode} • Acct: {(tx.metadata as any).accountNumber}
                         </p>
                       )}
                     </div>
