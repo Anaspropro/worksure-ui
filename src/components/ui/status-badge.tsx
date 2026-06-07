@@ -8,9 +8,13 @@ export function StatusBadge({
   status,
   className,
 }: {
-  status: string;
+  status?: string | null;
   className?: string;
 }) {
+  if (!status || typeof status !== "string") {
+    return <StateBadge state="DRAFT" className={className}>Unknown</StateBadge>;
+  }
+
   const normalized = status.toUpperCase().replace(/ /g, "_");
   
   // Map to the exact state names expected by StateBadge

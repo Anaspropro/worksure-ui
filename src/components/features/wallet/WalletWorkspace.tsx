@@ -326,9 +326,9 @@ export default function WalletWorkspace() {
                           <SelectValue placeholder={banksQuery.isLoading ? "Loading banks..." : "Select your bank"} />
                         </SelectTrigger>
                         <SelectContent>
-                          {banksList.map((bank) => (
-                            <SelectItem key={bank.code} value={bank.code}>
-                              {bank.name}
+                          {banksList.filter(b => b && b.code).map((bank) => (
+                            <SelectItem key={bank.code.toString()} value={bank.code.toString()}>
+                              {bank.name || "Unknown Bank"}
                             </SelectItem>
                           ))}
                         </SelectContent>
