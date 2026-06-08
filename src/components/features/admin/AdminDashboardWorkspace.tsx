@@ -70,7 +70,7 @@ export default function AdminDashboardWorkspace() {
       </motion.div>
 
       {/* ── Quick Stats Grid ── */}
-      <motion.section variants={containerVariants} className="grid gap-4 grid-cols-2 md:grid-cols-4">
+      <motion.section variants={containerVariants} className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
         <motion.div variants={itemVariants}>
           <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">

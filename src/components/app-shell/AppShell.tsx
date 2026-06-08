@@ -138,7 +138,7 @@ export default function AppShell({
               </div>
 
               <div className="flex-1 overflow-y-auto px-4 pb-4">
-                <SidebarNav role={user.role} />
+                <SidebarNav role={user.role} onItemClick={() => setMobileMenuOpen(false)} />
               </div>
 
               <div className="p-4 border-t border-sidebar-border mt-auto">

@@ -17,8 +17,10 @@ const navItemVariants = {
 
 export default function SidebarNav({
   role,
+  onItemClick,
 }: {
   role: User["role"];
+  onItemClick?: () => void;
 }) {
   const pathname = usePathname();
   const navItems = [...(getDashboardLinks(role) ?? [])];
@@ -37,6 +39,7 @@ export default function SidebarNav({
           >
             <Link
               href={href}
+              onClick={onItemClick}
               className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "text-primary"

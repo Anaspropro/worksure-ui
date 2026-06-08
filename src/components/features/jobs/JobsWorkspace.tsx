@@ -209,7 +209,7 @@ export default function JobsWorkspace() {
       </Card>
 
       {/* ─── Stats Row ─── */}
-      <section className="grid gap-4 grid-cols-2 md:grid-cols-3">
+      <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         <Card size="sm">
           <CardContent className="space-y-1 py-2">
             <p className="text-sm text-muted-foreground">

@@ -136,7 +136,7 @@ export default function AdminMonitoringWorkspace() {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border border-border overflow-hidden">
+          <div className="rounded-md border border-border overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/50 border-b border-border">
                 <tr>
