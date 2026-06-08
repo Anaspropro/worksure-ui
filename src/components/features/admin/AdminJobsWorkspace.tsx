@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   BriefcaseBusiness,
@@ -39,6 +39,8 @@ const cardVariants = {
 export default function AdminJobsWorkspace() {
   const [statusFilter] = useState<string | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 20;
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
   const { data: jobsResponse, isLoading: jobsLoading } = useAdminJobs(statusFilter);
@@ -51,6 +53,14 @@ export default function AdminJobsWorkspace() {
       j.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [jobs, searchTerm]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  const paginatedJobs = useMemo(() => {
+    return filteredJobs.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  }, [filteredJobs, page]);
 
   return (
     <div className="space-y-8 py-4">
@@ -205,11 +215,11 @@ export default function AdminJobsWorkspace() {
                 ) : filteredJobs?.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
-                      No jobs found matching your criteria.
+                      No jobs match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  filteredJobs?.map((job: Job) => (
+                  paginatedJobs?.map((job: Job) => (
                     <tr key={job.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 font-mono text-xs text-muted-foreground">
                         {job.id.split('-')[0].toUpperCase()}
@@ -259,6 +269,11 @@ export default function AdminJobsWorkspace() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredJobs.length / itemsPerPage) || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredJobs.length / itemsPerPage)}>Next</Button>
           </div>
         </CardContent>
       </Card>

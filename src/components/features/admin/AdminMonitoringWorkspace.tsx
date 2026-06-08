@@ -6,6 +6,7 @@ import { useAdminSystemHealth, useAdminSystemLogs } from "@/hooks/useAdmin";
 import { formatDate } from "@/lib/formatters";
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -15,7 +16,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminMonitoringWorkspace() {
-  const [page] = useState(1);
+  const [page, setPage] = useState(1);
   const { data: healthData, isLoading: healthLoading } = useAdminSystemHealth({ refetchInterval: 10000 });
   const { data: logsResponse, isLoading: logsLoading } = useAdminSystemLogs(page, 20);
 
@@ -165,7 +166,7 @@ export default function AdminMonitoringWorkspace() {
                   logs.map((log) => (
                     <tr key={log.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 text-muted-foreground whitespace-nowrap align-top">
-                        {formatDate(log.timestamp)}
+                        {formatDate(log.createdAt)}
                       </td>
                       <td className="px-4 py-4 align-top">
                         {getLevelBadge(log.level)}
@@ -193,6 +194,11 @@ export default function AdminMonitoringWorkspace() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={logs.length < 20}>Next</Button>
           </div>
         </CardContent>
       </Card>

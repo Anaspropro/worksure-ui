@@ -1,11 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { History } from "lucide-react";
+import { History, X, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { useAdminAuditLogs } from "@/hooks/useAdmin";
 import { formatDate } from "@/lib/formatters";
+import type { AuditLog } from "@/types";
 import {
   Badge,
+  Button,
   Card,
   CardContent,
   CardDescription,
@@ -15,7 +18,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminAuditWorkspace() {
-  const [page] = useState(1);
+  const [page, setPage] = useState(1);
+  const [selectedAudit, setSelectedAudit] = useState<AuditLog | null>(null);
   const { data: auditResponse, isLoading } = useAdminAuditLogs(page, 20);
 
   const logs = auditResponse?.data || [];
@@ -52,6 +56,7 @@ export default function AdminAuditWorkspace() {
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Action</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Entity</th>
                   <th className="px-4 py-3 text-left font-medium text-muted-foreground">Performed By</th>
+                  <th className="px-4 py-3 text-right font-medium text-muted-foreground">Details</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -90,14 +95,99 @@ export default function AdminAuditWorkspace() {
                           <span className="font-mono text-xs">{log.performedBy}</span>
                         </div>
                       </td>
+                      <td className="px-4 py-4 text-right">
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          onClick={() => setSelectedAudit(log)}
+                        >
+                          View Details
+                          <ChevronRight className="ml-1 h-3 w-3" />
+                        </Button>
+                      </td>
                     </tr>
                   ))
                 )}
               </tbody>
             </table>
           </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={logs.length < 20}>Next</Button>
+          </div>
         </CardContent>
       </Card>
+
+      {selectedAudit && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-2xl bg-card border border-border rounded-xl shadow-lg overflow-hidden flex flex-col max-h-[85vh]"
+          >
+            <div className="flex items-center justify-between p-6 border-b border-border">
+              <div>
+                <h2 className="text-xl font-bold">Audit Details</h2>
+                <p className="text-sm text-muted-foreground mt-1">ID: {selectedAudit?.id}</p>
+              </div>
+              <Button variant="ghost" size="icon" onClick={() => setSelectedAudit(null)}>
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            
+            <div className="p-6 space-y-6 overflow-y-auto flex-1">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Action</span>
+                  <div>
+                    <Badge variant="outline" className="font-mono text-xs font-normal">
+                      {selectedAudit?.action}
+                    </Badge>
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Timestamp</span>
+                  <div className="font-medium">{selectedAudit?.performedAt ? formatDate(selectedAudit.performedAt) : null}</div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Entity Type</span>
+                  <div className="font-medium">{selectedAudit?.entityType}</div>
+                </div>
+                <div className="space-y-1">
+                  <span className="text-xs text-muted-foreground">Entity ID</span>
+                  <div className="font-mono text-sm break-all">{selectedAudit?.entityId}</div>
+                </div>
+                <div className="space-y-1 col-span-2">
+                  <span className="text-xs text-muted-foreground">Performed By</span>
+                  <div className="font-mono text-sm flex items-center gap-2">
+                    <History className="size-4 text-muted-foreground" />
+                    {selectedAudit?.performedBy}
+                  </div>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="text-sm font-semibold text-muted-foreground">Metadata</h3>
+                <div className="bg-muted rounded-md p-4 overflow-x-auto">
+                  <pre className="text-xs font-mono text-foreground whitespace-pre-wrap">
+                    {selectedAudit?.metadata 
+                      ? JSON.stringify(selectedAudit.metadata, null, 2) 
+                      : "No metadata available for this action."}
+                  </pre>
+                </div>
+              </div>
+            </div>
+            
+            <div className="p-4 border-t border-border bg-muted/20 flex justify-end">
+              <Button variant="outline" onClick={() => setSelectedAudit(null)}>
+                Close
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }

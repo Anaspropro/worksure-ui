@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -35,6 +35,8 @@ import type { AdminUserRecord } from "@/types";
 
 export default function AdminUsersWorkspace() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 20;
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -55,6 +57,14 @@ export default function AdminUsersWorkspace() {
       u.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
   }, [users, searchTerm]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  const paginatedUsers = useMemo(() => {
+    return filteredUsers.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  }, [filteredUsers, page]);
 
   const handleReviewClick = (id: string) => {
     setSelectedUserId(id);
@@ -134,11 +144,11 @@ export default function AdminUsersWorkspace() {
                 ) : filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground italic">
-                      No users found matching your criteria.
+                      No users match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  filteredUsers.map((user: AdminUserRecord) => (
+                  paginatedUsers.map((user: AdminUserRecord) => (
                     <tr key={user.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
@@ -189,6 +199,11 @@ export default function AdminUsersWorkspace() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredUsers.length / itemsPerPage) || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredUsers.length / itemsPerPage)}>Next</Button>
           </div>
         </CardContent>
       </Card>

@@ -481,7 +481,7 @@ export interface SystemLog {
   message: string;
   trace?: string | null;
   metadata?: Record<string, unknown> | null;
-  timestamp: string;
+  createdAt: string;
 }
 
 export interface SystemHealth {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   BarChart3, 
@@ -39,6 +39,8 @@ const cardVariants = {
 export default function AdminContractsWorkspace() {
   const [statusFilter] = useState<string | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 20;
 
   const { data: stats, isLoading: statsLoading } = useAdminContractStats();
   const { data: contracts, isLoading: contractsLoading } = useAdminContracts(statusFilter);
@@ -51,6 +53,14 @@ export default function AdminContractsWorkspace() {
       c.id.toLowerCase().includes(searchTerm.toLowerCase())
     ) || [];
   }, [contracts, searchTerm]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
+  const paginatedContracts = useMemo(() => {
+    return filteredContracts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  }, [filteredContracts, page]);
 
   return (
     <div className="space-y-8">
@@ -245,11 +255,11 @@ export default function AdminContractsWorkspace() {
                 ) : filteredContracts?.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
-                      No contracts found matching your criteria.
+                      No contracts match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  filteredContracts?.map((contract: Contract) => (
+                  paginatedContracts?.map((contract: Contract) => (
                     <tr key={contract.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 font-mono text-xs text-muted-foreground">
                         {contract.id.split('-')[0].toUpperCase()}
@@ -285,6 +295,11 @@ export default function AdminContractsWorkspace() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredContracts.length / itemsPerPage) || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredContracts.length / itemsPerPage)}>Next</Button>
           </div>
         </CardContent>
       </Card>

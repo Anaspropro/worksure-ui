@@ -17,7 +17,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminReconciliationWorkspace() {
-  const [page] = useState(1);
+  const [page, setPage] = useState(1);
   const { data: reportsResponse, isLoading } = useAdminReconciliationReports(page, 20);
   const triggerMutation = useTriggerReconciliation();
 
@@ -133,6 +133,11 @@ export default function AdminReconciliationWorkspace() {
                 )}
               </tbody>
             </table>
+          </div>
+          <div className="flex items-center justify-between mt-4">
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={reports.length < 20}>Next</Button>
           </div>
         </CardContent>
       </Card>
