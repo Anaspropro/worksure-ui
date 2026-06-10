@@ -296,10 +296,10 @@ export default function WorkspaceDashboard({
         transition={{ duration: 0.4 }}
       >
 
-        <div className="relative flex flex-wrap items-center justify-between gap-4 text-secondary-foreground">
-          <div>
-            <h1 className="text-3xl font-bold">Dashboard</h1>
-            <p className="mt-0.5 text-lg">Welcome back, {firstName} 👋</p>
+        <div className="relative flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 text-secondary-foreground">
+          <div className="min-w-0 pr-4">
+            <h1 className="text-3xl font-bold truncate text-white">Dashboard</h1>
+            <p className="mt-0.5 text-lg truncate text-white/90">Welcome back, {firstName} 👋</p>
           </div>
           <div className="flex items-center gap-3">
             {roleView === "CLIENT" && (
@@ -528,7 +528,7 @@ export default function WorkspaceDashboard({
               </div>
 
               {filteredContracts.length > 0 ? (
-                filteredContracts.slice(0, 5).map((contract) => (
+                filteredContracts.slice(0, 2).map((contract) => (
                   <ContractRow
                     key={contract.id}
                     contract={contract}
@@ -676,7 +676,7 @@ export default function WorkspaceDashboard({
               </Button>
             </CardHeader>
             <CardContent className="space-y-2">
-              {visibleJobs.slice(0, 4).map((job) => (
+              {visibleJobs.slice(0, 2).map((job) => (
                 <JobRow key={job.id} job={job} />
               ))}
             </CardContent>
@@ -697,9 +697,14 @@ export default function WorkspaceDashboard({
                 <CardTitle className="text-base">Proposals</CardTitle>
                 <Badge variant="secondary" className="rounded-full">{proposals.length}</Badge>
               </div>
+              <Button asChild variant="ghost" size="sm" className="text-primary h-8 px-2 gap-1">
+                <Link href="/jobs">
+                  View all <ArrowRight className="size-3.5" />
+                </Link>
+              </Button>
             </CardHeader>
             <CardContent className="space-y-2">
-              {proposals.slice(0, 4).map((proposal) => (
+              {proposals.slice(0, 2).map((proposal) => (
                 <motion.div
                   key={proposal.id}
                   variants={fadeUp}

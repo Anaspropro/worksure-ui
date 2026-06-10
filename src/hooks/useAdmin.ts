@@ -51,6 +51,20 @@ export function useVerifyArtisan() {
   });
 }
 
+export function useRejectArtisanVerification() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (userId: string) =>
+      proxyFetch(`/admin/users/${userId}/reject-verification`, {
+        method: "PATCH",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
+    },
+  });
+}
+
 export function useBanUser() {
   const queryClient = useQueryClient();
 

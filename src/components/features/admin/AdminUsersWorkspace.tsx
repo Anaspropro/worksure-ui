@@ -188,7 +188,7 @@ export default function AdminUsersWorkspace() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleReviewClick(user.id)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          className="transition-opacity"
                         >
                           Review user
                           <ChevronRight className="ml-1 h-3 w-3" />

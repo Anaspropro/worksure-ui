@@ -38,7 +38,7 @@ export default function ClientWorkspaceSection({
 
   return (
     <section className="grid gap-4 lg:grid-cols-2">
-      <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible">
+      <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible" className="lg:col-span-2 max-w-2xl">
         <Card className="border-border bg-card">
           <CardHeader>
             <CardTitle>Post a job</CardTitle>
@@ -53,22 +53,6 @@ export default function ClientWorkspaceSection({
             <Button onClick={onCreateJob} disabled={isBusy || !jobTitle || jobBudget <= 0}>
               Create job
             </Button>
-          </CardContent>
-        </Card>
-      </motion.div>
-
-      <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
-        <Card className="border-border bg-primary/5">
-          <CardHeader>
-            <CardTitle>Client payment rules</CardTitle>
-            <CardDescription>
-              Keep money-related actions obvious and deliberate in every contract.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-7 text-text-secondary">
-            <p>Fund escrow only after reviewing the proposal and contract amount.</p>
-            <p>Confirm completion only when the delivered work matches the agreement.</p>
-            <p>Release or refund from the contract card so status always stays visible.</p>
           </CardContent>
         </Card>
       </motion.div>

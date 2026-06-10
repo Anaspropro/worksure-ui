@@ -70,7 +70,7 @@ export default function AdminDashboardWorkspace() {
       </motion.div>
 
       {/* ── Quick Stats Grid ── */}
-      <motion.section variants={containerVariants} className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-4">
+      <motion.section variants={containerVariants} className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <motion.div variants={itemVariants}>
           <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">
@@ -199,7 +199,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         {/* Platform Snapshot */}
-        <motion.div variants={itemVariants} className="flex flex-col h-full">
+        <motion.div variants={itemVariants} className="flex flex-col">
           <Card className="border-border/60 bg-card/40 backdrop-blur-md shadow-sm flex-1 flex flex-col overflow-hidden">
             <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -212,7 +212,7 @@ export default function AdminDashboardWorkspace() {
             </CardHeader>
             <CardContent className="p-5">
               {report ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div className="rounded-xl border border-border/50 bg-background/50 p-4 hover:bg-background/80 transition-colors">
                     <div className="flex items-center gap-2 text-muted-foreground mb-2">
                       <Users className="size-4" />

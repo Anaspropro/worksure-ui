@@ -100,7 +100,7 @@ export default function AdminJobsWorkspace() {
           <Card className="border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Open</CardTitle>
-              <div className="h-2 w-2 rounded-full bg-success" />
+              <div className="h-2 w-2 rounded-full bg-warning" />
             </CardHeader>
             <CardContent>
               {jobsLoading ? (
@@ -257,7 +257,7 @@ export default function AdminJobsWorkspace() {
                         <Button 
                           variant="ghost" 
                           size="sm" 
-                          className="opacity-0 group-hover:opacity-100 transition-opacity"
+                          className=" transition-opacity"
                           onClick={() => setSelectedJob(job)}
                         >
                           View details

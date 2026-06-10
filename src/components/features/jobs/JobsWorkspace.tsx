@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import {
   ArrowRight,
   BriefcaseBusiness,
+  ChevronLeft,
+  ChevronRight,
   FilePlus2,
   Loader2,
   Search,
@@ -119,6 +121,16 @@ export default function JobsWorkspace() {
   const [activeTab, setActiveTab] = useState<"jobs" | "proposals">("jobs");
   const deferredSearch = useDeferredValue(search);
 
+  const [jobsPage, setJobsPage] = useState(1);
+  const [proposalsPage, setProposalsPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  // Reset pagination when searching or changing tabs
+  useMemo(() => {
+    setJobsPage(1);
+    setProposalsPage(1);
+  }, [deferredSearch, activeTab]);
+
   const jobsQuery = useJobs(
     {
       clientId: user?.role === "CLIENT" ? user.id : undefined,
@@ -152,6 +164,20 @@ export default function JobsWorkspace() {
     () => proposals.filter((p) => p.status === "PENDING"),
     [proposals],
   );
+
+  const paginatedJobs = useMemo(() => {
+    const startIndex = (jobsPage - 1) * ITEMS_PER_PAGE;
+    return jobs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [jobs, jobsPage]);
+
+  const totalJobsPages = Math.ceil(jobs.length / ITEMS_PER_PAGE);
+
+  const paginatedProposals = useMemo(() => {
+    const startIndex = (proposalsPage - 1) * ITEMS_PER_PAGE;
+    return proposals.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [proposals, proposalsPage]);
+
+  const totalProposalsPages = Math.ceil(proposals.length / ITEMS_PER_PAGE);
 
   if (!user) return null;
 
@@ -297,46 +323,71 @@ export default function JobsWorkspace() {
                   <CardSkeleton />
                 </>
               ) : jobs.length ? (
-                jobs.map((job) => (
-                  <div
-                    key={job.id}
-                    className="rounded-lg border border-border bg-background/70 p-4 hover:border-primary/20 transition-colors"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1 flex-1 min-w-0">
-                        <p className="font-semibold text-foreground">{job.title}</p>
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                          {job.description}
-                        </p>
+                <>
+                  {paginatedJobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="rounded-lg border border-border bg-background/70 p-4 hover:border-primary/20 transition-colors"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="space-y-1 flex-1 min-w-0">
+                          <p className="font-semibold text-foreground">{job.title}</p>
+                          <p className="text-sm text-muted-foreground line-clamp-2">
+                            {job.description}
+                          </p>
+                        </div>
+                        <StatusBadge status={job.status} />
                       </div>
-                      <StatusBadge status={job.status} />
-                    </div>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">
-                        {formatCurrency(job.budget)}
-                      </span>
-                      <span className="text-xs px-2 py-0.5 rounded-full bg-muted">
-                        {job.category ?? "General"}
-                      </span>
-                      <span>{formatDate(job.createdAt)}</span>
-                    </div>
-                    {isArtisan && job.status === "OPEN" && (
-                      <div className="mt-3">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            setProposalJobId(job.id);
-                            setActiveTab("proposals");
-                          }}
-                        >
-                          <Send className="size-3.5 mr-1.5" />
-                          Apply to this job
-                        </Button>
+                      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">
+                          {formatCurrency(job.budget)}
+                        </span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-muted">
+                          {job.category ?? "General"}
+                        </span>
+                        <span>{formatDate(job.createdAt)}</span>
                       </div>
-                    )}
-                  </div>
-                ))
+                      {isArtisan && user.artisanVerified && job.status === "OPEN" && (
+                        <div className="mt-3">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setProposalJobId(job.id);
+                              setActiveTab("proposals");
+                            }}
+                          >
+                            <Send className="size-3.5 mr-1.5" />
+                            Apply to this job
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                  {totalJobsPages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setJobsPage((p) => Math.max(1, p - 1))}
+                        disabled={jobsPage === 1}
+                      >
+                        <ChevronLeft className="size-4 mr-1" /> Previous
+                      </Button>
+                      <span className="text-sm text-muted-foreground">
+                        Page {jobsPage} of {totalJobsPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setJobsPage((p) => Math.min(totalJobsPages, p + 1))}
+                        disabled={jobsPage === totalJobsPages}
+                      >
+                        Next <ChevronRight className="size-4 ml-1" />
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <EmptyState
                   icon={BriefcaseBusiness}
@@ -421,7 +472,7 @@ export default function JobsWorkspace() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {!user.artisanVerified && (
+                {!user.artisanVerified ? (
                   <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
                     <p className="font-medium">Verification required</p>
                     <p className="mt-1">
@@ -431,48 +482,50 @@ export default function JobsWorkspace() {
                       </Link>
                     </p>
                   </div>
+                ) : (
+                  <>
+                    <select
+                      className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
+                      value={proposalJobId}
+                      onChange={(e) => setProposalJobId(e.target.value)}
+                    >
+                      <option value="">Select a job to apply to</option>
+                      {jobs.map((job) => (
+                        <option key={job.id} value={job.id}>
+                          {job.title} ({formatCurrency(job.budget)})
+                        </option>
+                      ))}
+                    </select>
+                    <Input
+                      type="number"
+                      placeholder="Your proposed price (₦)"
+                      value={proposalAmountInput}
+                      onChange={(e) => setProposalAmountInput(e.target.value)}
+                    />
+                    <Textarea
+                      placeholder="Describe how you'll handle this work, your timeline, and relevant experience..."
+                      value={proposalMessage}
+                      onChange={(e) => setProposalMessage(e.target.value)}
+                      rows={4}
+                    />
+                    <Button
+                      disabled={
+                        !proposalJobId ||
+                        !proposalMessage.trim() ||
+                        proposalAmount <= 0 ||
+                        createProposalMutation.status === "pending"
+                      }
+                      onClick={handleCreateProposal}
+                      className="w-full"
+                    >
+                      {createProposalMutation.status === "pending" ? (
+                        <><Loader2 className="size-4 animate-spin" /> Submitting...</>
+                      ) : (
+                        <><Send className="size-4" /> Submit proposal</>
+                      )}
+                    </Button>
+                  </>
                 )}
-                <select
-                  className="h-11 w-full rounded-lg border border-border bg-background px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  value={proposalJobId}
-                  onChange={(e) => setProposalJobId(e.target.value)}
-                >
-                  <option value="">Select a job to apply to</option>
-                  {jobs.map((job) => (
-                    <option key={job.id} value={job.id}>
-                      {job.title} ({formatCurrency(job.budget)})
-                    </option>
-                  ))}
-                </select>
-                <Input
-                  type="number"
-                  placeholder="Your proposed price (₦)"
-                  value={proposalAmountInput}
-                  onChange={(e) => setProposalAmountInput(e.target.value)}
-                />
-                <Textarea
-                  placeholder="Describe how you'll handle this work, your timeline, and relevant experience..."
-                  value={proposalMessage}
-                  onChange={(e) => setProposalMessage(e.target.value)}
-                  rows={4}
-                />
-                <Button
-                  disabled={
-                    !user.artisanVerified ||
-                    !proposalJobId ||
-                    !proposalMessage.trim() ||
-                    proposalAmount <= 0 ||
-                    createProposalMutation.status === "pending"
-                  }
-                  onClick={handleCreateProposal}
-                  className="w-full"
-                >
-                  {createProposalMutation.status === "pending" ? (
-                    <><Loader2 className="size-4 animate-spin" /> Submitting...</>
-                  ) : (
-                    <><Send className="size-4" /> Submit proposal</>
-                  )}
-                </Button>
               </CardContent>
             </Card>
           )}
@@ -496,98 +549,123 @@ export default function JobsWorkspace() {
                   <CardSkeleton />
                 </>
               ) : proposals.length ? (
-                proposals.map((proposal) => (
-                  <div
-                    key={proposal.id}
-                    className="rounded-lg border border-border bg-background/70 p-4"
-                  >
-                    <div className="flex flex-wrap items-start justify-between gap-3">
-                      <div className="space-y-1">
-                        <p className="font-semibold text-foreground">
-                          {proposal.job.title}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {isClient
-                            ? `From ${proposal.artisan.name}`
-                            : `For ${proposal.client.name}`}
-                        </p>
+                <>
+                  {paginatedProposals.map((proposal) => (
+                    <div
+                      key={proposal.id}
+                      className="rounded-lg border border-border bg-background/70 p-4"
+                    >
+                      <div className="flex flex-wrap items-start justify-between gap-3">
+                        <div className="space-y-1">
+                          <p className="font-semibold text-foreground">
+                            {proposal.job.title}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {isClient
+                              ? `From ${proposal.artisan.name}`
+                              : `For ${proposal.client.name}`}
+                          </p>
+                        </div>
+                        <StatusBadge status={proposal.status} />
                       </div>
-                      <StatusBadge status={proposal.status} />
-                    </div>
-                    <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
-                      {proposal.message}
-                    </p>
-                    <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                      <span className="font-medium text-foreground">
-                        {formatCurrency(proposal.amount)}
-                      </span>
-                      <span>{formatDate(proposal.createdAt)}</span>
-                    </div>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {isClient && proposal.status === "PENDING" && (
-                        <>
+                      <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
+                        {proposal.message}
+                      </p>
+                      <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">
+                          {formatCurrency(proposal.amount)}
+                        </span>
+                        <span>{formatDate(proposal.createdAt)}</span>
+                      </div>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {isClient && proposal.status === "PENDING" && (
+                          <>
+                            <Button
+                              size="sm"
+                              onClick={() =>
+                                acceptProposalMutation.mutate(proposal.id, {
+                                  onSuccess: () => toast.success("Proposal accepted!"),
+                                  onError: (e) => toast.error(e.message || "Unable to accept."),
+                                })
+                              }
+                              disabled={acceptProposalMutation.status === "pending"}
+                            >
+                              Accept
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() =>
+                                rejectProposalMutation.mutate(proposal.id, {
+                                  onSuccess: () => toast.success("Proposal rejected."),
+                                  onError: (e) => toast.error(e.message || "Unable to reject."),
+                                })
+                              }
+                              disabled={rejectProposalMutation.status === "pending"}
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                        {isClient && proposal.status === "ACCEPTED" && (
                           <Button
                             size="sm"
                             onClick={() =>
-                              acceptProposalMutation.mutate(proposal.id, {
-                                onSuccess: () => toast.success("Proposal accepted!"),
-                                onError: (e) => toast.error(e.message || "Unable to accept."),
+                              createContractMutation.mutate(proposal.id, {
+                                onSuccess: () => {
+                                  toast.success("Contract created! Go to Contracts to fund escrow.");
+                                  router.push("/contracts");
+                                },
+                                onError: (e) => toast.error(e.message || "Unable to create contract."),
                               })
                             }
-                            disabled={acceptProposalMutation.status === "pending"}
+                            disabled={createContractMutation.status === "pending"}
                           >
-                            Accept
+                            Create contract →
                           </Button>
+                        )}
+                        {isArtisan && proposal.status === "PENDING" && (
                           <Button
                             size="sm"
                             variant="outline"
                             onClick={() =>
-                              rejectProposalMutation.mutate(proposal.id, {
-                                onSuccess: () => toast.success("Proposal rejected."),
-                                onError: (e) => toast.error(e.message || "Unable to reject."),
+                              withdrawProposalMutation.mutate(proposal.id, {
+                                onSuccess: () => toast.success("Proposal withdrawn."),
+                                onError: (e) => toast.error(e.message || "Unable to withdraw."),
                               })
                             }
-                            disabled={rejectProposalMutation.status === "pending"}
+                            disabled={withdrawProposalMutation.status === "pending"}
                           >
-                            Reject
+                            Withdraw
                           </Button>
-                        </>
-                      )}
-                      {isClient && proposal.status === "ACCEPTED" && (
-                        <Button
-                          size="sm"
-                          onClick={() =>
-                            createContractMutation.mutate(proposal.id, {
-                              onSuccess: () => {
-                                toast.success("Contract created! Go to Contracts to fund escrow.");
-                                router.push("/contracts");
-                              },
-                              onError: (e) => toast.error(e.message || "Unable to create contract."),
-                            })
-                          }
-                          disabled={createContractMutation.status === "pending"}
-                        >
-                          Create contract →
-                        </Button>
-                      )}
-                      {isArtisan && proposal.status === "PENDING" && (
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() =>
-                            withdrawProposalMutation.mutate(proposal.id, {
-                              onSuccess: () => toast.success("Proposal withdrawn."),
-                              onError: (e) => toast.error(e.message || "Unable to withdraw."),
-                            })
-                          }
-                          disabled={withdrawProposalMutation.status === "pending"}
-                        >
-                          Withdraw
-                        </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))}
+                  {totalProposalsPages > 1 && (
+                    <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setProposalsPage((p) => Math.max(1, p - 1))}
+                        disabled={proposalsPage === 1}
+                      >
+                        <ChevronLeft className="size-4 mr-1" /> Previous
+                      </Button>
+                      <span className="text-sm text-muted-foreground">
+                        Page {proposalsPage} of {totalProposalsPages}
+                      </span>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setProposalsPage((p) => Math.min(totalProposalsPages, p + 1))}
+                        disabled={proposalsPage === totalProposalsPages}
+                      >
+                        Next <ChevronRight className="size-4 ml-1" />
+                      </Button>
+                    </div>
+                  )}
+                </>
               ) : (
                 <EmptyState
                   icon={Send}

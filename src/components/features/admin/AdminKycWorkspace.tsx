@@ -15,7 +15,7 @@ import {
   Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAdminUsers, useVerifyArtisan } from "@/hooks/useAdmin";
+import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification } from "@/hooks/useAdmin";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,6 +49,7 @@ export default function AdminKycWorkspace() {
 
   const { data: usersData, isLoading } = useAdminUsers();
   const verifyMutation = useVerifyArtisan();
+  const rejectMutation = useRejectArtisanVerification();
 
   const artisans = useMemo(() => {
     return usersData?.data.filter(u => u.role === "ARTISAN") || [];
@@ -76,6 +77,16 @@ export default function AdminKycWorkspace() {
       toast.success("Artisan verified successfully", { id: toastId });
     } catch (err) {
       toast.error("Failed to verify artisan", { id: toastId });
+    }
+  };
+
+  const handleReject = async (userId: string) => {
+    const toastId = toast.loading("Rejecting verification...");
+    try {
+      await rejectMutation.mutateAsync(userId);
+      toast.success("Verification rejected successfully", { id: toastId });
+    } catch (err) {
+      toast.error("Failed to reject verification", { id: toastId });
     }
   };
 
@@ -202,14 +213,24 @@ export default function AdminKycWorkspace() {
 
                     <div className="flex gap-2 pt-2">
                       {!artisan.artisanVerified ? (
-                        <Button 
-                          className="w-full gap-2 rounded-xl" 
-                          onClick={() => handleVerify(artisan.id)}
-                          disabled={verifyMutation.isPending}
-                        >
-                          <ShieldCheck className="size-4" />
-                          Approve Verify
-                        </Button>
+                        <div className="flex gap-2 w-full">
+                          <Button 
+                            className="flex-1 gap-2 rounded-xl" 
+                            onClick={() => handleVerify(artisan.id)}
+                            disabled={verifyMutation.isPending || rejectMutation.isPending}
+                          >
+                            <ShieldCheck className="size-4" />
+                            Approve
+                          </Button>
+                          <Button 
+                            variant="destructive"
+                            className="flex-1 gap-2 rounded-xl" 
+                            onClick={() => handleReject(artisan.id)}
+                            disabled={verifyMutation.isPending || rejectMutation.isPending}
+                          >
+                            Reject
+                          </Button>
+                        </div>
                       ) : (
                         <Button variant="outline" className="w-full gap-2 rounded-xl" disabled>
                           <UserCheck className="size-4" />

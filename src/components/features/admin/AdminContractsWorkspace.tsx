@@ -285,7 +285,7 @@ export default function AdminContractsWorkspace() {
                         </Badge>
                       </td>
                       <td className="px-4 py-4 text-right">
-                        <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button variant="ghost" size="sm" className="transition-opacity">
                           View details
                           <ChevronRight className="ml-1 h-3 w-3" />
                         </Button>
@@ -311,7 +311,7 @@ function getStatusColor(status: string) {
   switch (status) {
     case "FUNDED": return "bg-info";
     case "ACTIVE":
-    case "IN_PROGRESS": return "bg-success";
+    case "IN_PROGRESS": return "bg-warning";
     case "DISPUTED": return "bg-danger";
     case "COMPLETED":
     case "PAID_OUT": return "bg-primary";
@@ -324,7 +324,7 @@ function getStatusBg(status: string) {
   switch (status) {
     case "FUNDED": return "bg-info/20 text-info border-info/30";
     case "ACTIVE":
-    case "IN_PROGRESS": return "bg-success-50 text-success-700 border-success-200 dark:bg-success-900/30 dark:text-success-400";
+    case "IN_PROGRESS": return "bg-warning-50 text-warning-700 border-warning-200 dark:bg-warning-900/30 dark:text-warning-400";
     case "DISPUTED": return "bg-danger-50 text-danger-700 border-danger-200 dark:bg-danger-900/30 dark:text-danger-400";
     case "COMPLETED":
     case "PAID_OUT": return "bg-primary-50 text-primary-700 border-primary-200 dark:bg-primary-900/30 dark:text-primary-400";

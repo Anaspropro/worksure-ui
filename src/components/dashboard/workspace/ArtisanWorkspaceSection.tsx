@@ -44,40 +44,7 @@ export default function ArtisanWorkspaceSection({
 
   return (
     <section className="grid gap-4 lg:grid-cols-2">
-      <motion.div custom={0} variants={cardVariants} initial="hidden" animate="visible">
-        <Card className="border-border bg-card">
-          <CardHeader>
-            <CardTitle>Submit a proposal</CardTitle>
-            <CardDescription>
-              Respond to an open job with your amount and delivery approach.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            {!artisanVerified ? (
-              <div className="rounded-lg border border-warning/40 bg-warning/10 p-4 text-sm text-warning">
-                Artisan verification is required before you can submit proposals.
-              </div>
-            ) : null}
-            <select
-              className="h-11 w-full rounded-lg border border-border bg-input px-3.5 text-sm shadow-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-              value={proposalJobId}
-              onChange={(event) => setProposalJobId(event.target.value)}
-            >
-              <option value="">Select a job</option>
-              {jobs?.map((job) => (
-                <option value={job.id} key={job.id}>
-                  {job.title} ({formatAmount(job.budget)})
-                </option>
-              ))}
-            </select>
-            <Input type="number" placeholder="Proposal amount" value={proposalAmountInput} onChange={(event) => setProposalAmountInput(event.target.value)} />
-            <Textarea placeholder="Proposal message" value={proposalMessage} onChange={(event) => setProposalMessage(event.target.value)} />
-            <Button onClick={onSubmitProposal} disabled={!artisanVerified || isBusy || !proposalJobId || proposalAmount <= 0 || !proposalMessage.trim()}>
-              Submit proposal
-            </Button>
-          </CardContent>
-        </Card>
-      </motion.div>
+      {/* Removed Submit a proposal card as requested */}
 
       <motion.div custom={1} variants={cardVariants} initial="hidden" animate="visible">
         <Card className="border-border bg-primary/5">

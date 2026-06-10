@@ -227,24 +227,10 @@ export default function WorkSureDashboard({
               </Button>
             </CardContent>
           </Card>
-
-          <Card className="border-border bg-secondary-light/20">
-            <CardHeader>
-              <CardTitle>Client payment rules</CardTitle>
-              <CardDescription>
-                Keep money-related actions obvious and deliberate in every contract.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3 text-sm leading-7 text-text-secondary">
-              <p>Fund escrow only after reviewing the proposal and contract amount.</p>
-              <p>Confirm completion only when the delivered work matches the agreement.</p>
-              <p>Release or refund from the contract card so status always stays visible.</p>
-            </CardContent>
-          </Card>
         </section>
       ) : null}
 
-      {roleView === "ARTISAN" ? (
+      {/* {roleView === "ARTISAN" ? (
         <section className="grid gap-4 lg:grid-cols-2">
           <Card className="border-border/90 bg-card">
             <CardHeader>
@@ -306,7 +292,7 @@ export default function WorkSureDashboard({
             </CardContent>
           </Card>
         </section>
-      ) : null}
+      ) : null} */}
 
       {/* {roleView === "ADMIN" ? (
         <section className="grid gap-4 lg:grid-cols-3">
