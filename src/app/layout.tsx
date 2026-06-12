@@ -27,7 +27,14 @@ export const metadata: Metadata = {
   title: "WorkSure",
   description:
     "Escrow-backed artisan marketplace for trusted jobs, contracts, and completion.",
+  manifest: "/manifest.json",
 };
+
+export const viewport = {
+  themeColor: "#000000",
+};
+
+import { NetworkStatus } from "@/components/ui/network-status";
 
 export default function RootLayout({
   children,
@@ -40,6 +47,7 @@ export default function RootLayout({
       className={`${bodyFont.variable} ${monoFont.variable} ${headingFont.variable} h-full antialiased`}
     >
       <body className="min-h-full font-sans flex flex-col bg-background text-foreground">
+        <NetworkStatus />
         <QueryProvider>
           <AnimatedPage>{children}</AnimatedPage>
           <Toaster richColors position="top-right" />
