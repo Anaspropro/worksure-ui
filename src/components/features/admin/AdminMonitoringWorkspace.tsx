@@ -76,7 +76,7 @@ export default function AdminMonitoringWorkspace() {
           <CardContent>
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
-                <div className="text-2xl font-bold">{formatUptime(healthData?.uptime)}</div>
+                <div className="text-2xl font-bold">{formatUptime((healthData as any)?.metrics?.uptime)}</div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Status: <span className="text-success font-medium">{healthData?.status || 'Unknown'}</span>
                 </p>
@@ -93,9 +93,9 @@ export default function AdminMonitoringWorkspace() {
           <CardContent>
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
-                <div className="text-2xl font-bold">{formatBytes(healthData?.memory?.rss)}</div>
+                <div className="text-2xl font-bold">{formatBytes((healthData as any)?.metrics?.memory?.rss)}</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Heap Used: {formatBytes(healthData?.memory?.heapUsed)}
+                  Heap Used: {formatBytes((healthData as any)?.metrics?.memory?.heapUsed)}
                 </p>
               </>
             )}
@@ -111,7 +111,7 @@ export default function AdminMonitoringWorkspace() {
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
                 <div className="text-2xl font-bold capitalize text-success">
-                  {healthData?.database?.status || 'Unknown'}
+                  {(healthData as any)?.services?.database?.status || 'Unknown'}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Connection active
