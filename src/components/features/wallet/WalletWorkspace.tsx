@@ -137,7 +137,7 @@ export default function WalletWorkspace() {
   const handleAddFunds = () => {
     const toastId = toast.loading("Initializing payment...");
     depositInitMutation.mutate(
-      { amount },
+      { amount, callbackUrl: window.location.href },
       {
         onSuccess: (data) => {
           toast.dismiss(toastId);

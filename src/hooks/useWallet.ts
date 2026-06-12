@@ -53,7 +53,7 @@ export function useCreateWallet() {
 
 export function useWalletDepositInit() {
   return useMutation({
-    mutationFn: (input: { amount: number }) =>
+    mutationFn: (input: { amount: number; callbackUrl?: string }) =>
       proxyFetch<{ authorizationUrl: string; reference: string }>("/wallet/deposit/init", {
         method: "POST",
         body: JSON.stringify(input),
