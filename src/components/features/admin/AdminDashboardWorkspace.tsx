@@ -13,7 +13,7 @@ import {
   FileText,
   AlertTriangle
 } from "lucide-react";
-import { useAdminDisputes, useAdminReports, useAdminUsers } from "@/hooks/useAdmin";
+import { useAdminReports } from "@/hooks/useAdmin";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 
 const containerVariants: Variants = {
@@ -34,16 +34,12 @@ const itemVariants: Variants = {
 };
 
 export default function AdminDashboardWorkspace() {
-  const usersQuery = useAdminUsers();
-  const disputesQuery = useAdminDisputes();
   const reportsQuery = useAdminReports("overview");
-
-  const users = usersQuery.data?.data ?? [];
-  const disputes = disputesQuery.data?.data ?? [];
   const report = reportsQuery.data;
 
-  const pendingArtisansCount = users.filter((entry) => entry.role === "ARTISAN" && !entry.artisanVerified).length;
-  const openDisputesCount = disputes.filter((entry) => entry.status !== "RESOLVED").length;
+  const usersCount = report?.totals.users ?? 0;
+  const pendingArtisansCount = (report?.totals as any)?.pendingArtisansCount ?? 0;
+  const openDisputesCount = report?.totals.openDisputes ?? 0;
 
   return (
     <motion.main 
@@ -81,7 +77,7 @@ export default function AdminDashboardWorkspace() {
               </div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Total Users</p>
               <p className="text-3xl font-bold text-foreground">
-                {users.length}
+                {usersCount}
               </p>
             </CardContent>
           </Card>
