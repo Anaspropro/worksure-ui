@@ -15,7 +15,7 @@ import {
   Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification } from "@/hooks/useAdmin";
+import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification, useBanUser } from "@/hooks/useAdmin";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,6 +50,7 @@ export default function AdminKycWorkspace() {
   const { data: usersData, isLoading } = useAdminUsers();
   const verifyMutation = useVerifyArtisan();
   const rejectMutation = useRejectArtisanVerification();
+  const banUserMutation = useBanUser();
 
   const artisans = useMemo(() => {
     return usersData?.data.filter(u => u.role === "ARTISAN") || [];
@@ -213,7 +214,7 @@ export default function AdminKycWorkspace() {
 
                     <div className="flex gap-2 pt-2">
                       {!artisan.artisanVerified ? (
-                        <div className="flex gap-2 w-full">
+                        <div className="flex gap-2 flex-1">
                           <Button 
                             className="flex-1 gap-2 rounded-xl" 
                             onClick={() => handleVerify(artisan.id)}
@@ -232,7 +233,7 @@ export default function AdminKycWorkspace() {
                           </Button>
                         </div>
                       ) : (
-                        <Button variant="outline" className="w-full gap-2 rounded-xl" disabled>
+                        <Button variant="outline" className="flex-1 gap-2 rounded-xl" disabled>
                           <UserCheck className="size-4" />
                           Already Verified
                         </Button>
@@ -244,10 +245,19 @@ export default function AdminKycWorkspace() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-48 rounded-xl">
-                          <DropdownMenuItem className="gap-2">
+                          <DropdownMenuItem className="gap-2" onClick={() => window.location.href = `/admin/users`}>
                             <ExternalLink className="size-4" /> View Profile
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 text-danger focus:text-danger">
+                          <DropdownMenuItem 
+                            className="gap-2 text-danger focus:text-danger"
+                            onClick={() => {
+                              const toastId = toast.loading("Suspending account...");
+                              banUserMutation.mutate(artisan.id, {
+                                onSuccess: () => toast.success("Account suspended", { id: toastId }),
+                                onError: () => toast.error("Failed to suspend account", { id: toastId })
+                              });
+                            }}
+                          >
                             <Clock className="size-4" /> Suspend Account
                           </DropdownMenuItem>
                         </DropdownMenuContent>
