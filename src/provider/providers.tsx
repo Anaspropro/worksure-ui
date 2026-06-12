@@ -48,7 +48,11 @@ export default function QueryProvider({
 
   if (!persister) {
     // SSR or Initial load before persister is ready
-    return <>{children}</>;
+    return (
+      <QueryClientProvider client={queryClient}>
+        {children}
+      </QueryClientProvider>
+    );
   }
 
   return (
