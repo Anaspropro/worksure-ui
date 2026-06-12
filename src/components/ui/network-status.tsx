@@ -5,12 +5,11 @@ import { WifiOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function NetworkStatus() {
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(() => 
+    typeof window !== "undefined" ? navigator.onLine : true
+  );
 
   useEffect(() => {
-    // Check initial state
-    setIsOnline(navigator.onLine);
-
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 

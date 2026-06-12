@@ -1,8 +1,8 @@
 "use client";
 
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { get, set, del } from "idb-keyval";
 import type { Persister, PersistedClient } from "@tanstack/react-query-persist-client";
 
@@ -38,13 +38,12 @@ export default function QueryProvider({
     }),
   );
 
-  const [persister, setPersister] = useState<Persister | null>(null);
-
-  useEffect(() => {
+  const [persister] = useState<Persister | null>(() => {
     if (typeof window !== "undefined") {
-      setPersister(createIDBPersister());
+      return createIDBPersister();
     }
-  }, []);
+    return null;
+  });
 
   if (!persister) {
     // SSR or Initial load before persister is ready
