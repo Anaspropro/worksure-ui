@@ -75,10 +75,15 @@ export async function middleware(request: NextRequest) {
       });
 
       if (!meRes.ok) {
-        const response = NextResponse.redirect(new URL(`/auth/login?error=me_not_ok&status=${meRes.status}`, request.url));
-        response.cookies.delete("token");
-        response.cookies.delete("refresh_token");
-        return response;
+        if (meRes.status === 401 || meRes.status === 403) {
+          const response = NextResponse.redirect(new URL(`/auth/login?error=me_not_ok&status=${meRes.status}`, request.url));
+          response.cookies.delete("token");
+          response.cookies.delete("refresh_token");
+          return response;
+        }
+        // If the server returns 429 Too Many Requests or 500, do not log the user out.
+        // Let the request pass through so the client can handle the API error gracefully.
+        return NextResponse.next();
       }
 
       const body = await meRes.json();
