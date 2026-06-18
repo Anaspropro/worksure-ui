@@ -49,8 +49,9 @@ export async function middleware(request: NextRequest) {
 
   if (!API_URL && (isProtectedPath(pathname) || isAuthPath(pathname))) {
     const response = NextResponse.redirect(new URL("/auth/login?error=no_api_url", request.url));
-    response.cookies.delete("token");
-    response.cookies.delete("refresh_token");
+    response.cookies.set("token", "", { maxAge: 0 });
+    response.cookies.set("refresh_token", "", { maxAge: 0 });
+    response.cookies.set("auth_present", "", { maxAge: 0 });
     return response;
   }
 
@@ -77,8 +78,9 @@ export async function middleware(request: NextRequest) {
       if (!meRes.ok) {
         if (meRes.status === 401 || meRes.status === 403) {
           const response = NextResponse.redirect(new URL(`/auth/login?error=me_not_ok&status=${meRes.status}`, request.url));
-          response.cookies.delete("token");
-          response.cookies.delete("refresh_token");
+          response.cookies.set("token", "", { maxAge: 0 });
+          response.cookies.set("refresh_token", "", { maxAge: 0 });
+          response.cookies.set("auth_present", "", { maxAge: 0 });
           return response;
         }
         // If the server returns 429 Too Many Requests or 500, do not log the user out.
@@ -97,10 +99,9 @@ export async function middleware(request: NextRequest) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
       }
     } catch (e) {
-      const response = NextResponse.redirect(new URL(`/auth/login?error=catch_error&msg=${e instanceof Error ? e.message : 'unknown'}`, request.url));
-      response.cookies.delete("token");
-      response.cookies.delete("refresh_token");
-      return response;
+      console.error("Middleware fetch error:", e);
+      // Let the request pass through so the client can handle the API error gracefully
+      return NextResponse.next();
     }
   }
 

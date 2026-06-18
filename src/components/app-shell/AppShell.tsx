@@ -9,6 +9,7 @@ import SidebarNav from "@/components/app-shell/SidebarNav";
 import SidebarProfile from "@/components/app-shell/SidebarProfile";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/useAuth";
+import { useNotificationStats } from "@/hooks/useNotifications";
 import type { User } from "@/types";
 
 export default function AppShell({
@@ -21,11 +22,15 @@ export default function AppShell({
   const router = useRouter();
   const pathname = usePathname();
   const logoutMutation = useLogout();
+  const { data: notificationStats } = useNotificationStats();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () => {
-    logoutMutation.mutate();
-    router.replace("/auth/login");
+  const handleLogout = async () => {
+    try {
+      await logoutMutation.mutateAsync();
+    } finally {
+      window.location.replace("/auth/login");
+    }
   };
 
   // Basic title mapping from pathname
@@ -80,7 +85,9 @@ export default function AppShell({
             <div className="flex items-center gap-5">
                <Button variant="ghost" size="icon" className="relative rounded-full text-muted-foreground hover:text-foreground">
                   <Bell className="size-5" />
-                  <span className="absolute top-1.5 right-2 size-2 bg-destructive rounded-full border-2 border-card"></span>
+                  {notificationStats && notificationStats.unread > 0 && (
+                     <span className="absolute top-1.5 right-2 size-2 bg-destructive rounded-full border-2 border-card"></span>
+                  )}
                </Button>
                
                <div className="pl-2 border-l border-border h-8 flex items-center">
