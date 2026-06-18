@@ -4,7 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import type { User, Contract, Job } from "@/types";
-import { useJobs, useCreateJob } from "@/hooks/useJobs";
+import { useJobs } from "@/hooks/useJobs";
 import { useProposals, useCreateProposal, useAcceptProposal } from "@/hooks/useProposals";
 import {
   useContracts,
@@ -35,7 +35,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { formatAmount } from "@/components/dashboard/workspace/format";
-import ClientWorkspaceSection from "@/components/dashboard/workspace/ClientWorkspaceSection";
 import ArtisanWorkspaceSection from "@/components/dashboard/workspace/ArtisanWorkspaceSection";
 import AdminWorkspaceSection from "@/components/dashboard/workspace/AdminWorkspaceSection";
 
@@ -205,22 +204,17 @@ export default function WorkspaceDashboard({
   roleView: User["role"];
   user: User;
 }) {
-  const [jobTitle, setJobTitle] = useState("");
-  const [jobBudgetInput, setJobBudgetInput] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
   const [proposalJobId, setProposalJobId] = useState("");
   const [proposalAmountInput, setProposalAmountInput] = useState("");
   const [proposalMessage, setProposalMessage] = useState("");
   const [contractSearch, setContractSearch] = useState("");
 
-  const jobBudget = Number(jobBudgetInput || 0);
   const proposalAmount = Number(proposalAmountInput || 0);
 
   const { data: jobs } = useJobs();
   const { data: proposals } = useProposals({ userId: user.id, role: roleView });
   const { data: contracts } = useContracts();
 
-  const createJobMutation = useCreateJob();
   const createProposalMutation = useCreateProposal();
   const acceptProposalMutation = useAcceptProposal();
   const createContractMutation = useCreateContract();
@@ -230,7 +224,6 @@ export default function WorkspaceDashboard({
   const refundContractMutation = useRefundContract();
 
   const isBusy =
-    createJobMutation.status === "pending" ||
     createProposalMutation.status === "pending" ||
     acceptProposalMutation.status === "pending" ||
     createContractMutation.status === "pending" ||
@@ -255,20 +248,6 @@ export default function WorkspaceDashboard({
   const filteredContracts = (contracts ?? []).filter((c) =>
     contractSearch === "" || c.job.title.toLowerCase().includes(contractSearch.toLowerCase()),
   );
-
-  const handleCreateJob = () => {
-    const toastId = toast.loading("Publishing job...");
-    createJobMutation.mutate(
-      { title: jobTitle.trim(), description: jobDescription.trim(), budget: jobBudget, category: "general" },
-      {
-        onSuccess: () => {
-          toast.success("Job published.", { id: toastId });
-          setJobTitle(""); setJobDescription(""); setJobBudgetInput("");
-        },
-        onError: (e) => toast.error(e.message || "Unable to publish.", { id: toastId }),
-      },
-    );
-  };
 
   const handleSubmitProposal = () => {
     const toastId = toast.loading("Submitting proposal...");
@@ -469,18 +448,6 @@ export default function WorkspaceDashboard({
       </motion.div>
 
       {/* ── Role-specific forms ── */}
-      {roleView === "CLIENT" && (
-        <ClientWorkspaceSection
-          jobTitle={jobTitle}
-          jobDescription={jobDescription}
-          jobBudgetInput={jobBudgetInput}
-          setJobTitle={setJobTitle}
-          setJobDescription={setJobDescription}
-          setJobBudgetInput={setJobBudgetInput}
-          onCreateJob={handleCreateJob}
-          isBusy={isBusy}
-        />
-      )}
       {roleView === "ARTISAN" && (
         <ArtisanWorkspaceSection
           jobs={jobs}
