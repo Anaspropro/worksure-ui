@@ -57,6 +57,10 @@ export function useLogout() {
     mutationFn: async () => {
       await logoutRequest();
     },
+    onMutate() {
+      clearSessionHint();
+      queryClient.clear();
+    },
     onSettled() {
       clearSessionHint();
       queryClient.clear();

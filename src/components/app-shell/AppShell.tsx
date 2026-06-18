@@ -23,10 +23,10 @@ export default function AppShell({
   const logoutMutation = useLogout();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const handleLogout = () =>
-    logoutMutation.mutate(undefined, {
-      onSettled: () => router.replace("/auth/login"),
-    });
+  const handleLogout = () => {
+    logoutMutation.mutate();
+    router.replace("/auth/login");
+  };
 
   // Basic title mapping from pathname
   const segments = pathname.split('/').filter(Boolean);
