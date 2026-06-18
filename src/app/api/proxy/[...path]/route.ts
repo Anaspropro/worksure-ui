@@ -111,8 +111,20 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
   }
 
   if (shouldClearSession) {
-    response.cookies.delete(TOKEN_KEY);
-    response.cookies.delete(SESSION_HINT_KEY);
+    response.cookies.set(TOKEN_KEY, "", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set(SESSION_HINT_KEY, "", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
   }
 
   return response;

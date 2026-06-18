@@ -96,6 +96,8 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState<UserRole>("CLIENT");
   const hasHydrated = useSyncExternalStore(
     () => () => {},
@@ -140,6 +142,11 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       return;
     }
 
+    if (mode === "register" && password !== confirmPassword) {
+      toast.error("Passwords do not match.");
+      return;
+    }
+
     const toastId = toast.loading("Creating your account...");
     registerMutation.mutate(
       { name: trimmedName, email: normalizedEmail, password, role },
@@ -149,6 +156,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
           setName("");
           setEmail("");
           setPassword("");
+          setConfirmPassword("");
           setRole("CLIENT");
           window.location.replace(`/auth/verify-email?email=${encodeURIComponent(user.email)}`);
         },
@@ -388,6 +396,47 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                 </InputGroupAddon>
               </InputGroup>
             </motion.div>
+
+            {/* Confirm Password — register only */}
+            {mode === "register" && (
+              <motion.div
+                className="space-y-1.5"
+                custom={passwordIdx + 0.5}
+                variants={formFieldVariants}
+                initial="hidden"
+                animate="visible"
+              >
+                <label className="text-sm font-medium text-foreground" htmlFor="confirm-password">
+                  Confirm password
+                </label>
+                <InputGroup className="h-11 rounded-lg border-border bg-input">
+                  <InputGroupAddon>
+                    <InputGroupText>
+                      <LockKeyhole className="size-4 text-muted-foreground" />
+                    </InputGroupText>
+                  </InputGroupAddon>
+                  <InputGroupInput
+                    id="confirm-password"
+                    placeholder="Confirm your password"
+                    type={showConfirmPassword ? "text" : "password"}
+                    autoComplete="new-password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                  />
+                  <InputGroupAddon align="inline-end">
+                    <InputGroupButton
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => setShowConfirmPassword((v) => !v)}
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                    </InputGroupButton>
+                  </InputGroupAddon>
+                </InputGroup>
+              </motion.div>
+            )}
 
             {/* Role selector — register only */}
             {mode === "register" && (
