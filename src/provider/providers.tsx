@@ -32,7 +32,7 @@ export default function QueryProvider({
           retry: 1,
           refetchOnWindowFocus: false,
           gcTime: 1000 * 60 * 60 * 24 * 7, // Keep data in garbage collection for 7 days offline
-          staleTime: 1000 * 60, // Data becomes stale after 1 minute
+          staleTime: 1000 * 60 * 5, // Data becomes stale after 5 minutes
         },
       },
     }),

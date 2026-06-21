@@ -22,6 +22,8 @@ export default function UserAvatar({
       <Image
         src={user.avatarUrl}
         alt={user.name}
+        width={40}
+        height={40}
         className={` ${className}`.trim()}
       />
     );

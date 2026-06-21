@@ -19,7 +19,6 @@ function AttachmentPreview({ message }: { message: ChatMessage }) {
           width={720}
           height={480}
           className="h-auto max-h-72 w-full object-cover"
-          unoptimized
         />
       </div>
     );

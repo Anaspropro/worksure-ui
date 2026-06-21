@@ -35,8 +35,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { formatAmount } from "@/components/dashboard/workspace/format";
-import ArtisanWorkspaceSection from "@/components/dashboard/workspace/ArtisanWorkspaceSection";
-import AdminWorkspaceSection from "@/components/dashboard/workspace/AdminWorkspaceSection";
+import dynamic from "next/dynamic";
+const ArtisanWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/ArtisanWorkspaceSection"), { ssr: false });
+const AdminWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/AdminWorkspaceSection"), { ssr: false });
 
 /* ── Shared animation helpers ───────────────────────────────── */
 const staggerContainer = {
