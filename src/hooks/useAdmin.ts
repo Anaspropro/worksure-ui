@@ -204,6 +204,20 @@ export function useAdminSystemLogs(page = 1, limit = 20, options: { enabled?: bo
   });
 }
 
+export function useClearSystemLogs() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: () =>
+      proxyFetch("/admin/monitoring/logs", {
+        method: "DELETE",
+      }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "monitoring", "logs"] });
+    },
+  });
+}
+
 export function useAdminTransactions(type?: string, options: { enabled?: boolean } = {}) {
   const queryKey = type ? ["admin", "transactions", type] : ["admin", "transactions"];
   const url = type ? `/admin/transactions?type=${type}` : "/admin/transactions";

@@ -2,8 +2,9 @@
 
 import { useState } from "react";
 import { Activity, Server, Database, MemoryStick, AlertTriangle } from "lucide-react";
-import { useAdminSystemHealth, useAdminSystemLogs } from "@/hooks/useAdmin";
+import { useAdminSystemHealth, useAdminSystemLogs, useClearSystemLogs } from "@/hooks/useAdmin";
 import { formatDate } from "@/lib/formatters";
+import { Trash2 } from "lucide-react";
 import {
   Badge,
   Button,
@@ -19,6 +20,7 @@ export default function AdminMonitoringWorkspace() {
   const [page, setPage] = useState(1);
   const { data: healthData, isLoading: healthLoading } = useAdminSystemHealth({ refetchInterval: 10000 });
   const { data: logsResponse, isLoading: logsLoading } = useAdminSystemLogs(page, 20);
+  const clearLogsMutation = useClearSystemLogs();
 
   const logs = logsResponse?.data || [];
   const total = logsResponse?.meta?.total || 0;
@@ -134,6 +136,21 @@ export default function AdminMonitoringWorkspace() {
                 Recent system errors and critical events. Total records: {logsLoading ? "Loading..." : String(total)}
               </CardDescription>
             </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive border-destructive/20 hover:bg-destructive/10"
+              onClick={() => {
+                if (confirm("Are you sure you want to clear all system logs?")) {
+                  clearLogsMutation.mutate();
+                  setPage(1);
+                }
+              }}
+              disabled={logsLoading || logs.length === 0 || clearLogsMutation.status === "pending"}
+            >
+              <Trash2 className="size-4 mr-2" />
+              Clear logs
+            </Button>
           </div>
         </CardHeader>
         <CardContent>
