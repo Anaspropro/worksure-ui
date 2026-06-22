@@ -215,6 +215,10 @@ export function useClearSystemLogs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "monitoring", "logs"] });
     },
+    onError: (error: Error) => {
+      console.error("Failed to clear logs:", error);
+      alert(`Failed to clear logs: ${error.message}. If the server was just updated, please ensure the backend is restarted.`);
+    }
   });
 }
 
