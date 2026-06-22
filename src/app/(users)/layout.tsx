@@ -26,5 +26,9 @@ export default function UsersLayout({
     return <DashboardLoadingState />;
   }
 
+  if (!user) {
+    return <DashboardLoadingState />;
+  }
+
   return <AppShell user={user}>{children}</AppShell>;
 }
