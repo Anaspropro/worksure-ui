@@ -20,7 +20,10 @@ import { formatCurrency, formatDate } from "@/lib/formatters";
 export default function ContractsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
-  const contractsQuery = useContracts(undefined, { enabled: Boolean(user) });
+  const [page, setPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
+  const contractsQuery = useContracts({ page, limit: ITEMS_PER_PAGE }, { enabled: Boolean(user) });
   const fundContractMutation = useFundContract();
   const confirmCompletionMutation = useConfirmCompletion();
   const releaseEscrowMutation = useReleaseEscrow();
@@ -30,7 +33,11 @@ export default function ContractsWorkspace() {
     return null;
   }
 
-  const contracts = contractsQuery.data ?? [];
+  const contractsResponse = contractsQuery.data;
+  const contracts = contractsResponse?.data ?? [];
+  const totalContractsCount = contractsResponse?.pagination?.total ?? 0;
+  const totalPages = contractsResponse?.pagination?.totalPages ?? 1;
+
   const readyToRelease = contracts.filter(
     (contract) =>
       contract.status === "ACTIVE" &&
@@ -38,16 +45,6 @@ export default function ContractsWorkspace() {
       contract.artisanConfirmedCompletion &&
       !contract.escrowReleased,
   );
-
-  const [page, setPage] = useState(1);
-  const ITEMS_PER_PAGE = 10;
-
-  const paginatedContracts = useMemo(() => {
-    const startIndex = (page - 1) * ITEMS_PER_PAGE;
-    return contracts.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [contracts, page]);
-
-  const totalPages = Math.ceil(contracts.length / ITEMS_PER_PAGE);
 
   return (
     <main className="space-y-6">
@@ -64,7 +61,7 @@ export default function ContractsWorkspace() {
         <Card size="sm">
           <CardContent className="space-y-1 py-2">
             <p className="text-sm text-muted-foreground">Total contracts</p>
-            <p className="text-3xl font-semibold text-foreground">{contracts.length}</p>
+            <p className="text-3xl font-semibold text-foreground">{totalContractsCount}</p>
           </CardContent>
         </Card>
         <Card size="sm">
@@ -108,7 +105,7 @@ export default function ContractsWorkspace() {
         <CardContent className="space-y-4">
           {contracts.length ? (
             <>
-              {paginatedContracts.map((contract) => (
+              {contracts.map((contract) => (
                 <div key={contract.id} className="rounded-lg border border-border bg-background/75 p-4">
                   <div className="flex flex-wrap items-start justify-between gap-3">
                     <div className="space-y-1">

@@ -1,13 +1,37 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { proxyFetch } from "@/api-client";
-import type { Contract, ContractStatus } from "@/types";
+import { proxyFetch, proxyFetchRaw } from "@/api-client";
+import type { ApiPagination, Contract, ContractStatus } from "@/types";
 
-export function useContracts(status?: ContractStatus | string, options: { enabled?: boolean } = {}) {
-  return useQuery<Contract[]>({
-    queryKey: ["contracts", status],
-    queryFn: () => proxyFetch<Contract[]>(`/contracts${status ? `?status=${status}` : ""}`),
+export type ContractsQuery = {
+  status?: ContractStatus | string;
+  page?: number;
+  limit?: number;
+};
+
+export type ContractsResponse = {
+  data: Contract[];
+  pagination: ApiPagination;
+};
+
+function buildContractsQuery(params: ContractsQuery = {}) {
+  const query = new URLSearchParams();
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== "") {
+      query.set(key, String(value));
+    }
+  });
+  if (!query.has("limit")) {
+    query.set("limit", "50");
+  }
+  return query.toString();
+}
+
+export function useContracts(params: ContractsQuery = {}, options: { enabled?: boolean } = {}) {
+  return useQuery<ContractsResponse>({
+    queryKey: ["contracts", params],
+    queryFn: () => proxyFetchRaw<ContractsResponse>(`/contracts?${buildContractsQuery(params)}`),
     enabled: options.enabled,
   });
 }

@@ -212,9 +212,13 @@ export default function WorkspaceDashboard({
 
   const proposalAmount = Number(proposalAmountInput || 0);
 
-  const { data: jobs } = useJobs();
-  const { data: proposals } = useProposals({ userId: user.id, role: roleView });
-  const { data: contracts } = useContracts();
+  const { data: jobsResponse } = useJobs();
+  const { data: proposalsResponse } = useProposals({ userId: user.id, role: roleView });
+  const { data: contractsResponse } = useContracts();
+
+  const jobs = jobsResponse?.jobs ?? [];
+  const proposals = proposalsResponse?.proposals ?? [];
+  const contracts = contractsResponse?.data ?? [];
 
   const createProposalMutation = useCreateProposal();
   const acceptProposalMutation = useAcceptProposal();
@@ -234,19 +238,19 @@ export default function WorkspaceDashboard({
     refundContractMutation.status === "pending";
 
   const visibleJobs = roleView === "CLIENT"
-    ? (jobs?.filter((j) => j.client?.id === user.id) ?? [])
-    : (jobs ?? []);
+    ? jobs.filter((j) => j.client?.id === user.id)
+    : jobs;
 
-  const activeContracts = contracts?.filter((c) => c.status === "ACTIVE" || c.status === "IN_PROGRESS" || c.status === "FUNDED") ?? [];
-  const pendingPayments = contracts?.filter((c) => c.status === "DRAFT" || c.status === "PENDING_PAYMENT") ?? [];
-  const completedContracts = contracts?.filter((c) => c.status === "COMPLETED" || c.status === "PAID_OUT") ?? [];
-  const escrowReadyContracts = contracts?.filter(
+  const activeContracts = contracts.filter((c) => c.status === "ACTIVE" || c.status === "IN_PROGRESS" || c.status === "FUNDED");
+  const pendingPayments = contracts.filter((c) => c.status === "DRAFT" || c.status === "PENDING_PAYMENT");
+  const completedContracts = contracts.filter((c) => c.status === "COMPLETED" || c.status === "PAID_OUT");
+  const escrowReadyContracts = contracts.filter(
     (c) => c.status === "ACTIVE" && c.clientConfirmedCompletion && c.artisanConfirmedCompletion && !c.escrowReleased,
-  ) ?? [];
+  );
 
   const totalSpent = completedContracts.reduce((sum, c) => sum + c.amount, 0);
 
-  const filteredContracts = (contracts ?? []).filter((c) =>
+  const filteredContracts = contracts.filter((c) =>
     contractSearch === "" || c.job.title.toLowerCase().includes(contractSearch.toLowerCase()),
   );
 

@@ -32,12 +32,10 @@ function buildJobsQuery(params: JobsQuery = {}) {
 }
 
 export function useJobs(params: JobsQuery = {}, options: { enabled?: boolean } = {}) {
-  return useQuery<Job[]>({
+  return useQuery<JobsResponse>({
     queryKey: ["jobs", params],
     queryFn: () =>
-      proxyFetchRaw<JobsResponse>(`/jobs${buildJobsQuery(params) ? `?${buildJobsQuery(params)}` : ""}`).then(
-        (response) => response.jobs,
-      ),
+      proxyFetchRaw<JobsResponse>(`/jobs${buildJobsQuery(params) ? `?${buildJobsQuery(params)}` : ""}`),
     enabled: options.enabled,
     staleTime: 1000 * 30,
   });

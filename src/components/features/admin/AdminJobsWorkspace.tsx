@@ -43,24 +43,23 @@ export default function AdminJobsWorkspace() {
   const itemsPerPage = 20;
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
-  const { data: jobsResponse, isLoading: jobsLoading } = useAdminJobs(statusFilter);
-  const jobs = jobsResponse?.data || [];
-
-  const filteredJobs = useMemo(() => {
-    return jobs.filter((j: Job) =>
-      j.title?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      j.client?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      j.id.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [jobs, searchTerm]);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {
-    setPage(1);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setPage(1); // reset page on search
+    }, 400);
+    return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  const paginatedJobs = useMemo(() => {
-    return filteredJobs.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [filteredJobs, page]);
+  const { data: jobsResponse, isLoading: jobsLoading } = useAdminJobs({
+    status: statusFilter,
+    page,
+    limit: itemsPerPage,
+    search: debouncedSearch || undefined,
+  });
+  const jobs = jobsResponse?.data || [];
 
   return (
     <div className="space-y-8 py-4">
@@ -212,14 +211,14 @@ export default function AdminJobsWorkspace() {
                       </td>
                     </tr>
                   ))
-                ) : filteredJobs?.length === 0 ? (
+                ) : jobs?.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
                       No jobs match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  paginatedJobs?.map((job: Job) => (
+                  jobs?.map((job: Job) => (
                     <tr key={job.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 font-mono text-xs text-muted-foreground">
                         {job.id.split('-')[0].toUpperCase()}
@@ -271,9 +270,9 @@ export default function AdminJobsWorkspace() {
             </table>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredJobs.length / itemsPerPage) || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredJobs.length / itemsPerPage)}>Next</Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || jobsLoading}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {jobsResponse?.meta?.page || page} of {jobsResponse?.meta?.totalPages || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (jobsResponse?.meta?.totalPages || 1) || jobsLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>

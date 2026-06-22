@@ -136,13 +136,19 @@ export default function JobsWorkspace() {
       clientId: user?.role === "CLIENT" ? user.id : undefined,
       status: user?.role === "ARTISAN" ? "OPEN" : undefined,
       search: deferredSearch.trim() || undefined,
-      limit: 50,
+      limit: ITEMS_PER_PAGE,
+      page: jobsPage,
     },
     { enabled: canLoadProtectedData },
   );
 
   const proposalsQuery = useProposals(
-    { role: user?.role, userId: user?.id },
+    {
+      role: user?.role,
+      userId: user?.id,
+      limit: ITEMS_PER_PAGE,
+      page: proposalsPage,
+    },
     { enabled: canLoadProtectedData },
   );
 
@@ -157,27 +163,20 @@ export default function JobsWorkspace() {
   const [proposalMessage, setProposalMessage] = useState("");
   const proposalAmount = Number(proposalAmountInput || 0);
 
-  const jobs = useMemo(() => jobsQuery.data ?? [], [jobsQuery.data]);
-  const proposals = useMemo(() => proposalsQuery.data ?? [], [proposalsQuery.data]);
+  const jobsResponse = jobsQuery.data;
+  const jobs = jobsResponse?.jobs ?? [];
+  const totalJobsPages = jobsResponse?.pagination?.totalPages ?? 1;
+  const totalJobsCount = jobsResponse?.pagination?.total ?? 0;
+
+  const proposalsResponse = proposalsQuery.data;
+  const proposals = proposalsResponse?.proposals ?? [];
+  const totalProposalsPages = proposalsResponse?.pagination?.totalPages ?? 1;
+  const totalProposalsCount = proposalsResponse?.pagination?.total ?? 0;
 
   const pendingProposals = useMemo(
     () => proposals.filter((p) => p.status === "PENDING"),
     [proposals],
   );
-
-  const paginatedJobs = useMemo(() => {
-    const startIndex = (jobsPage - 1) * ITEMS_PER_PAGE;
-    return jobs.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [jobs, jobsPage]);
-
-  const totalJobsPages = Math.ceil(jobs.length / ITEMS_PER_PAGE);
-
-  const paginatedProposals = useMemo(() => {
-    const startIndex = (proposalsPage - 1) * ITEMS_PER_PAGE;
-    return proposals.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [proposals, proposalsPage]);
-
-  const totalProposalsPages = Math.ceil(proposals.length / ITEMS_PER_PAGE);
 
   if (!user) return null;
 
@@ -241,7 +240,7 @@ export default function JobsWorkspace() {
             <p className="text-sm text-muted-foreground">
               {isClient ? "Jobs posted" : "Available jobs"}
             </p>
-            <p className="text-3xl font-semibold text-foreground">{jobs.length}</p>
+            <p className="text-3xl font-semibold text-foreground">{totalJobsCount}</p>
           </CardContent>
         </Card>
         <Card size="sm">
@@ -250,7 +249,7 @@ export default function JobsWorkspace() {
               {isClient ? "Pending proposals" : "Your proposals"}
             </p>
             <p className="text-3xl font-semibold text-foreground">
-              {isClient ? pendingProposals.length : proposals.length}
+              {isClient ? pendingProposals.length : totalProposalsCount}
             </p>
           </CardContent>
         </Card>
@@ -276,13 +275,13 @@ export default function JobsWorkspace() {
               <TabButton
                 active={activeTab === "jobs"}
                 label={isClient ? "My Jobs" : "Available Jobs"}
-                count={jobs.length}
+                count={totalJobsCount}
                 onClick={() => setActiveTab("jobs")}
               />
               <TabButton
                 active={activeTab === "proposals"}
                 label={isClient ? "Proposals" : "My Proposals"}
-                count={proposals.length}
+                count={totalProposalsCount}
                 onClick={() => setActiveTab("proposals")}
               />
             </div>
@@ -324,7 +323,7 @@ export default function JobsWorkspace() {
                 </>
               ) : jobs.length ? (
                 <>
-                  {paginatedJobs.map((job) => (
+                  {jobs.map((job) => (
                     <div
                       key={job.id}
                       className="rounded-lg border border-border bg-background/70 p-4 hover:border-primary/20 transition-colors"
@@ -550,7 +549,7 @@ export default function JobsWorkspace() {
                 </>
               ) : proposals.length ? (
                 <>
-                  {paginatedProposals.map((proposal) => (
+                  {proposals.map((proposal) => (
                     <div
                       key={proposal.id}
                       className="rounded-lg border border-border bg-background/70 p-4"

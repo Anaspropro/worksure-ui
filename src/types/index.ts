@@ -439,7 +439,13 @@ export interface AdminDisputeRecord {
 
 export interface AdminCollection<T> {
   data: T[];
-  meta?: Record<string, unknown>;
+  meta?: {
+    total?: number;
+    page?: number;
+    limit?: number;
+    totalPages?: number;
+    [key: string]: unknown;
+  };
 }
 
 export interface AdminOverviewReport {

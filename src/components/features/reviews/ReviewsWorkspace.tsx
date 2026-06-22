@@ -16,7 +16,7 @@ export default function ReviewsWorkspace() {
   const userQuery = useUser();
   const user = userQuery.data;
   const canLoadProtectedData = Boolean(user);
-  const contractsQuery = useContracts("COMPLETED", { enabled: canLoadProtectedData });
+  const contractsQuery = useContracts({ status: "COMPLETED" }, { enabled: canLoadProtectedData });
   const myReviewsQuery = useMyReviews({
     enabled: canLoadProtectedData && user?.role !== "ARTISAN",
   });
@@ -33,7 +33,7 @@ export default function ReviewsWorkspace() {
 
   const availableContracts = useMemo(
     () =>
-      (contractsQuery.data ?? []).filter((contract) =>
+      (contractsQuery.data?.data ?? []).filter((contract) =>
         user?.role === "CLIENT" ? contract.clientId === user.id : contract.artisanId === user?.id,
       ),
     [contractsQuery.data, user],

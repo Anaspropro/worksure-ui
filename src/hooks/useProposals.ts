@@ -49,12 +49,10 @@ function buildProposalQuery({
 }
 
 export function useProposals(params: ProposalsQuery = {}, options: { enabled?: boolean } = {}) {
-  return useQuery<Proposal[]>({
+  return useQuery<ProposalsResponse>({
     queryKey: ["proposals", params],
     queryFn: () =>
-      proxyFetchRaw<ProposalsResponse>(`/proposals?${buildProposalQuery(params)}`).then(
-        (response) => response.proposals,
-      ),
+      proxyFetchRaw<ProposalsResponse>(`/proposals?${buildProposalQuery(params)}`),
     enabled: options.enabled,
   });
 }

@@ -42,25 +42,25 @@ export default function AdminContractsWorkspace() {
   const [page, setPage] = useState(1);
   const itemsPerPage = 20;
 
-  const { data: stats, isLoading: statsLoading } = useAdminContractStats();
-  const { data: contracts, isLoading: contractsLoading } = useAdminContracts(statusFilter);
-
-  const filteredContracts = useMemo(() => {
-    return contracts?.data.filter((c: Contract) => 
-      c.jobTitle?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.artisanName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      c.id.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
-  }, [contracts, searchTerm]);
+  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   useEffect(() => {
-    setPage(1);
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setPage(1); // reset page on search
+    }, 400);
+    return () => clearTimeout(handler);
   }, [searchTerm]);
 
-  const paginatedContracts = useMemo(() => {
-    return filteredContracts.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [filteredContracts, page]);
+  const { data: stats, isLoading: statsLoading } = useAdminContractStats();
+  const { data: contractsResponse, isLoading: contractsLoading } = useAdminContracts({
+    status: statusFilter,
+    page,
+    limit: itemsPerPage,
+    search: debouncedSearch || undefined,
+  });
+
+  const contracts = contractsResponse?.data || [];
 
   return (
     <div className="space-y-8">
@@ -252,14 +252,14 @@ export default function AdminContractsWorkspace() {
                       </td>
                     </tr>
                   ))
-                ) : filteredContracts?.length === 0 ? (
+                ) : contracts?.length === 0 ? (
                   <tr>
                     <td colSpan={6} className="px-4 py-8 text-center text-muted-foreground italic">
                       No contracts match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  paginatedContracts?.map((contract: Contract) => (
+                  contracts?.map((contract: Contract) => (
                     <tr key={contract.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4 font-mono text-xs text-muted-foreground">
                         {contract.id.split('-')[0].toUpperCase()}
@@ -297,9 +297,9 @@ export default function AdminContractsWorkspace() {
             </table>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredContracts.length / itemsPerPage) || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredContracts.length / itemsPerPage)}>Next</Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || contractsLoading}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {contractsResponse?.meta?.page || page} of {contractsResponse?.meta?.totalPages || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (contractsResponse?.meta?.totalPages || 1) || contractsLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>

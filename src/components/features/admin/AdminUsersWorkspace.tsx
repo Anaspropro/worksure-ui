@@ -40,7 +40,22 @@ export default function AdminUsersWorkspace() {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const { data: usersResponse, isLoading: usersLoading } = useAdminUsers();
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearch(searchTerm);
+      setPage(1); // reset page on search
+    }, 400);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
+
+  const { data: usersResponse, isLoading: usersLoading } = useAdminUsers({
+    page,
+    limit: itemsPerPage,
+    search: debouncedSearch || undefined,
+  });
+
   const verifyArtisanMutation = useVerifyArtisan();
   const banUserMutation = useBanUser();
   const unbanUserMutation = useUnbanUser();
@@ -50,21 +65,6 @@ export default function AdminUsersWorkspace() {
   });
 
   const users = usersResponse?.data || [];
-
-  const filteredUsers = useMemo(() => {
-    return users.filter((u: AdminUserRecord) =>
-      u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      u.email.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [users, searchTerm]);
-
-  useEffect(() => {
-    setPage(1);
-  }, [searchTerm]);
-
-  const paginatedUsers = useMemo(() => {
-    return filteredUsers.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-  }, [filteredUsers, page]);
 
   const handleReviewClick = (id: string) => {
     setSelectedUserId(id);
@@ -141,14 +141,14 @@ export default function AdminUsersWorkspace() {
                       </td>
                     </tr>
                   ))
-                ) : filteredUsers.length === 0 ? (
+                ) : users.length === 0 ? (
                   <tr>
                     <td colSpan={5} className="px-4 py-8 text-center text-muted-foreground italic">
                       No users match your criteria.
                     </td>
                   </tr>
                 ) : (
-                  paginatedUsers.map((user: AdminUserRecord) => (
+                  users.map((user: AdminUserRecord) => (
                     <tr key={user.id} className="hover:bg-muted/30 transition-colors group">
                       <td className="px-4 py-4">
                         <div className="flex items-center gap-3">
@@ -201,9 +201,9 @@ export default function AdminUsersWorkspace() {
             </table>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {page} of {Math.ceil(filteredUsers.length / itemsPerPage) || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(filteredUsers.length / itemsPerPage)}>Next</Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || usersLoading}>Previous</Button>
+            <span className="text-sm text-muted-foreground">Page {usersResponse?.meta?.page || page} of {usersResponse?.meta?.totalPages || 1}</span>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (usersResponse?.meta?.totalPages || 1) || usersLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>
