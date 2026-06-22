@@ -16,12 +16,12 @@ export default function AdminLayout({
   const router = useRouter();
 
   useEffect(() => {
-    if (!userQuery.isLoading && (!user || user.role !== "ADMIN")) {
+    if (!userQuery.isAuthLoading && (!userQuery.isAuthenticated || user?.role !== "ADMIN")) {
       router.replace("/auth/login");
     }
-  }, [user, userQuery.isLoading, router]);
+  }, [user, userQuery.isAuthenticated, userQuery.isAuthLoading, router]);
 
-  if (userQuery.isLoading || !user || user.role !== "ADMIN") {
+  if (userQuery.isAuthLoading || !userQuery.isAuthenticated || user?.role !== "ADMIN") {
     return <DashboardLoadingState />;
   }
 

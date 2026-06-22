@@ -5,6 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { io, type Socket } from "socket.io-client";
 import { proxyFetch, proxyFetchEnvelope } from "@/api-client";
 import type { ApiEnvelope, ChatConversation, ChatMessage } from "@/types";
+import { useUpload } from "./useUpload";
 
 const CHAT_SOCKET_URL =
   process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? null;
@@ -44,6 +45,7 @@ export function useChatSocketToken(enabled: boolean) {
 
 export function useSendMessage() {
   const queryClient = useQueryClient();
+  const { uploadFile } = useUpload();
 
   return useMutation<
     ChatMessage,
@@ -69,17 +71,16 @@ export function useSendMessage() {
         | undefined = preUploaded.fileUrl ? (preUploaded as any) : undefined;
 
       if (file && !uploaded) {
-        const body = new FormData();
-        body.append("file", file);
-        uploaded = await proxyFetch<{
-          fileUrl: string;
-          fileType?: string | null;
-          fileName?: string | null;
-          fileSize?: number | null;
-        }>("/upload", {
-          method: "POST",
-          body,
-        });
+        const cloudinaryUpload = await uploadFile(file);
+        if (!cloudinaryUpload) {
+          throw new Error("Failed to upload file");
+        }
+        uploaded = {
+          fileUrl: cloudinaryUpload.secure_url,
+          fileType: cloudinaryUpload.resource_type,
+          fileName: cloudinaryUpload.original_filename,
+          fileSize: cloudinaryUpload.bytes,
+        };
       }
 
       return proxyFetch<ChatMessage>(`/chat/conversations/${conversationId}/messages`, {

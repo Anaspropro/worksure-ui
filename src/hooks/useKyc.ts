@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch } from "@/api-client";
 
 import { useArtisanProfile, useSaveArtisanProfile } from "./useProfile";
+import { useUpload } from "./useUpload";
 
 export function useVerifyIdentity() {
   const queryClient = useQueryClient();
@@ -23,17 +24,21 @@ export function useVerifyIdentity() {
 
 export function useUploadKycDocument() {
   const queryClient = useQueryClient();
+  const { uploadFile } = useUpload();
+  
   return useMutation({
     mutationFn: async ({ file, documentType }: { file: File; documentType: string }) => {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("documentType", documentType);
+      const cloudinaryUpload = await uploadFile(file);
+      if (!cloudinaryUpload) {
+        throw new Error("Failed to upload KYC document");
+      }
 
-      // proxyFetch uses fetch under the hood. For FormData, we don't set Content-Type header manually.
       return proxyFetch("/kyc/upload", {
         method: "POST",
-        body: formData,
-        // Assuming proxyFetch handles FormData correctly and doesn't stringify it
+        body: JSON.stringify({
+          documentType,
+          documentUrl: cloudinaryUpload.secure_url,
+        }),
       });
     },
     onSuccess: () => {

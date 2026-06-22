@@ -38,8 +38,9 @@ export default function AdminDashboardWorkspace() {
   const report = reportsQuery.data;
 
   const usersCount = report?.totals.users ?? 0;
-  const pendingArtisansCount = (report?.totals as any)?.pendingArtisansCount ?? 0;
+  const pendingArtisansCount = report?.totals.pendingArtisansCount ?? 0;
   const openDisputesCount = report?.totals.openDisputes ?? 0;
+  const pendingPayoutsCount = report?.totals.pendingPayoutsCount ?? 0;
 
   return (
     <motion.main 
@@ -186,6 +187,27 @@ export default function AdminDashboardWorkspace() {
                   <Button asChild variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
                     <Link href="/admin/disputes">
                       Resolve <ChevronRight className="ml-1 size-4" />
+                    </Link>
+                  </Button>
+                </div>
+
+                <div className="p-5 flex items-start justify-between group hover:bg-muted/10 transition-colors">
+                  <div className="space-y-1">
+                    <p className="font-semibold text-foreground flex items-center gap-2">
+                      Payout Processing
+                      {pendingPayoutsCount > 0 && (
+                        <span className="flex h-5 w-5 items-center justify-center rounded-full bg-danger/10 text-[11px] font-bold text-danger">
+                          {pendingPayoutsCount}
+                        </span>
+                      )}
+                    </p>
+                    <p className="text-sm text-muted-foreground max-w-[280px]">
+                      Completed contracts are awaiting manual or automated payout to artisans.
+                    </p>
+                  </div>
+                  <Button asChild variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Link href="/admin/payouts">
+                      Process <ChevronRight className="ml-1 size-4" />
                     </Link>
                   </Button>
                 </div>

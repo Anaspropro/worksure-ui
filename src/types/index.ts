@@ -450,6 +450,8 @@ export interface AdminOverviewReport {
     openDisputes: number;
     platformFees: number;
     flaggedJobs: number;
+    pendingArtisansCount?: number;
+    pendingPayoutsCount?: number;
   };
 }
 

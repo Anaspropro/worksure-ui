@@ -173,6 +173,17 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   const roleIdx = passwordIdx + 1;
   const submitIdx = roleIdx + 1;
 
+  if (!hasHydrated || userQuery.isAuthLoading) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-background">
+        <div className="flex flex-col items-center gap-4">
+          <div className="size-8 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
+          <p className="text-sm text-muted-foreground">Checking authentication...</p>
+        </div>
+      </main>
+    );
+  }
+
   return (
     <main className="min-h-screen flex">
       {/* ── Brand side panel ───────────────────────────────────── */}

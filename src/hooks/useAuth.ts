@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   clearSessionHint,
@@ -15,13 +16,27 @@ import type { AuthSuccess, RegisterSuccess, User } from "@/types/index";
 export function useUser() {
   const hasToken = hasSessionHint();
 
-  return useQuery<User>({
+  const [isHydrated, setIsHydrated] = useState(false);
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  const query = useQuery<User>({
     queryKey: ["user"],
     queryFn: getProfile,
     enabled: hasToken,
     retry: false,
     staleTime: 1000 * 60 * 5,
   });
+
+  const isAuthLoading = !isHydrated || (hasToken && query.isPending);
+  const isAuthenticated = !!query.data;
+
+  return {
+    ...query,
+    isAuthLoading,
+    isAuthenticated,
+  };
 }
 
 export function useLogin() {
