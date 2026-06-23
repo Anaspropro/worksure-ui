@@ -40,6 +40,8 @@ export default function AdminContractsWorkspace() {
   const [statusFilter] = useState<string | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
+  const currentCursor = cursors[page - 1];
   const itemsPerPage = 20;
 
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -48,6 +50,7 @@ export default function AdminContractsWorkspace() {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
       setPage(1); // reset page on search
+      setCursors([undefined]);
     }, 400);
     return () => clearTimeout(handler);
   }, [searchTerm]);
@@ -55,7 +58,7 @@ export default function AdminContractsWorkspace() {
   const { data: stats, isLoading: statsLoading } = useAdminContractStats();
   const { data: contractsResponse, isLoading: contractsLoading } = useAdminContracts({
     status: statusFilter,
-    page,
+    cursor: currentCursor,
     limit: itemsPerPage,
     search: debouncedSearch || undefined,
   });
@@ -298,8 +301,13 @@ export default function AdminContractsWorkspace() {
           </div>
           <div className="flex items-center justify-between mt-4">
             <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || contractsLoading}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {contractsResponse?.meta?.page || page} of {contractsResponse?.meta?.totalPages || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (contractsResponse?.meta?.totalPages || 1) || contractsLoading}>Next</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => {
+              if (contractsResponse?.meta?.nextCursor && page === cursors.length) {
+                setCursors(prev => [...prev, contractsResponse.meta!.nextCursor as string]);
+              }
+              setPage(p => p + 1);
+            }} disabled={!contractsResponse?.meta?.nextCursor || contractsLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>

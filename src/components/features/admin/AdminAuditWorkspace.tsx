@@ -19,8 +19,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminAuditWorkspace() {
   const [page, setPage] = useState(1);
+  const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
+  const currentCursor = cursors[page - 1];
   const [selectedAudit, setSelectedAudit] = useState<AuditLog | null>(null);
-  const { data: auditResponse, isLoading } = useAdminAuditLogs(page, 20);
+  const { data: auditResponse, isLoading } = useAdminAuditLogs({
+    cursor: currentCursor,
+    limit: 20,
+  });
 
   const logs = auditResponse?.data || [];
   const total = auditResponse?.meta?.total || 0;
@@ -113,9 +118,14 @@ export default function AdminAuditWorkspace() {
             </table>
           </div>
           <div className="flex items-center justify-between mt-4">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
+            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || isLoading}>Previous</Button>
             <span className="text-sm text-muted-foreground">Page {page}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={logs.length < 20}>Next</Button>
+            <Button variant="outline" size="sm" onClick={() => {
+              if (auditResponse?.meta?.nextCursor && page === cursors.length) {
+                setCursors(prev => [...prev, auditResponse.meta!.nextCursor as string]);
+              }
+              setPage(p => p + 1);
+            }} disabled={!auditResponse?.meta?.nextCursor || isLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>

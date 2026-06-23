@@ -5,25 +5,30 @@ import { proxyFetch, proxyFetchRaw } from "@/api-client";
 import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job, AuditLog, SystemLog, SystemHealth, ReconciliationReport, ApiEnvelope, WalletTransaction } from "@/types";
 import { getAuditLogs, getReconciliationReports, triggerReconciliation, getSystemHealth, getSystemLogs } from "@/api-client";
 
-export function useAdminUsers(params: { search?: string; page?: number; limit?: number; enabled?: boolean } = {}) {
+export function useAdminUsers(params: { search?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
   const query = new URLSearchParams();
   if (params.search) query.set("search", params.search);
-  if (params.page) query.set("page", params.page.toString());
+  if (params.cursor) query.set("cursor", params.cursor);
   if (params.limit) query.set("limit", params.limit.toString());
   const queryString = query.toString() ? `?${query.toString()}` : "";
 
   return useQuery<AdminCollection<AdminUserRecord>>({
-    queryKey: ["admin", "users", params.search, params.page, params.limit],
+    queryKey: ["admin", "users", params.search, params.cursor, params.limit],
     queryFn: () => proxyFetchRaw<AdminCollection<AdminUserRecord>>(`/admin/users${queryString}`),
     enabled: params.enabled,
   });
 }
 
-export function useAdminDisputes(options: { enabled?: boolean } = {}) {
+export function useAdminDisputes(params: { cursor?: string; limit?: number; enabled?: boolean } = {}) {
+  const query = new URLSearchParams();
+  if (params.cursor) query.set("cursor", params.cursor);
+  if (params.limit) query.set("limit", params.limit.toString());
+  const queryString = query.toString() ? `?${query.toString()}` : "";
+
   return useQuery<AdminCollection<AdminDisputeRecord>>({
-    queryKey: ["admin", "disputes"],
-    queryFn: () => proxyFetchRaw<AdminCollection<AdminDisputeRecord>>("/admin/disputes"),
-    enabled: options.enabled,
+    queryKey: ["admin", "disputes", params.cursor, params.limit],
+    queryFn: () => proxyFetchRaw<AdminCollection<AdminDisputeRecord>>(`/admin/disputes${queryString}`),
+    enabled: params.enabled,
   });
 }
 
@@ -123,16 +128,16 @@ export function useResolveAdminDispute() {
   });
 }
 
-export function useAdminContracts(params: { search?: string; status?: string; page?: number; limit?: number; enabled?: boolean } = {}) {
+export function useAdminContracts(params: { search?: string; status?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
   const query = new URLSearchParams();
   if (params.search) query.set("search", params.search);
   if (params.status) query.set("status", params.status);
-  if (params.page) query.set("page", params.page.toString());
+  if (params.cursor) query.set("cursor", params.cursor);
   if (params.limit) query.set("limit", params.limit.toString());
   const queryString = query.toString() ? `?${query.toString()}` : "";
 
   return useQuery<AdminCollection<Contract>>({
-    queryKey: ["admin", "contracts", params.search, params.status, params.page, params.limit],
+    queryKey: ["admin", "contracts", params.search, params.status, params.cursor, params.limit],
     queryFn: () => proxyFetchRaw<AdminCollection<Contract>>(`/admin/contracts${queryString}`),
     enabled: params.enabled,
   });
@@ -146,26 +151,31 @@ export function useAdminContractStats(options: { enabled?: boolean } = {}) {
   });
 }
 
-export function useAdminJobs(params: { search?: string; status?: string; page?: number; limit?: number; enabled?: boolean } = {}) {
+export function useAdminJobs(params: { search?: string; status?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
   const query = new URLSearchParams();
   if (params.search) query.set("search", params.search);
   if (params.status) query.set("status", params.status);
-  if (params.page) query.set("page", params.page.toString());
+  if (params.cursor) query.set("cursor", params.cursor);
   if (params.limit) query.set("limit", params.limit.toString());
   const queryString = query.toString() ? `?${query.toString()}` : "";
 
   return useQuery<AdminCollection<Job>>({
-    queryKey: ["admin", "jobs", params.search, params.status, params.page, params.limit],
+    queryKey: ["admin", "jobs", params.search, params.status, params.cursor, params.limit],
     queryFn: () => proxyFetchRaw<AdminCollection<Job>>(`/admin/jobs${queryString}`),
     enabled: params.enabled,
   });
 }
 
-export function useAdminAuditLogs(page = 1, limit = 20, options: { enabled?: boolean } = {}) {
+export function useAdminAuditLogs(params: { cursor?: string; limit?: number; enabled?: boolean } = {}) {
+  const query = new URLSearchParams();
+  if (params.cursor) query.set("cursor", params.cursor);
+  if (params.limit) query.set("limit", params.limit.toString());
+  const queryString = query.toString() ? `?${query.toString()}` : "";
+
   return useQuery<ApiEnvelope<AuditLog[]>>({
-    queryKey: ["admin", "audit", page, limit],
-    queryFn: () => getAuditLogs(page, limit),
-    enabled: options.enabled,
+    queryKey: ["admin", "audit", params.cursor, params.limit],
+    queryFn: () => proxyFetchRaw<ApiEnvelope<AuditLog[]>>(`/admin/audit-logs${queryString}`),
+    enabled: params.enabled,
   });
 }
 
@@ -222,14 +232,17 @@ export function useClearSystemLogs() {
   });
 }
 
-export function useAdminTransactions(type?: string, options: { enabled?: boolean } = {}) {
-  const queryKey = type ? ["admin", "transactions", type] : ["admin", "transactions"];
-  const url = type ? `/admin/transactions?type=${type}` : "/admin/transactions";
+export function useAdminTransactions(params: { type?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
+  const query = new URLSearchParams();
+  if (params.type) query.set("type", params.type);
+  if (params.cursor) query.set("cursor", params.cursor);
+  if (params.limit) query.set("limit", params.limit.toString());
+  const queryString = query.toString() ? `?${query.toString()}` : "";
 
   return useQuery<AdminCollection<WalletTransaction>>({
-    queryKey,
-    queryFn: () => proxyFetchRaw<AdminCollection<WalletTransaction>>(url),
-    enabled: options.enabled,
+    queryKey: ["admin", "transactions", params.type, params.cursor, params.limit],
+    queryFn: () => proxyFetchRaw<AdminCollection<WalletTransaction>>(`/admin/transactions${queryString}`),
+    enabled: params.enabled,
   });
 }
 

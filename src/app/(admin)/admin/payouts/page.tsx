@@ -11,7 +11,7 @@ import { formatDate } from "@/lib/formatters";
 import { Loader2, CheckCircle2 } from "lucide-react";
 
 export default function PayoutRequestsPage() {
-  const { data, isLoading } = useAdminTransactions("PAYOUT");
+  const { data, isLoading } = useAdminTransactions({ type: "PAYOUT" });
   const processPayoutMutation = useAdminProcessPayout();
   const [processingId, setProcessingId] = useState<string | null>(null);
 

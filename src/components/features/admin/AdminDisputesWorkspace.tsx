@@ -41,8 +41,15 @@ export default function AdminDisputesWorkspace() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisputeId, setSelectedDisputeId] = useState<string | null>(null);
   const [resolutionNotes, setResolutionNotes] = useState("");
+  const [page, setPage] = useState(1);
+  const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
+  const currentCursor = cursors[page - 1];
+  const itemsPerPage = 20;
 
-  const { data: disputes, isLoading } = useAdminDisputes();
+  const { data: disputes, isLoading } = useAdminDisputes({
+    cursor: currentCursor,
+    limit: itemsPerPage,
+  });
   const resolveMutation = useResolveAdminDispute();
 
   const filteredDisputes = useMemo(() => {
@@ -165,6 +172,17 @@ export default function AdminDisputesWorkspace() {
                   </motion.div>
                 ))
               )}
+            </div>
+
+            <div className="flex items-center justify-between mt-4">
+              <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || isLoading}>Previous</Button>
+              <span className="text-sm text-muted-foreground">Page {page}</span>
+              <Button variant="outline" size="sm" onClick={() => {
+                if (disputes?.meta?.nextCursor && page === cursors.length) {
+                  setCursors(prev => [...prev, disputes.meta!.nextCursor as string]);
+                }
+                setPage(p => p + 1);
+              }} disabled={!disputes?.meta?.nextCursor || isLoading}>Next</Button>
             </div>
           </div>
 

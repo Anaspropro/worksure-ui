@@ -40,6 +40,8 @@ export default function AdminJobsWorkspace() {
   const [statusFilter] = useState<string | undefined>();
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
+  const currentCursor = cursors[page - 1];
   const itemsPerPage = 20;
   const [selectedJob, setSelectedJob] = useState<Job | null>(null);
 
@@ -49,13 +51,14 @@ export default function AdminJobsWorkspace() {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
       setPage(1); // reset page on search
+      setCursors([undefined]);
     }, 400);
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
   const { data: jobsResponse, isLoading: jobsLoading } = useAdminJobs({
     status: statusFilter,
-    page,
+    cursor: currentCursor,
     limit: itemsPerPage,
     search: debouncedSearch || undefined,
   });
@@ -271,8 +274,13 @@ export default function AdminJobsWorkspace() {
           </div>
           <div className="flex items-center justify-between mt-4">
             <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || jobsLoading}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {jobsResponse?.meta?.page || page} of {jobsResponse?.meta?.totalPages || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (jobsResponse?.meta?.totalPages || 1) || jobsLoading}>Next</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => {
+              if (jobsResponse?.meta?.nextCursor && page === cursors.length) {
+                setCursors(prev => [...prev, jobsResponse.meta!.nextCursor as string]);
+              }
+              setPage(p => p + 1);
+            }} disabled={!jobsResponse?.meta?.nextCursor || jobsLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>

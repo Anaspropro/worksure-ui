@@ -36,6 +36,8 @@ import type { AdminUserRecord } from "@/types";
 export default function AdminUsersWorkspace() {
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(1);
+  const [cursors, setCursors] = useState<(string | undefined)[]>([undefined]);
+  const currentCursor = cursors[page - 1];
   const itemsPerPage = 20;
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -46,12 +48,13 @@ export default function AdminUsersWorkspace() {
     const handler = setTimeout(() => {
       setDebouncedSearch(searchTerm);
       setPage(1); // reset page on search
+      setCursors([undefined]);
     }, 400);
     return () => clearTimeout(handler);
   }, [searchTerm]);
 
   const { data: usersResponse, isLoading: usersLoading } = useAdminUsers({
-    page,
+    cursor: currentCursor,
     limit: itemsPerPage,
     search: debouncedSearch || undefined,
   });
@@ -202,8 +205,13 @@ export default function AdminUsersWorkspace() {
           </div>
           <div className="flex items-center justify-between mt-4">
             <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1 || usersLoading}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {usersResponse?.meta?.page || page} of {usersResponse?.meta?.totalPages || 1}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={page >= (usersResponse?.meta?.totalPages || 1) || usersLoading}>Next</Button>
+            <span className="text-sm text-muted-foreground">Page {page}</span>
+            <Button variant="outline" size="sm" onClick={() => {
+              if (usersResponse?.meta?.nextCursor && page === cursors.length) {
+                setCursors(prev => [...prev, usersResponse.meta!.nextCursor as string]);
+              }
+              setPage(p => p + 1);
+            }} disabled={!usersResponse?.meta?.nextCursor || usersLoading}>Next</Button>
           </div>
         </CardContent>
       </Card>
