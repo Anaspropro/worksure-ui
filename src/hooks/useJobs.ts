@@ -15,7 +15,8 @@ export type JobsQuery = {
 };
 
 export type JobsResponse = {
-  jobs: Job[];
+  jobs?: Job[];
+  data?: Job[];
   pagination: ApiPagination;
 };
 
