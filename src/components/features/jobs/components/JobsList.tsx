@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { useJobs } from "@/hooks/useJobs";
+import { useInfiniteJobs } from "@/hooks/useJobs";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 
 function CardSkeleton() {
@@ -64,26 +64,20 @@ export function JobsList({
   setSearch: (s: string) => void;
   onApplyToJob: (jobId: string) => void;
 }) {
-  const [jobsPage, setJobsPage] = useState(1);
   const deferredSearch = useDeferredValue(search);
   const ITEMS_PER_PAGE = 5;
 
-  useMemo(() => {
-    setJobsPage(1);
-  }, [deferredSearch]);
-
-  const jobsQuery = useJobs({
+  const jobsQuery = useInfiniteJobs({
     clientId: user?.role === "CLIENT" ? user.id : undefined,
     status: user?.role === "ARTISAN" ? "OPEN" : undefined,
     search: deferredSearch.trim() || undefined,
     limit: ITEMS_PER_PAGE,
-    page: jobsPage,
   });
 
-  const jobsResponse = jobsQuery.data;
-  const jobs = jobsResponse?.jobs ?? [];
-  const totalJobsPages = jobsResponse?.pagination?.totalPages ?? 1;
+  const jobs = jobsQuery.data?.pages.flatMap((page) => page.data || page.jobs || []) ?? [];
   const isLoading = jobsQuery.isLoading;
+  const isFetchingNextPage = jobsQuery.isFetchingNextPage;
+  const hasNextPage = jobsQuery.hasNextPage;
 
   const isClient = user?.role === "CLIENT";
   const isArtisan = user?.role === "ARTISAN";
@@ -157,26 +151,15 @@ export function JobsList({
                   )}
                 </div>
               ))}
-              {totalJobsPages > 1 && (
-                <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
+              {hasNextPage && (
+                <div className="flex items-center justify-center pt-4 border-t border-border mt-4">
                   <Button
                     variant="outline"
-                    size="sm"
-                    onClick={() => setJobsPage((p) => Math.max(1, p - 1))}
-                    disabled={jobsPage === 1}
+                    onClick={() => jobsQuery.fetchNextPage()}
+                    disabled={isFetchingNextPage}
+                    className="w-full sm:w-auto"
                   >
-                    <ChevronLeft className="size-4 mr-1" /> Previous
-                  </Button>
-                  <span className="text-sm text-muted-foreground">
-                    Page {jobsPage} of {totalJobsPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setJobsPage((p) => Math.min(totalJobsPages, p + 1))}
-                    disabled={jobsPage === totalJobsPages}
-                  >
-                    Next <ChevronRight className="size-4 ml-1" />
+                    {isFetchingNextPage ? "Loading more..." : "Load more jobs"}
                   </Button>
                 </div>
               )}

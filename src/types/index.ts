@@ -68,12 +68,13 @@ export interface ApiEnvelope<T> {
 }
 
 export interface ApiPagination {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-  hasNext: boolean;
-  hasPrev: boolean;
+  page?: number;
+  limit?: number;
+  total?: number;
+  totalPages?: number;
+  hasNext?: boolean;
+  hasPrev?: boolean;
+  nextCursor?: string;
 }
 
 export interface PaginatedResponse<T> {

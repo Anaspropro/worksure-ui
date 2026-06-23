@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch, proxyFetchRaw } from "@/api-client";
 import type { ApiPagination, Job, JobStatus, UserRole } from "@/types";
 
@@ -10,7 +10,7 @@ export type JobsQuery = {
   artisanId?: string;
   category?: string;
   search?: string;
-  page?: number;
+  cursor?: string;
   limit?: number;
 };
 
@@ -36,6 +36,25 @@ export function useJobs(params: JobsQuery = {}, options: { enabled?: boolean } =
     queryKey: ["jobs", params],
     queryFn: () =>
       proxyFetchRaw<JobsResponse>(`/jobs${buildJobsQuery(params) ? `?${buildJobsQuery(params)}` : ""}`),
+    enabled: options.enabled,
+    staleTime: 1000 * 30,
+  });
+}
+
+export function useInfiniteJobs(params: JobsQuery = {}, options: { enabled?: boolean } = {}) {
+  return useInfiniteQuery<JobsResponse>({
+    queryKey: ["jobs", "infinite", params],
+    queryFn: ({ pageParam }) => {
+      const queryParams = { ...params };
+      if (pageParam) {
+        queryParams.cursor = pageParam as string;
+      }
+      return proxyFetchRaw<JobsResponse>(
+        `/jobs${buildJobsQuery(queryParams) ? `?${buildJobsQuery(queryParams)}` : ""}`
+      );
+    },
+    initialPageParam: undefined as string | undefined,
+    getNextPageParam: (lastPage) => lastPage.pagination?.nextCursor || undefined,
     enabled: options.enabled,
     staleTime: 1000 * 30,
   });
