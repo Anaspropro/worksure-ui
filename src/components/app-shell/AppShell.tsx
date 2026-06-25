@@ -12,6 +12,7 @@ import { useLogout } from "@/hooks/useAuth";
 import { useNotificationStats } from "@/hooks/useNotifications";
 import type { User } from "@/types";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
+import { NotificationDropdown } from "@/components/app-shell/NotificationDropdown";
 
 export default function AppShell({
   user,
@@ -21,7 +22,6 @@ export default function AppShell({
   children: React.ReactNode;
 }) {
   const logoutMutation = useLogout();
-  const { data: notificationStats } = useNotificationStats();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -81,12 +81,7 @@ export default function AppShell({
             
             <div className="flex items-center gap-4">
                <ThemeToggle />
-               <Button variant="ghost" size="icon" className="relative rounded-full text-muted-foreground hover:text-foreground">
-                  <Bell className="size-5" />
-                  {notificationStats && notificationStats.unread > 0 && (
-                     <span className="absolute top-1.5 right-2 size-2 bg-destructive rounded-full border-2 border-card"></span>
-                  )}
-               </Button>
+               <NotificationDropdown />
                
                <div className="pl-2 border-l border-border h-8 flex items-center">
                   <SidebarProfile user={user} />
