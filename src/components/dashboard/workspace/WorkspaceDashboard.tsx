@@ -37,7 +37,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { formatAmount } from "@/components/dashboard/workspace/format";
 import dynamic from "next/dynamic";
-const ArtisanWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/ArtisanWorkspaceSection"), { ssr: false });
+
 const AdminWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/AdminWorkspaceSection"), { ssr: false });
 
 /* ── Shared animation helpers ───────────────────────────────── */
@@ -287,7 +287,7 @@ export default function WorkspaceDashboard({
     <div className="space-y-6">
       {/* ── Header row ── */}
       <motion.div
-        className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--brand-hero-from)] via-[var(--brand-hero-via)] to-[var(--brand-hero-to)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
+        className="relative overflow-hidden rounded-xl border border-white/10 bg-[var(--brand-hero-via)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -466,7 +466,7 @@ export default function WorkspaceDashboard({
       </motion.div>
 
       {/* ── Role-specific forms ── */}
-      {roleView === "ARTISAN" && (
+      {/* {roleView === "ARTISAN" && (
         <ArtisanWorkspaceSection
           jobs={jobs}
           proposalJobId={proposalJobId}
@@ -480,7 +480,7 @@ export default function WorkspaceDashboard({
           formatAmount={formatAmount}
           artisanVerified={Boolean(user.artisanVerified)}
         />
-      )}
+      )} */}
       {roleView === "ADMIN" && <AdminWorkspaceSection />}
 
       {/* ── Main content: Contracts + Activity ── */}
