@@ -94,10 +94,10 @@ export default function LandingFeatures() {
             <motion.div
               key={f.title}
               variants={item}
-              className="group rounded-2xl border border-border bg-card p-6 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+              className="group rounded-2xl border border-border/60 bg-card/50 backdrop-blur-sm p-6 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 transition-all duration-300"
             >
               <div
-                className={`size-12 rounded-xl ${f.color.split(" ")[0]} flex items-center justify-center mb-4`}
+                className={`size-12 rounded-xl ${f.color.split(" ")[0]} flex items-center justify-center mb-4 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300`}
               >
                 <f.icon className={`size-6 ${f.color.split(" ")[1]}`} />
               </div>

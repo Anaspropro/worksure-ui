@@ -11,13 +11,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { useCreateProposal } from "@/hooks/useProposals";
 import { useRoleScopedJobs } from "@/hooks/useJobs";
 import { formatCurrency } from "@/lib/formatters";
+import type { User } from "@/types";
 
 export function CreateProposalForm({
   user,
   initialJobId = "",
   onSuccess,
 }: {
-  user: any;
+  user: User;
   initialJobId?: string;
   onSuccess?: () => void;
 }) {

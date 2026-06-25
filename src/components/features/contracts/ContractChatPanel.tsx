@@ -29,7 +29,12 @@ export default function ContractChatPanel({
       return;
     }
 
-    let uploadedInfo: any = undefined;
+    let uploadedInfo: {
+      fileUrl: string;
+      fileType: string;
+      fileName: string;
+      fileSize: number;
+    } | undefined = undefined;
 
     if (file) {
       const result = await uploadFile(file);
@@ -67,8 +72,11 @@ export default function ContractChatPanel({
       conversationId: conversation.id,
       content: draft,
       file: null, // File is already uploaded or handled
-      ...uploadedInfo,
-    } as any);
+      fileUrl: uploadedInfo?.fileUrl,
+      fileType: uploadedInfo?.fileType,
+      fileName: uploadedInfo?.fileName,
+      fileSize: uploadedInfo?.fileSize,
+    });
     
     setDraft("");
     setFile(null);

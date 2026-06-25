@@ -18,7 +18,8 @@ export function useUser() {
 
   const [isHydrated, setIsHydrated] = useState(false);
   useEffect(() => {
-    setIsHydrated(true);
+    const timer = setTimeout(() => setIsHydrated(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const query = useQuery<User>({
@@ -54,7 +55,6 @@ export function useLogin() {
 }
 
 export function useRegister() {
-  const queryClient = useQueryClient();
 
   return useMutation<
     RegisterSuccess,

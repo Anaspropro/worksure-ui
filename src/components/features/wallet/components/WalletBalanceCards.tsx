@@ -50,8 +50,8 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
   );
 }
 
-export function BalanceCardsSkeleton() {
-  const SkeletonCard = () => (
+function SkeletonCard() {
+  return (
     <Card size="sm">
       <CardContent className="space-y-2 py-3 animate-pulse">
         <div className="h-3 bg-muted rounded w-24" />
@@ -59,7 +59,9 @@ export function BalanceCardsSkeleton() {
       </CardContent>
     </Card>
   );
+}
 
+export function BalanceCardsSkeleton() {
   return (
     <section className="grid gap-4 md:grid-cols-3">
       <SkeletonCard />

@@ -3,6 +3,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { useState } from "react";
+import { ThemeProvider } from "next-themes";
 import { get, set, del } from "idb-keyval";
 import type { Persister, PersistedClient } from "@tanstack/react-query-persist-client";
 
@@ -45,21 +46,20 @@ export default function QueryProvider({
     return null;
   });
 
-  if (!persister) {
-    // SSR or Initial load before persister is ready
-    return (
-      <QueryClientProvider client={queryClient}>
-        {children}
-      </QueryClientProvider>
-    );
-  }
-
   return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister }}
-    >
-      {children}
-    </PersistQueryClientProvider>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      {!persister ? (
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+      ) : (
+        <PersistQueryClientProvider
+          client={queryClient}
+          persistOptions={{ persister }}
+        >
+          {children}
+        </PersistQueryClientProvider>
+      )}
+    </ThemeProvider>
   );
 }

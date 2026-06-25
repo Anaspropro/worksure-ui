@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { ShieldCheck, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 const navLinks = [
   { label: "Features", href: "#features" },
@@ -26,18 +27,16 @@ export default function LandingNavbar() {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 right-0 z-100 border-primary border-b-[0.5]"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+        scrolled
+          ? "bg-background/80 border-border/80 shadow-lg backdrop-blur-md"
+          : "bg-transparent border-transparent"
+      }`}
       initial={{ y: -80, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      <header
-        className={`mx-auto transition-all duration-300 px-2 ${
-          scrolled
-            ? "bg-background/80 border-border shadow-2xl shadow-black/40 backdrop-blur-lg opacity-100"
-            : "border-transparent"
-        }`}
-      >
+      <header className="mx-auto px-2">
         <div className="px-5 sm:px-6">
           <div className="flex h-18 items-center justify-between">
             {/* ── Logo ── */}
@@ -65,6 +64,7 @@ export default function LandingNavbar() {
 
             {/* ── Desktop CTAs ── */}
             <div className="hidden md:flex items-center gap-2.5 shrink-0">
+              <ThemeToggle />
               <Button
                 asChild
                 size="sm"
@@ -119,22 +119,27 @@ export default function LandingNavbar() {
                     {link.label}
                   </a>
                 ))}
-                <div className="pt-2 border-t border-border flex gap-2 mt-1">
-                  <Button
-                    asChild
-                    variant="ghost"
-                    size="sm"
-                    className="flex-1 text-muted-foreground hover:text-foreground hover:bg-muted h-9 rounded-lg"
-                  >
-                    <Link href="/auth/login">Sign In</Link>
-                  </Button>
-                  <Button
-                    asChild
-                    size="sm"
-                    className="flex-1 font-semibold h-9 rounded-lg"
-                  >
-                    <Link href="/auth/register">Get Started</Link>
-                  </Button>
+                <div className="pt-2 border-t border-border flex items-center justify-between mt-1">
+                  <div className="flex gap-2 flex-1">
+                    <Button
+                      asChild
+                      variant="ghost"
+                      size="sm"
+                      className="flex-1 text-muted-foreground hover:text-foreground hover:bg-muted h-9 rounded-lg"
+                    >
+                      <Link href="/auth/login">Sign In</Link>
+                    </Button>
+                    <Button
+                      asChild
+                      size="sm"
+                      className="flex-1 font-semibold h-9 rounded-lg"
+                    >
+                      <Link href="/auth/register">Get Started</Link>
+                    </Button>
+                  </div>
+                  <div className="pl-3 border-l border-border ml-2 flex items-center">
+                    <ThemeToggle />
+                  </div>
                 </div>
               </div>
             </motion.div>

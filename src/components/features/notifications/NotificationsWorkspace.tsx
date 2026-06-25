@@ -1,6 +1,6 @@
 "use client";
 
-import AppShell from "@/components/app-shell/AppShell";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";

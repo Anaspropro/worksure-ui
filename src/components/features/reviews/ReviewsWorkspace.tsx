@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import AppShell from "@/components/app-shell/AppShell";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

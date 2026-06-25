@@ -4,7 +4,6 @@ import { useState, useMemo } from "react";
 import { 
   UserCheck, 
   Search, 
-  Filter, 
   User, 
   Mail, 
   Phone, 
@@ -16,7 +15,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification, useBanUser } from "@/hooks/useAdmin";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -76,7 +75,7 @@ export default function AdminKycWorkspace() {
     try {
       await verifyMutation.mutateAsync(userId);
       toast.success("Artisan verified successfully", { id: toastId });
-    } catch (err) {
+    } catch {
       toast.error("Failed to verify artisan", { id: toastId });
     }
   };
@@ -86,7 +85,7 @@ export default function AdminKycWorkspace() {
     try {
       await rejectMutation.mutateAsync(userId);
       toast.success("Verification rejected successfully", { id: toastId });
-    } catch (err) {
+    } catch {
       toast.error("Failed to reject verification", { id: toastId });
     }
   };
@@ -129,7 +128,7 @@ export default function AdminKycWorkspace() {
                 key={f}
                 variant={filter === f ? "default" : "ghost"}
                 size="sm"
-                onClick={() => setFilter(f as any)}
+                onClick={() => setFilter(f as "ALL" | "PENDING" | "VERIFIED")}
                 className="rounded-full px-6"
               >
                 {f.charAt(0) + f.slice(1).toLowerCase()}

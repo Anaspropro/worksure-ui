@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Scale, Calculator } from "lucide-react";
+import { Calculator } from "lucide-react";
 import { toast } from "sonner";
 import { useAdminReconciliationReports, useTriggerReconciliation } from "@/hooks/useAdmin";
 import { formatDate } from "@/lib/formatters";

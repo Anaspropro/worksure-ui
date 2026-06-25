@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronRight, FileUp, Loader2, ShieldCheck, User as UserIcon } from "lucide-react";
+import { Check, ChevronRight, FileUp, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@/hooks/useAuth";
-import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument, useKycStatus } from "@/hooks/useKyc";
+import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument } from "@/hooks/useKyc";
 import { useBanks } from "@/hooks/useWallet";
 
 import { Button } from "@/components/ui/button";
@@ -23,8 +22,7 @@ export default function KycSubmitWorkspace() {
   const banksQuery = useBanks({ enabled: true });
   const NIGERIAN_BANKS = banksQuery.data ?? [];
   
-  const kycStatusQuery = useKycStatus();
-  const kycStatus = kycStatusQuery.data?.kycStatus || "UNVERIFIED";
+
 
   const [step, setStep] = useState(1);
   const totalSteps = 3;
@@ -66,8 +64,9 @@ export default function KycSubmitWorkspace() {
       await verifyIdentityMutation.mutateAsync({ bvn, bankCode, accountNumber });
       toast.success("Identity verified successfully!");
       setStep(2);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to verify identity");
+    } catch (err) {
+      const error = err as { message?: string };
+      toast.error(error.message || "Failed to verify identity");
     }
   };
 
@@ -88,8 +87,9 @@ export default function KycSubmitWorkspace() {
 
       toast.success("Documents uploaded successfully!");
       setStep(3);
-    } catch (err: any) {
-      toast.error(err.message || "Failed to upload documents");
+    } catch (err) {
+      const error = err as { message?: string };
+      toast.error(error.message || "Failed to upload documents");
     }
   };
 
@@ -104,8 +104,9 @@ export default function KycSubmitWorkspace() {
       toast.success("Verification application submitted successfully!");
       // Redirect or show success state
       window.location.href = "/kyc/status";
-    } catch (err: any) {
-      toast.error(err.message || "Failed to save profile details");
+    } catch (err) {
+      const error = err as { message?: string };
+      toast.error(error.message || "Failed to save profile details");
     }
   };
 
@@ -225,7 +226,7 @@ export default function KycSubmitWorkspace() {
                 {/* ID Card */}
                 <div className="space-y-3">
                   <label className="text-sm font-medium flex items-center gap-2">
-                    Valid ID Card (Voter's Card, NIN) <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-0">Required</Badge>
+                    Valid ID Card (Voter&apos;s Card, NIN) <Badge className="bg-primary/10 text-primary hover:bg-primary/20 border-0">Required</Badge>
                   </label>
                   <div className="border-2 border-dashed border-border rounded-xl p-8 flex flex-col items-center justify-center bg-muted/20 hover:bg-muted/40 transition-colors cursor-pointer relative">
                     <input 

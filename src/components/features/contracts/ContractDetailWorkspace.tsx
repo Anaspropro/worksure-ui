@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
-import AppShell from "@/components/app-shell/AppShell";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -105,6 +104,51 @@ export default function ContractDetailWorkspace({
         </Card>
       ) : (
         <>
+          <motion.div custom={0.5} variants={sectionVariants} initial="hidden" animate="visible" className="mb-6">
+            <Card className="border-border bg-card overflow-hidden">
+              <CardContent className="p-6">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center relative">
+                  {/* Progress Line */}
+                  <div className="absolute left-6 top-6 bottom-6 w-0.5 bg-border sm:hidden" />
+                  <div className="hidden sm:block absolute top-1/2 left-10 right-10 h-0.5 -translate-y-1/2 bg-border" />
+                  
+                  {[
+                    { status: "DRAFT", label: "Draft", desc: "Awaiting funds" },
+                    { status: "FUNDED", label: "Funded", desc: "Escrow locked" },
+                    { status: "ACTIVE", label: "In Progress", desc: "Work ongoing" },
+                    { status: "COMPLETED", label: "Completed", desc: "Funds released" },
+                  ].map((step, idx) => {
+                    const statusOrder = { DRAFT: 0, FUNDED: 1, ACTIVE: 2, COMPLETED: 3, CANCELLED: -1, REFUNDED: -1 };
+                    const currentOrder = statusOrder[contract.status as keyof typeof statusOrder] ?? -1;
+                    const stepOrder = statusOrder[step.status as keyof typeof statusOrder];
+                    
+                    const isPast = stepOrder < currentOrder && currentOrder !== -1;
+                    const isCurrent = stepOrder === currentOrder;
+                    
+                    return (
+                      <div key={step.status} className="relative z-10 flex flex-row sm:flex-col items-center gap-4 sm:gap-3 py-4 sm:py-0 bg-card sm:bg-transparent pl-12 sm:pl-0 w-full sm:w-1/4">
+                        <div className={`flex items-center justify-center size-10 rounded-full border-2 transition-all duration-500 ${
+                          isPast ? "bg-primary border-primary text-primary-foreground" :
+                          isCurrent ? "bg-background border-primary text-primary ring-4 ring-primary/20" :
+                          "bg-muted border-border text-muted-foreground"
+                        }`}>
+                          {isPast ? <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg> :
+                           <span className="text-sm font-bold">{idx + 1}</span>}
+                        </div>
+                        <div className="text-left sm:text-center">
+                          <p className={`text-sm font-bold ${isCurrent ? "text-primary" : isPast ? "text-foreground" : "text-muted-foreground"}`}>
+                            {step.label}
+                          </p>
+                          <p className="text-xs text-muted-foreground">{step.desc}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
           <section className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
             <motion.div custom={1} variants={sectionVariants} initial="hidden" animate="visible">
               <Card className="border-border bg-card">

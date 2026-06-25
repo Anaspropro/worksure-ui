@@ -1,10 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Activity, Server, Database, MemoryStick, AlertTriangle } from "lucide-react";
+import { Server, Database, MemoryStick, AlertTriangle } from "lucide-react";
 import { useAdminSystemHealth, useAdminSystemLogs, useClearSystemLogs } from "@/hooks/useAdmin";
 import { formatDate } from "@/lib/formatters";
 import { Trash2 } from "lucide-react";
+
+interface HealthMetrics {
+  metrics?: {
+    uptime?: number;
+    memory?: {
+      rss?: number;
+      heapUsed?: number;
+    };
+  };
+  services?: {
+    database?: {
+      status?: string;
+    };
+  };
+}
 import {
   Badge,
   Button,
@@ -78,7 +93,7 @@ export default function AdminMonitoringWorkspace() {
           <CardContent>
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
-                <div className="text-2xl font-bold">{formatUptime((healthData as any)?.metrics?.uptime)}</div>
+                <div className="text-2xl font-bold">{formatUptime((healthData as unknown as HealthMetrics)?.metrics?.uptime)}</div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Status: <span className="text-success font-medium">{healthData?.status || 'Unknown'}</span>
                 </p>
@@ -95,9 +110,9 @@ export default function AdminMonitoringWorkspace() {
           <CardContent>
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
-                <div className="text-2xl font-bold">{formatBytes((healthData as any)?.metrics?.memory?.rss)}</div>
+                <div className="text-2xl font-bold">{formatBytes((healthData as unknown as HealthMetrics)?.metrics?.memory?.rss)}</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  Heap Used: {formatBytes((healthData as any)?.metrics?.memory?.heapUsed)}
+                  Heap Used: {formatBytes((healthData as unknown as HealthMetrics)?.metrics?.memory?.heapUsed)}
                 </p>
               </>
             )}
@@ -113,7 +128,7 @@ export default function AdminMonitoringWorkspace() {
             {healthLoading ? <Skeleton className="h-8 w-24" /> : (
               <>
                 <div className="text-2xl font-bold capitalize text-success">
-                  {(healthData as any)?.services?.database?.status || 'Unknown'}
+                  {(healthData as unknown as HealthMetrics)?.services?.database?.status || 'Unknown'}
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
                   Connection active

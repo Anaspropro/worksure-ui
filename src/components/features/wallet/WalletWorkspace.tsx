@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info } from "lucide-react";
 import { useUser } from "@/hooks/useAuth";
-import { useWalletTransactions } from "@/hooks/useWallet";
+import { useWalletTransactions, useWalletBalance, useWalletSummary } from "@/hooks/useWallet";
 
 import { useWalletInitialization } from "./hooks/useWalletInitialization";
 import { usePaystackVerification } from "./hooks/usePaystackVerification";
@@ -110,7 +110,11 @@ export default function WalletWorkspace() {
 }
 
 // Wrapping useSearchParams in a component to satisfy Next.js client component rules
-function VerificationHandler({ balanceQuery, summaryQuery, transactionsQuery }: any) {
+function VerificationHandler({ balanceQuery, summaryQuery, transactionsQuery }: {
+  balanceQuery: ReturnType<typeof useWalletBalance>;
+  summaryQuery: ReturnType<typeof useWalletSummary>;
+  transactionsQuery: ReturnType<typeof useWalletTransactions>;
+}) {
   usePaystackVerification(balanceQuery, summaryQuery, transactionsQuery);
   return null;
 }

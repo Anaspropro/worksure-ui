@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { CheckCircle2, Loader2, Mail, ShieldCheck, XCircle, ArrowRight, Edit2 } from "lucide-react";
+import { CheckCircle2, Loader2, Mail, ShieldCheck, ArrowRight, Edit2 } from "lucide-react";
 import Link from "next/link";
 import { proxyFetch } from "@/api-client";
 import { Button } from "@/components/ui/button";
@@ -16,39 +16,17 @@ import {
 
 export default function VerifyEmailWorkspace() {
   const searchParams = useSearchParams();
-  const router = useRouter();
-
   const queryEmail = searchParams.get("email") || "";
   const queryToken = searchParams.get("token") || "";
 
   const [email, setEmail] = useState(queryEmail);
   const [isEditingEmail, setIsEditingEmail] = useState(!queryEmail);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState(() => (queryToken && queryToken.length === 6 && /^\d+$/.test(queryToken) ? queryToken : ""));
   const [status, setStatus] = useState<"idle" | "verifying" | "success" | "error">("idle");
   const [resendCooldown, setResendCooldown] = useState(10);
   const [isResending, setIsResending] = useState(false);
 
-  // Autofill code if token is passed in query string (fallback support for links)
-  useEffect(() => {
-    if (queryToken && queryToken.length === 6 && /^\d+$/.test(queryToken)) {
-      setOtp(queryToken);
-      // Auto verify if we have email and token from URL
-      if (queryEmail) {
-        verifyCode(queryToken, queryEmail);
-      }
-    }
-  }, [queryToken, queryEmail]);
-
-  // Handle countdown timer
-  useEffect(() => {
-    if (resendCooldown === 0) return;
-    const interval = setInterval(() => {
-      setResendCooldown((prev) => prev - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [resendCooldown]);
-
-  const verifyCode = async (code: string, emailAddress: string) => {
+  const verifyCode = useCallback(async (code: string, emailAddress: string) => {
     if (!emailAddress) {
       toast.error("Please enter a valid email address first");
       setIsEditingEmail(true);
@@ -67,11 +45,36 @@ export default function VerifyEmailWorkspace() {
       });
       setStatus("success");
       toast.success("Email verified successfully!");
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as { message?: string };
       setStatus("error");
-      toast.error(err.message || "Verification failed");
+      toast.error(error.message || "Verification failed");
     }
-  };
+  }, []);
+
+  // Autofill code if token is passed in query string (fallback support for links)
+  useEffect(() => {
+    if (queryToken && queryToken.length === 6 && /^\d+$/.test(queryToken)) {
+      // Auto verify if we have email and token from URL
+      if (queryEmail) {
+        const timer = setTimeout(() => {
+          void verifyCode(queryToken, queryEmail);
+        }, 0);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [queryToken, queryEmail, verifyCode]);
+
+  // Handle countdown timer
+  useEffect(() => {
+    if (resendCooldown === 0) return;
+    const interval = setInterval(() => {
+      setResendCooldown((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [resendCooldown]);
+
+
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,8 +104,9 @@ export default function VerifyEmailWorkspace() {
       if (status === "error") {
         setStatus("idle");
       }
-    } catch (err: any) {
-      toast.error(err.message || "Failed to resend verification code");
+    } catch (err) {
+      const error = err as { message?: string };
+      toast.error(error.message || "Failed to resend verification code");
     } finally {
       setIsResending(false);
     }

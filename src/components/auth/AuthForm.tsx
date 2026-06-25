@@ -3,7 +3,7 @@
 import { FormEvent, useEffect, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   ArrowRight,
   Briefcase,
@@ -29,7 +29,7 @@ import {
   InputGroupText,
 } from "@/components/ui/input-group";
 import type { UserRole } from "@/types";
-import Image from "next/image";
+
 
 type AuthMode = "login" | "register";
 

@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useAdminDisputes, useResolveAdminDispute } from "@/hooks/useAdmin";
+import type { AdminDisputeRecord } from "@/types";
 import { 
   Card, 
   CardContent, 
@@ -53,12 +54,15 @@ export default function AdminDisputesWorkspace() {
   const resolveMutation = useResolveAdminDispute();
 
   const filteredDisputes = useMemo(() => {
-    return disputes?.data.filter(d => 
-      d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (d as any).contractId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (d as any).clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (d as any).artisanName?.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+    return disputes?.data.filter(d => {
+      const typedDispute = d as { contractId?: string; clientName?: string; artisanName?: string };
+      return (
+        d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        typedDispute.contractId?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        typedDispute.clientName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        typedDispute.artisanName?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    });
   }, [disputes, searchTerm]);
 
   const selectedDispute = filteredDisputes?.find(d => d.id === selectedDisputeId);
@@ -76,7 +80,7 @@ export default function AdminDisputesWorkspace() {
       toast.success("Dispute resolved successfully", { id: toastId });
       setSelectedDisputeId(null);
       setResolutionNotes("");
-    } catch (err) {
+    } catch {
       toast.error("Failed to resolve dispute", { id: toastId });
     }
   };
@@ -156,10 +160,10 @@ export default function AdminDisputesWorkspace() {
                               <span className="text-xs font-mono text-muted-foreground uppercase">#{dispute.id.split('-')[0]}</span>
                               <Badge variant={dispute.status === "RESOLVED" ? "secondary" : "warning"}>{dispute.status}</Badge>
                             </div>
-                            <h3 className="font-semibold text-lg">{(dispute as any).contractTitle || "Untitled Contract"}</h3>
+                            <h3 className="font-semibold text-lg">{dispute.contractTitle || "Untitled Contract"}</h3>
                             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                              <span className="flex items-center gap-1.5"><XCircle className="size-3.5" /> {(dispute as any).clientName || dispute.clientId}</span>
-                              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-3.5" /> {(dispute as any).artisanName || dispute.artisanId}</span>
+                              <span className="flex items-center gap-1.5"><XCircle className="size-3.5" /> {dispute.clientName || dispute.clientId}</span>
+                              <span className="flex items-center gap-1.5"><CheckCircle2 className="size-3.5" /> {dispute.artisanName || dispute.artisanId}</span>
                             </div>
                           </div>
                           <div className="text-right space-y-1">
@@ -221,7 +225,7 @@ export default function AdminDisputesWorkspace() {
                           <div className="grid gap-2 text-sm">
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Contract ID:</span>
-                              <span className="font-medium">#{(selectedDispute as any).contractId?.split('-')[0]}</span>
+                              <span className="font-medium">#{(selectedDispute as { contractId?: string }).contractId?.split('-')[0]}</span>
                             </div>
                             <div className="flex justify-between">
                               <span className="text-muted-foreground">Date Opened:</span>
@@ -271,11 +275,11 @@ export default function AdminDisputesWorkspace() {
                               Resolved Decision
                             </p>
                             <p className="text-sm font-bold uppercase mb-2">
-                              {(selectedDispute as any).resolution?.decision?.replace('_', ' ')}
+                              {(selectedDispute as { resolution?: { decision?: string } }).resolution?.decision?.replace('_', ' ')}
                             </p>
-                            {(selectedDispute as any).resolution?.notes && (
+                            {(selectedDispute as { resolution?: { notes?: string } }).resolution?.notes && (
                               <p className="text-sm text-muted-foreground italic">
-                                "{(selectedDispute as any).resolution.notes}"
+                                &ldquo;{(selectedDispute as { resolution?: { notes?: string } }).resolution?.notes}&rdquo;
                               </p>
                             )}
                           </div>
@@ -299,6 +303,6 @@ export default function AdminDisputesWorkspace() {
   );
 }
 
-function disputeReason(dispute: any) {
+function disputeReason(dispute: AdminDisputeRecord & { reason?: string; message?: string }) {
   return dispute.reason || dispute.message || "";
 }

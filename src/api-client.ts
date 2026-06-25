@@ -1,15 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
 import type { ApiEnvelope, AuthSuccess, RegisterSuccess, User, UserRole, AuditLog, SystemLog, SystemHealth, ReconciliationReport } from "@/types";
 
 const INTERNAL_API_PREFIX = "/api/proxy";
 const SESSION_HINT_KEY = "auth_present";
 const SESSION_HINT_VALUE = "1";
-
-type MeResponse = {
-  data?: {
-    role?: UserRole;
-  };
-};
 
 export function getDashboardPathForRole(role: UserRole): string {
   switch (role) {
@@ -148,12 +141,12 @@ export async function login(email: string, password: string): Promise<AuthSucces
       body: { email, password }
     });
     if (error) {
-      throw new ApiError((error as any).message || "Invalid credentials provided. Please check your email and password.", response?.status || 401);
+      throw new ApiError((error as { message?: string })?.message || "Invalid credentials provided. Please check your email and password.", response?.status || 401);
     }
-    if (!data || !(data as any).data?.user) {
+    if (!data || !(data as { data?: { user?: unknown } })?.data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
     }
-    return (data as any).data as AuthSuccess;
+    return (data as { data: AuthSuccess }).data;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available. Please check your connection.", 503);
@@ -171,12 +164,12 @@ export async function register(
       body: { name, email, password, role }
     });
     if (error) {
-      throw new ApiError((error as any).message || "Registration failed. This email might already be in use.", (response as any)?.status || 400);
+      throw new ApiError((error as { message?: string })?.message || "Registration failed. This email might already be in use.", (response as unknown as { status?: number })?.status || 400);
     }
-    if (!data || !(data as any).data?.user) {
+    if (!data || !(data as { data?: { user?: unknown } })?.data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
     }
-    return (data as any).data as RegisterSuccess;
+    return (data as { data: RegisterSuccess }).data;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available. Please check your connection.", 503);
@@ -187,7 +180,7 @@ export async function getProfile(): Promise<User> {
   try {
     const { data, error, response } = await apiClient.GET("/auth/me");
     if (error || !data) throw new ApiError("Session expired or server not available.", response?.status || 401);
-    return (data as any).data as User;
+    return (data as { data: User }).data;
   } catch (e) {
     if (e instanceof ApiError) throw e;
     throw new ApiError("Server not available.", 503);
@@ -198,42 +191,52 @@ export async function logoutRequest(): Promise<void> {
   try {
     const { error, response } = await apiClient.POST("/auth/logout");
     if (error) throw new ApiError("Logout failed", response?.status || 500);
-  } catch (e) {
+  } catch {
     // Ignore logout network errors
   }
 }
 
 export async function getAuditLogs(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
-  const { data, error, response } = await apiClient.GET("/admin/audit", {
-    params: { query: { page: String(page), limit: String(limit) } as any }
+  const { data, response } = await apiClient.GET("/admin/audit", {
+    params: {
+      query: {
+        page: String(page),
+        limit: String(limit),
+      } as unknown as { page: string; limit: string; entityType: string; performedBy: string }
+    }
   });
   if (!response.ok) throw new ApiError(response.statusText, response.status);
   return data as unknown as ApiEnvelope<AuditLog[]>;
 }
 
 export async function getReconciliationReports(page = 1, limit = 20): Promise<ApiEnvelope<AuditLog[]>> {
-  const { data, error, response } = await apiClient.GET("/admin/reconciliation/reports", {
-    params: { query: { page: String(page), limit: String(limit) } as any }
+  const { data, response } = await apiClient.GET("/admin/reconciliation/reports", {
+    params: { query: { page: String(page), limit: String(limit) } }
   });
   if (!response.ok) throw new ApiError(response.statusText, response.status);
   return data as unknown as ApiEnvelope<AuditLog[]>;
 }
 
 export async function triggerReconciliation(): Promise<ReconciliationReport> {
-  const { data, error, response } = await apiClient.POST("/admin/reconciliation/trigger");
+  const { data, response } = await apiClient.POST("/admin/reconciliation/trigger");
   if (!response.ok) throw new ApiError(response.statusText, response.status);
   return data as unknown as ReconciliationReport;
 }
 
 export async function getSystemHealth(): Promise<SystemHealth> {
-  const { data, error, response } = await apiClient.GET("/admin/monitoring/health");
+  const { data, response } = await apiClient.GET("/admin/monitoring/health");
   if (!response.ok) throw new ApiError(response.statusText, response.status);
   return data as unknown as SystemHealth;
 }
 
 export async function getSystemLogs(page = 1, limit = 20): Promise<ApiEnvelope<SystemLog[]>> {
-  const { data, error, response } = await apiClient.GET("/admin/monitoring/logs", {
-    params: { query: { page: String(page), limit: String(limit) } as any }
+  const { data, response } = await apiClient.GET("/admin/monitoring/logs", {
+    params: {
+      query: {
+        page: String(page),
+        limit: String(limit),
+      } as unknown as { page: string; limit: string; level: string; context: string }
+    }
   });
   if (!response.ok) throw new ApiError(response.statusText, response.status);
   return data as unknown as ApiEnvelope<SystemLog[]>;

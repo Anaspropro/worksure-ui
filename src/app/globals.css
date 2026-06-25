@@ -59,7 +59,123 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-:root, .dark {
+:root {
+  /* Background System — Premium Light */
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --card: #FFFFFF;
+  --card-foreground: #0F172A;
+  --popover: #FFFFFF;
+  --popover-foreground: #0F172A;
+  
+  /* Primary Colors — Emerald Green */
+  --primary: #10B981;
+  --primary-700: #047857;
+  --primary-600: #059669;
+  --primary-50: rgba(16, 185, 129, 0.08);
+  --primary-foreground: #FFFFFF;
+  --primary-dark: #047857;
+  --primary-soft: rgba(16, 185, 129, 0.1);
+  
+  /* Success Colors */
+  --success: #22C55E;
+  --success-500: #22C55E;
+  --success-600: #16A34A;
+  --success-50: rgba(34, 197, 94, 0.08);
+  
+  /* Warning Colors */
+  --warning: #F59E0B;
+  --warning-500: #F59E0B;
+  --warning-600: #D97706;
+  --warning-50: rgba(245, 158, 11, 0.08);
+  
+  /* Danger Colors */
+  --danger: #EF4444;
+  --danger-500: #EF4444;
+  --danger-600: #DC2626;
+  --danger-50: rgba(239, 68, 68, 0.08);
+  --destructive: #EF4444;
+  
+  /* Neutral Colors */
+  --secondary: #F1F5F9;
+  --secondary-foreground: #0F172A;
+  --secondary-light: #64748B;
+  --muted: #F1F5F9;
+  --muted-foreground: #64748B;
+  --accent: #E2E8F0;
+  --accent-foreground: #0F172A;
+  
+  /* Text Colors */
+  --text-primary: #0F172A;
+  --text-secondary: #64748B;
+  --text-muted: #94A3B8;
+  
+  /* Border & Input Colors */
+  --border: #E2E8F0;
+  --input-border: #E2E8F0;
+  --input: #FFFFFF;
+  --input-focus: #10B981;
+  --input-error: #EF4444;
+  --input-success: #22C55E;
+  --ring: #10B981;
+  
+  /* Surface */
+  --surface: #FFFFFF;
+  --surface-muted: #F8FAFC;
+  --glass-bg: rgba(255, 255, 255, 0.75);
+
+  /* Financial Colors */
+  --amount-primary: #0F172A;
+  --positive-balance: #15803D;
+  --negative-fee: #B91C1C;
+  --neutral-amount: #64748B;
+  
+  /* State-Specific Colors */
+  --state-draft: #64748B;
+  --state-pending-payment: #D97706;
+  --state-funded: #2563EB;
+  --state-in-progress: #7C3AED;
+  --state-client-confirmed: #4F46E5;
+  --state-ready-for-payout: #EA580C;
+  --state-paid-out: #16A34A;
+  --state-disputed: #DC2626;
+  --state-cancelled: #64748B;
+  --state-refunded: #0D9488;
+  
+  /* Interactive States */
+  --button-hover: #059669;
+  --button-active: #047857;
+  --button-disabled: #E2E8F0;
+  
+  /* Chart Colors */
+  --chart-1: #10B981;
+  --chart-2: #3B82F6;
+  --chart-3: #F59E0B;
+  --chart-4: #EF4444;
+  --chart-5: #8B5CF6;
+
+  /* Info */
+  --info: #3B82F6;
+  
+  /* Radius */
+  --radius: 0.75rem;
+  
+  /* Sidebar Colors */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #64748B;
+  --sidebar-primary: #10B981;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #F1F5F9;
+  --sidebar-border: #E2E8F0;
+  --sidebar-ring: #10B981;
+
+  /* Dashboard Banner Gradient */
+  --brand-hero-from: #022c22;
+  --brand-hero-via: #064e3b;
+  --brand-hero-to: #0f172a;
+}
+
+.dark {
   /* Background System — Premium Dark */
   --background: #0F1117;
   --foreground: #F8FAFC;
@@ -124,7 +240,7 @@
   --surface-muted: #0F1117;
 
   /* Glass - minimal use */
-  --glass-bg: rgba(22, 26, 34, 0.85);
+  --glass-bg: rgba(22, 26, 34, 0.8);
 
   /* Financial Colors */
   --amount-primary: #F8FAFC;
@@ -160,7 +276,7 @@
   --info: #3B82F6;
   
   /* Radius */
-  --radius: 0.5rem;
+  --radius: 0.75rem;
   
   /* Sidebar Colors */
   --sidebar: #161A22;
@@ -170,6 +286,11 @@
   --sidebar-accent: #1D2430;
   --sidebar-border: #2A3441;
   --sidebar-ring: #10B981;
+
+  /* Dashboard Banner Gradient */
+  --brand-hero-from: #022c22;
+  --brand-hero-via: #064e3b;
+  --brand-hero-to: #0b0f17;
 }
 
 @layer base {

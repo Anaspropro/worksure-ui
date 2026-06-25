@@ -59,47 +59,50 @@ export default function PayoutRequestsPage() {
           </Card>
         ) : (
           <div className="grid gap-4">
-            {pendingPayouts.map((tx) => (
-              <Card key={tx.id} className="overflow-hidden border-border/80">
-                <CardContent className="p-0">
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-4">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-semibold text-lg">
-                          <FinancialAmount amount={tx.amount} />
-                        </span>
-                        <StatusBadge status={tx.status} />
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        Requested on {formatDate(tx.createdAt)}
-                      </p>
-                      {(tx.metadata as any)?.bankCode && (tx.metadata as any)?.accountNumber && (
-                        <p className="text-xs font-mono bg-muted/50 p-1.5 rounded inline-block mt-2">
-                          Bank: {(tx.metadata as any).bankCode} • Acct: {(tx.metadata as any).accountNumber}
+            {pendingPayouts.map((tx) => {
+              const meta = tx.metadata as { bankCode?: string; accountNumber?: string } | null;
+              return (
+                <Card key={tx.id} className="overflow-hidden border-border/80">
+                  <CardContent className="p-0">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 gap-4">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-semibold text-lg">
+                            <FinancialAmount amount={tx.amount} />
+                          </span>
+                          <StatusBadge status={tx.status} />
+                        </div>
+                        <p className="text-sm text-muted-foreground">
+                          Requested on {formatDate(tx.createdAt)}
                         </p>
-                      )}
+                        {meta?.bankCode && meta?.accountNumber && (
+                          <p className="text-xs font-mono bg-muted/50 p-1.5 rounded inline-block mt-2">
+                            Bank: {meta.bankCode} • Acct: {meta.accountNumber}
+                          </p>
+                        )}
+                      </div>
+                      <Button
+                        onClick={() => handleProcessPayout(tx.id)}
+                        disabled={processingId === tx.id || processPayoutMutation.status === "pending"}
+                        className="w-full sm:w-auto"
+                      >
+                        {processingId === tx.id ? (
+                          <>
+                            <Loader2 className="size-4 mr-2 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <CheckCircle2 className="size-4 mr-2" />
+                            Approve & Pay
+                          </>
+                        )}
+                      </Button>
                     </div>
-                    <Button
-                      onClick={() => handleProcessPayout(tx.id)}
-                      disabled={processingId === tx.id || processPayoutMutation.status === "pending"}
-                      className="w-full sm:w-auto"
-                    >
-                      {processingId === tx.id ? (
-                        <>
-                          <Loader2 className="size-4 mr-2 animate-spin" />
-                          Processing...
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle2 className="size-4 mr-2" />
-                          Approve & Pay
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Menu, LogOut, X, Bell, ShieldCheck } from "lucide-react";
-import { useRouter, usePathname } from "next/navigation";
+
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarNav from "@/components/app-shell/SidebarNav";
 import SidebarProfile from "@/components/app-shell/SidebarProfile";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/useAuth";
 import { useNotificationStats } from "@/hooks/useNotifications";
 import type { User } from "@/types";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function AppShell({
   user,
@@ -19,8 +20,6 @@ export default function AppShell({
   user: User;
   children: React.ReactNode;
 }) {
-  const router = useRouter();
-  const pathname = usePathname();
   const logoutMutation = useLogout();
   const { data: notificationStats } = useNotificationStats();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,9 +32,7 @@ export default function AppShell({
     }
   };
 
-  // Basic title mapping from pathname
-  const segments = pathname.split('/').filter(Boolean);
-  const title = segments.length > 0 ? segments[0] : "Dashboard";
+
 
   return (
     <div className="flex h-screen bg-background text-foreground overflow-hidden">
@@ -82,7 +79,8 @@ export default function AppShell({
                
             </div>
             
-            <div className="flex items-center gap-5">
+            <div className="flex items-center gap-4">
+               <ThemeToggle />
                <Button variant="ghost" size="icon" className="relative rounded-full text-muted-foreground hover:text-foreground">
                   <Bell className="size-5" />
                   {notificationStats && notificationStats.unread > 0 && (

@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import InteractiveEscrowVisualizer from "./InteractiveEscrowVisualizer";
 
 const steps = [
   {
@@ -73,8 +74,12 @@ export default function LandingHowItWorks() {
           ))}
         </div>
 
+        <div className="mt-16">
+          <InteractiveEscrowVisualizer />
+        </div>
+
         <motion.div
-          className="text-center mt-14"
+          className="text-center mt-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}

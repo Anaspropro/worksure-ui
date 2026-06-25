@@ -31,12 +31,12 @@ describe('AdminReconciliationWorkspace', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    (useAdminHooks.useTriggerReconciliation as any).mockReturnValue({
+    vi.mocked(useAdminHooks.useTriggerReconciliation).mockReturnValue({
       mutate: mockTriggerReconciliation,
       status: 'idle',
-    });
+    } as unknown as ReturnType<typeof useAdminHooks.useTriggerReconciliation>);
 
-    (useAdminHooks.useAdminReconciliationReports as any).mockReturnValue({
+    vi.mocked(useAdminHooks.useAdminReconciliationReports).mockReturnValue({
       data: {
         data: [
           {
@@ -63,7 +63,7 @@ describe('AdminReconciliationWorkspace', () => {
         meta: { total: 2 },
       },
       isLoading: false,
-    });
+    } as unknown as ReturnType<typeof useAdminHooks.useAdminReconciliationReports>);
   });
 
   it('renders the reconciliation center title and table headers', () => {
@@ -107,10 +107,10 @@ describe('AdminReconciliationWorkspace', () => {
   });
 
   it('disables the button when reconciliation is pending', () => {
-    (useAdminHooks.useTriggerReconciliation as any).mockReturnValue({
+    vi.mocked(useAdminHooks.useTriggerReconciliation).mockReturnValue({
       mutate: mockTriggerReconciliation,
       status: 'pending',
-    });
+    } as unknown as ReturnType<typeof useAdminHooks.useTriggerReconciliation>);
 
     render(<AdminReconciliationWorkspace />);
     

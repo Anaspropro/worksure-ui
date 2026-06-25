@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useState, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, CheckCircle2, Eye, EyeOff, KeyRound, Loader2, Lock, ShieldCheck, XCircle } from "lucide-react";
@@ -12,7 +12,6 @@ import { toast } from "sonner";
 
 function ResetPasswordForm() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const queryToken = searchParams.get("token") || "";
 
   const [token, setToken] = useState(queryToken);
@@ -59,10 +58,11 @@ function ResetPasswordForm() {
       });
       setStatus("success");
       toast.success("Password reset successful!");
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as { message?: string };
       setStatus("error");
-      setErrorMessage(err.message || "Failed to reset password. The code/link might be invalid or expired.");
-      toast.error(err.message || "Reset failed");
+      setErrorMessage(error.message || "Failed to reset password. The code/link might be invalid or expired.");
+      toast.error(error.message || "Reset failed");
     }
   };
 

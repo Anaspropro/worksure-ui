@@ -68,7 +68,14 @@ export function useSendMessage() {
             fileName?: string | null;
             fileSize?: number | null;
           }
-        | undefined = preUploaded.fileUrl ? (preUploaded as any) : undefined;
+        | undefined = preUploaded.fileUrl
+          ? {
+              fileUrl: preUploaded.fileUrl,
+              fileType: preUploaded.fileType,
+              fileName: preUploaded.fileName,
+              fileSize: preUploaded.fileSize,
+            }
+          : undefined;
 
       if (file && !uploaded) {
         const cloudinaryUpload = await uploadFile(file);

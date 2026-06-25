@@ -25,6 +25,7 @@ export function useWalletInitialization(canLoadProtectedData: boolean) {
     }
   }, [
     canLoadProtectedData,
+    balanceQuery,
     balanceQuery.isLoading,
     balanceQuery.isError,
     balanceQuery.data,

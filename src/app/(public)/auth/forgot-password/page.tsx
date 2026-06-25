@@ -31,10 +31,11 @@ export default function ForgotPasswordPage() {
       });
       setStatus("success");
       toast.success("Password reset request sent!");
-    } catch (err: any) {
+    } catch (err) {
+      const error = err as { message?: string };
       setStatus("error");
-      setErrorMessage(err.message || "Failed to submit password reset request. Please try again.");
-      toast.error(err.message || "Request failed");
+      setErrorMessage(error.message || "Failed to submit password reset request. Please try again.");
+      toast.error(error.message || "Request failed");
     }
   };
 

@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useDeferredValue, useMemo } from "react";
-import { BriefcaseBusiness, ChevronLeft, ChevronRight, FilePlus2, Search, Send } from "lucide-react";
+import { useDeferredValue } from "react";
+import { BriefcaseBusiness, FilePlus2, Search, Send } from "lucide-react";
+import type { User } from "@/types";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -59,7 +60,7 @@ export function JobsList({
   setSearch,
   onApplyToJob,
 }: {
-  user: any;
+  user: User;
   search: string;
   setSearch: (s: string) => void;
   onApplyToJob: (jobId: string) => void;
@@ -105,65 +106,75 @@ export function JobsList({
               : "Select a job to submit your proposal with a price and delivery plan."}
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
+        <CardContent className="p-0">
           {isLoading ? (
-            <>
+            <div className="p-6 space-y-3">
               <CardSkeleton />
               <CardSkeleton />
               <CardSkeleton />
-            </>
+            </div>
           ) : jobs.length ? (
-            <>
+            <ul className="divide-y divide-border/50">
               {jobs.map((job) => (
-                <div
+                <li
                   key={job.id}
-                  className="rounded-lg border border-border bg-background/70 p-4 hover:border-primary/20 transition-colors"
+                  className="group relative flex flex-col gap-4 p-5 sm:p-6 bg-card hover:bg-muted/30 transition-all duration-300"
                 >
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div className="space-y-1 flex-1 min-w-0">
-                      <p className="font-semibold text-foreground">{job.title}</p>
-                      <p className="text-sm text-muted-foreground line-clamp-2">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="flex items-center gap-3">
+                        <p className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                          {job.title}
+                        </p>
+                        <StatusBadge status={job.status} />
+                      </div>
+                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
                         {job.description}
                       </p>
                     </div>
-                    <StatusBadge status={job.status} />
+                    <div className="flex flex-col items-start sm:items-end gap-1">
+                      <span className="text-xl font-bold text-foreground">
+                        {formatCurrency(job.budget)}
+                      </span>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        Posted {formatDate(job.createdAt)}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                    <span className="font-medium text-foreground">
-                      {formatCurrency(job.budget)}
-                    </span>
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-muted">
-                      {job.category ?? "General"}
-                    </span>
-                    <span>{formatDate(job.createdAt)}</span>
-                  </div>
-                  {isArtisan && user.artisanVerified && job.status === "OPEN" && (
-                    <div className="mt-3">
+                  
+                  <div className="mt-2 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-medium px-2.5 py-1 rounded-md bg-primary/10 text-primary">
+                        {job.category ?? "General"}
+                      </span>
+                    </div>
+
+                    {isArtisan && user.artisanVerified && job.status === "OPEN" && (
                       <Button
                         size="sm"
-                        variant="outline"
+                        className="shadow-sm"
                         onClick={() => onApplyToJob(job.id)}
                       >
                         <Send className="size-3.5 mr-1.5" />
                         Apply to this job
                       </Button>
-                    </div>
-                  )}
-                </div>
+                    )}
+                  </div>
+                </li>
               ))}
               {hasNextPage && (
-                <div className="flex items-center justify-center pt-4 border-t border-border mt-4">
+                <li className="flex items-center justify-center p-4 bg-muted/10">
                   <Button
                     variant="outline"
+                    className="bg-background w-full sm:w-auto"
                     onClick={() => jobsQuery.fetchNextPage()}
                     disabled={isFetchingNextPage}
-                    className="w-full sm:w-auto"
                   >
                     {isFetchingNextPage ? "Loading more..." : "Load more jobs"}
                   </Button>
-                </div>
+                </li>
               )}
-            </>
+            </ul>
           ) : (
             <EmptyState
               icon={BriefcaseBusiness}

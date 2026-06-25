@@ -1,9 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const cardVariants = {
@@ -15,32 +12,20 @@ const cardVariants = {
   }),
 };
 
-export default function ArtisanWorkspaceSection({
-  jobs,
-  proposalJobId,
-  proposalAmountInput,
-  proposalMessage,
-  setProposalJobId,
-  setProposalAmountInput,
-  setProposalMessage,
-  onSubmitProposal,
-  isBusy,
-  formatAmount,
-  artisanVerified,
-}: {
-  jobs: Array<{ id: string; title: string; budget: number }> | undefined;
-  proposalJobId: string;
-  proposalAmountInput: string;
-  proposalMessage: string;
-  setProposalJobId: (value: string) => void;
-  setProposalAmountInput: (value: string) => void;
-  setProposalMessage: (value: string) => void;
-  onSubmitProposal: () => void;
-  isBusy: boolean;
-  formatAmount: (value: number) => string;
-  artisanVerified: boolean;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export default function ArtisanWorkspaceSection(_props: {
+  jobs: unknown;
+  proposalJobId: unknown;
+  proposalAmountInput: unknown;
+  proposalMessage: unknown;
+  setProposalJobId: unknown;
+  setProposalAmountInput: unknown;
+  setProposalMessage: unknown;
+  onSubmitProposal: unknown;
+  isBusy: unknown;
+  formatAmount: unknown;
+  artisanVerified: unknown;
 }) {
-  const proposalAmount = Number(proposalAmountInput || 0);
 
   return (
     <section className="grid gap-4 lg:grid-cols-2">

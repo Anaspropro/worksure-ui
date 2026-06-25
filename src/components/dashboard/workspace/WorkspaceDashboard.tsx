@@ -74,16 +74,19 @@ function StatCard({
       custom={index}
       whileHover={{ y: -3, transition: { duration: 0.18 } }}
     >
-      <Card className="border-border bg-card hover:shadow-md transition-shadow">
-        <CardContent className="p-5 flex items-start justify-between gap-4">
+      <Card className="group relative overflow-hidden border-border bg-gradient-to-br from-card to-muted/20 hover:border-primary/40 hover:shadow-lg transition-all duration-300">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <CardContent className="relative p-5 flex items-start justify-between gap-4 z-10">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
             <p className="text-3xl font-bold text-foreground">{value}</p>
             {sub && (
-              <p className="text-xs text-primary font-medium cursor-pointer hover:underline">{sub}</p>
+              <p className="text-xs text-primary/80 font-medium cursor-pointer hover:text-primary transition-colors flex items-center gap-1">
+                {sub} <ChevronRight className="size-3" />
+              </p>
             )}
           </div>
-          <div className={`rounded-xl ${iconBg} p-3 flex-shrink-0`}>
+          <div className={`rounded-2xl ${iconBg} p-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ring-1 ring-black/5 dark:ring-white/5`}>
             <Icon className={`size-5 ${iconColor}`} />
           </div>
         </CardContent>
@@ -125,22 +128,22 @@ function ContractRow({ contract, user, onFund, onConfirm, onRelease, isBusy }: {
       <div className="text-right flex-shrink-0">
         <p className="text-sm font-bold text-foreground">{formatAmount(contract.amount)}</p>
         {contract.status === "DRAFT" && isClient && (
-          <Button size="sm" className="mt-1.5 h-7 text-xs" onClick={onFund} disabled={isBusy}>
+          <Button size="sm" className="mt-1.5 h-7 text-xs shadow-sm" onClick={onFund} disabled={isBusy}>
             Fund
           </Button>
         )}
         {contract.status === "ACTIVE" && isClient && !contract.clientConfirmedCompletion && (
-          <Button size="sm" variant="outline" className="mt-1.5 h-7 text-xs" onClick={() => onConfirm(true)} disabled={isBusy}>
+          <Button size="sm" variant="outline" className="mt-1.5 h-7 text-xs bg-background" onClick={() => onConfirm(true)} disabled={isBusy}>
             Confirm
           </Button>
         )}
         {contract.status === "ACTIVE" && !isClient && !contract.artisanConfirmedCompletion && (
-          <Button size="sm" variant="outline" className="mt-1.5 h-7 text-xs" onClick={() => onConfirm(false)} disabled={isBusy}>
+          <Button size="sm" variant="outline" className="mt-1.5 h-7 text-xs bg-background" onClick={() => onConfirm(false)} disabled={isBusy}>
             Submit work
           </Button>
         )}
         {contract.status === "ACTIVE" && contract.clientConfirmedCompletion && contract.artisanConfirmedCompletion && !contract.escrowReleased && isClient && (
-          <Button size="sm" className="mt-1.5 h-7 text-xs bg-success hover:bg-success/90" onClick={onRelease} disabled={isBusy}>
+          <Button size="sm" className="mt-1.5 h-7 text-xs shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white" onClick={onRelease} disabled={isBusy}>
             Release
           </Button>
         )}
@@ -161,15 +164,20 @@ function ActivityItem({ icon: Icon, iconColor, iconBg, title, sub, time }: {
   time: string;
 }) {
   return (
-    <motion.div variants={fadeUp} className="flex items-start gap-3">
-      <div className={`size-8 rounded-full ${iconBg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+    <motion.div variants={fadeUp} className="relative flex items-start gap-4 pb-6 last:pb-0 group">
+      {/* Timeline line */}
+      <div className="absolute left-[15px] top-8 bottom-0 w-px bg-border group-last:hidden" />
+      
+      <div className={`relative z-10 size-8 rounded-full ${iconBg} flex items-center justify-center flex-shrink-0 ring-4 ring-card`}>
         <Icon className={`size-4 ${iconColor}`} />
       </div>
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-foreground">{title}</p>
+      <div className="flex-1 min-w-0 pt-1.5">
+        <div className="flex justify-between items-start gap-2">
+          <p className="text-sm font-semibold text-foreground">{title}</p>
+          <span className="text-[10px] uppercase font-bold tracking-wider text-muted-foreground flex-shrink-0 bg-muted/50 px-2 py-0.5 rounded-full">{time}</span>
+        </div>
         <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
       </div>
-      <p className="text-xs text-muted-foreground flex-shrink-0">{time}</p>
     </motion.div>
   );
 }

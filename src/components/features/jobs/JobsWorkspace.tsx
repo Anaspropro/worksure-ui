@@ -190,7 +190,7 @@ export default function JobsWorkspace() {
                   </div>
                   <div className="flex gap-3">
                     <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">2</span>
-                    <p>Review proposals in the "Proposals" tab, then accept the best one.</p>
+                    <p>Review proposals in the &ldquo;Proposals&rdquo; tab, then accept the best one.</p>
                   </div>
                   <div className="flex gap-3">
                     <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">3</span>
@@ -201,7 +201,7 @@ export default function JobsWorkspace() {
                 <>
                   <div className="flex gap-3">
                     <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">1</span>
-                    <p>Browse open jobs and click "Apply" on the ones that match your skills.</p>
+                    <p>Browse open jobs and click &ldquo;Apply&rdquo; on the ones that match your skills.</p>
                   </div>
                   <div className="flex gap-3">
                     <span className="flex-shrink-0 size-6 rounded-full bg-primary/10 text-primary text-xs font-bold flex items-center justify-center">2</span>

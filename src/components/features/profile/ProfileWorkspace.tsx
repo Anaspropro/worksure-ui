@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import AppShell from "@/components/app-shell/AppShell";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,7 +18,7 @@ import { useReviewStats } from "@/hooks/useReviews";
 import { useKycStatus } from "@/hooks/useKyc";
 import { ShieldCheck, Info } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { toast } from "sonner";
+
 
 export default function ProfileWorkspace() {
   const userQuery = useUser();

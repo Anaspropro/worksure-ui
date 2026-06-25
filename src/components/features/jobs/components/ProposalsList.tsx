@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
-import { useState, useMemo } from "react";
-import { ChevronLeft, ChevronRight, Loader2, Send } from "lucide-react";
+import { useState } from "react";
+import { ChevronLeft, ChevronRight, Send } from "lucide-react";
+import type { User } from "@/types";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -64,7 +64,7 @@ export function ProposalsList({
   user,
   onBrowseJobs,
 }: {
-  user: any;
+  user: User;
   onBrowseJobs: () => void;
 }) {
   const router = useRouter();
@@ -103,131 +103,142 @@ export function ProposalsList({
             : "Track the status of your proposals. Accepted proposals will become contracts."}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
-        {isLoading ? (
-          <>
-            <CardSkeleton />
-            <CardSkeleton />
-          </>
-        ) : proposals.length ? (
-          <>
-            {proposals.map((proposal) => (
-              <div
-                key={proposal.id}
-                className="rounded-lg border border-border bg-background/70 p-4"
-              >
-                <div className="flex flex-wrap items-start justify-between gap-3">
-                  <div className="space-y-1">
-                    <p className="font-semibold text-foreground">
-                      {proposal.job.title}
-                    </p>
-                    <p className="text-sm text-muted-foreground">
-                      {isClient
-                        ? `From ${proposal.artisan.name}`
-                        : `For ${proposal.client.name}`}
-                    </p>
+        <CardContent className="p-0">
+          {isLoading ? (
+            <div className="p-6 space-y-3">
+              <CardSkeleton />
+              <CardSkeleton />
+            </div>
+          ) : proposals.length ? (
+            <ul className="divide-y divide-border/50">
+              {proposals.map((proposal) => (
+                <li
+                  key={proposal.id}
+                  className="group relative flex flex-col gap-4 p-5 sm:p-6 bg-card hover:bg-muted/30 transition-all duration-300"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                    <div className="space-y-2 flex-1 min-w-0">
+                      <div className="flex items-center gap-3">
+                        <p className="font-semibold text-lg text-foreground group-hover:text-primary transition-colors">
+                          {proposal.job.title}
+                        </p>
+                        <StatusBadge status={proposal.status} />
+                      </div>
+                      <p className="text-sm font-medium text-primary/80">
+                        {isClient
+                          ? `From ${proposal.artisan.name}`
+                          : `For ${proposal.client.name}`}
+                      </p>
+                      <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+                        {proposal.message}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-start sm:items-end gap-1">
+                      <span className="text-xl font-bold text-foreground">
+                        {formatCurrency(proposal.amount)}
+                      </span>
+                      <span className="text-xs text-muted-foreground whitespace-nowrap">
+                        Submitted {formatDate(proposal.createdAt)}
+                      </span>
+                    </div>
                   </div>
-                  <StatusBadge status={proposal.status} />
-                </div>
-                <p className="mt-3 text-sm text-muted-foreground line-clamp-2">
-                  {proposal.message}
-                </p>
-                <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <span className="font-medium text-foreground">
-                    {formatCurrency(proposal.amount)}
-                  </span>
-                  <span>{formatDate(proposal.createdAt)}</span>
-                </div>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {isClient && proposal.status === "PENDING" && (
-                    <>
+
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {isClient && proposal.status === "PENDING" && (
+                      <>
+                        <Button
+                          size="sm"
+                          className="shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white"
+                          onClick={() =>
+                            acceptProposalMutation.mutate(proposal.id, {
+                              onSuccess: () => toast.success("Proposal accepted!"),
+                              onError: (e) => toast.error(e.message || "Unable to accept."),
+                            })
+                          }
+                          disabled={acceptProposalMutation.status === "pending"}
+                        >
+                          Accept
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          onClick={() =>
+                            rejectProposalMutation.mutate(proposal.id, {
+                              onSuccess: () => toast.success("Proposal rejected."),
+                              onError: (e) => toast.error(e.message || "Unable to reject."),
+                            })
+                          }
+                          disabled={rejectProposalMutation.status === "pending"}
+                        >
+                          Reject
+                        </Button>
+                      </>
+                    )}
+                    {isClient && proposal.status === "ACCEPTED" && (
                       <Button
                         size="sm"
+                        className="shadow-sm"
                         onClick={() =>
-                          acceptProposalMutation.mutate(proposal.id, {
-                            onSuccess: () => toast.success("Proposal accepted!"),
-                            onError: (e) => toast.error(e.message || "Unable to accept."),
+                          createContractMutation.mutate(proposal.id, {
+                            onSuccess: () => {
+                              toast.success("Contract created! Go to Contracts to fund escrow.");
+                              router.push("/contracts");
+                            },
+                            onError: (e) => toast.error(e.message || "Unable to create contract."),
                           })
                         }
-                        disabled={acceptProposalMutation.status === "pending"}
+                        disabled={createContractMutation.status === "pending"}
                       >
-                        Accept
+                        Create contract →
                       </Button>
+                    )}
+                    {isArtisan && proposal.status === "PENDING" && (
                       <Button
                         size="sm"
                         variant="outline"
+                        className="bg-background"
                         onClick={() =>
-                          rejectProposalMutation.mutate(proposal.id, {
-                            onSuccess: () => toast.success("Proposal rejected."),
-                            onError: (e) => toast.error(e.message || "Unable to reject."),
+                          withdrawProposalMutation.mutate(proposal.id, {
+                            onSuccess: () => toast.success("Proposal withdrawn."),
+                            onError: (e) => toast.error(e.message || "Unable to withdraw."),
                           })
                         }
-                        disabled={rejectProposalMutation.status === "pending"}
+                        disabled={withdrawProposalMutation.status === "pending"}
                       >
-                        Reject
+                        Withdraw
                       </Button>
-                    </>
-                  )}
-                  {isClient && proposal.status === "ACCEPTED" && (
-                    <Button
-                      size="sm"
-                      onClick={() =>
-                        createContractMutation.mutate(proposal.id, {
-                          onSuccess: () => {
-                            toast.success("Contract created! Go to Contracts to fund escrow.");
-                            router.push("/contracts");
-                          },
-                          onError: (e) => toast.error(e.message || "Unable to create contract."),
-                        })
-                      }
-                      disabled={createContractMutation.status === "pending"}
-                    >
-                      Create contract →
-                    </Button>
-                  )}
-                  {isArtisan && proposal.status === "PENDING" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() =>
-                        withdrawProposalMutation.mutate(proposal.id, {
-                          onSuccess: () => toast.success("Proposal withdrawn."),
-                          onError: (e) => toast.error(e.message || "Unable to withdraw."),
-                        })
-                      }
-                      disabled={withdrawProposalMutation.status === "pending"}
-                    >
-                      Withdraw
-                    </Button>
-                  )}
-                </div>
-              </div>
-            ))}
-            {totalProposalsPages > 1 && (
-              <div className="flex items-center justify-between pt-4 border-t border-border mt-4">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setProposalsPage((p) => Math.max(1, p - 1))}
-                  disabled={proposalsPage === 1}
-                >
-                  <ChevronLeft className="size-4 mr-1" /> Previous
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  Page {proposalsPage} of {totalProposalsPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setProposalsPage((p) => Math.min(totalProposalsPages, p + 1))}
-                  disabled={proposalsPage === totalProposalsPages}
-                >
-                  Next <ChevronRight className="size-4 ml-1" />
-                </Button>
-              </div>
-            )}
-          </>
-        ) : (
+                    )}
+                  </div>
+                </li>
+              ))}
+              {totalProposalsPages > 1 && (
+                <li className="flex items-center justify-between p-4 bg-muted/10">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-background"
+                    onClick={() => setProposalsPage((p) => Math.max(1, p - 1))}
+                    disabled={proposalsPage === 1}
+                  >
+                    <ChevronLeft className="size-4 mr-1" /> Previous
+                  </Button>
+                  <span className="text-sm font-medium text-muted-foreground">
+                    Page {proposalsPage} of {totalProposalsPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="bg-background"
+                    onClick={() => setProposalsPage((p) => Math.min(totalProposalsPages, p + 1))}
+                    disabled={proposalsPage === totalProposalsPages}
+                  >
+                    Next <ChevronRight className="size-4 ml-1" />
+                  </Button>
+                </li>
+              )}
+            </ul>
+          ) : (
           <EmptyState
             icon={Send}
             title="No proposals yet"

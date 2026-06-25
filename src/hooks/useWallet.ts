@@ -4,11 +4,6 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { proxyFetch } from "@/api-client";
 import type { WalletBalance, WalletSummary, WalletTransactionsResponse } from "@/types";
 
-type WalletMutationInput = {
-  amount: number;
-  reference?: string;
-  metadata?: Record<string, unknown>;
-};
 
 type WalletCreateResponse = {
   wallet: WalletBalance;
