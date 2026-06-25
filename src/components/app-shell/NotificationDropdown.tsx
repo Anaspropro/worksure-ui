@@ -33,9 +33,9 @@ export function NotificationDropdown() {
           )}
         </div>
         
-        <ScrollArea className="h-80">
+        <ScrollArea className="max-h-[320px]">
           {!notifications || notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-40 text-muted-foreground text-sm">
+            <div className="flex flex-col items-center justify-center h-32 text-muted-foreground text-sm">
               <Bell className="size-8 opacity-20 mb-2" />
               <p>No notifications yet</p>
             </div>
@@ -63,9 +63,11 @@ export function NotificationDropdown() {
                     size="icon" 
                     className="h-6 w-6 text-muted-foreground hover:text-destructive hover:bg-destructive/10 shrink-0"
                     onClick={(e) => {
+                      e.preventDefault();
                       e.stopPropagation();
                       deleteMutation.mutate(notification.id);
                     }}
+                    disabled={deleteMutation.status === "pending"}
                   >
                     <Trash2 className="size-3.5" />
                   </Button>
