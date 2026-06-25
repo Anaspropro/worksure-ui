@@ -81,7 +81,7 @@ export default function AppShell({
             
             <div className="flex items-center gap-4">
                <ThemeToggle />
-               <NotificationDropdown />
+               <NotificationDropdown role={user.role} />
                
                <div className="pl-2 border-l border-border h-8 flex items-center">
                   <SidebarProfile user={user} />

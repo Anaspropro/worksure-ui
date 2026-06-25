@@ -6,13 +6,46 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { useMyNotifications, useNotificationStats, useDeleteNotification } from "@/hooks/useNotifications";
+import type { UserRole } from "@/types";
 
-export function NotificationDropdown() {
+const ROLE_NOTIFICATION_TYPES: Record<string, string[]> = {
+  CLIENT: [
+    "proposal_received",
+    "proposal_withdrawn",
+    "contract_started",
+    "contract_completed",
+    "review_received",
+    "message_received",
+    "system_update",
+    "payment_verified"
+  ],
+  ARTISAN: [
+    "proposal_accepted",
+    "proposal_rejected",
+    "contract_created",
+    "contract_funded",
+    "contract_started",
+    "contract_completed",
+    "review_received",
+    "message_received",
+    "system_update"
+  ],
+  ADMIN: [
+    "system_update",
+    "dispute_created",
+    "dispute_resolved",
+    "payment_verified"
+  ]
+};
+
+export function NotificationDropdown({ role }: { role: string }) {
   const { data: stats } = useNotificationStats();
-  const { data: notifications } = useMyNotifications();
+  const { data: allNotifications } = useMyNotifications();
   const deleteMutation = useDeleteNotification();
 
-  const unreadCount = stats?.unread || 0;
+  const allowedTypes = ROLE_NOTIFICATION_TYPES[role] || [];
+  const notifications = (allNotifications || []).filter(n => allowedTypes.includes(n.type));
+  const unreadCount = notifications.filter(n => !n.isRead).length;
   const hasUnread = unreadCount > 0;
 
   return (
