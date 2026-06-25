@@ -16,6 +16,7 @@ import {
 } from "@/hooks/useContracts";
 import { motion } from "framer-motion";
 import {
+  Award,
   BriefcaseBusiness,
   CheckCircle2,
   ChevronRight,
@@ -610,6 +611,24 @@ export default function WorkspaceDashboard({
                       <p className="text-xs text-muted-foreground mt-1">Post a job and get proposals from verified artisans.</p>
                       <Button asChild size="sm" className="mt-3 h-8 text-xs shadow-sm shadow-primary/15">
                         <Link href="/jobs/create">Post a New Job</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            {roleView === "ARTISAN" && (
+              <Card className="border-border bg-gradient-to-br from-blue-500/8 to-blue-500/3 hover:shadow-md transition-shadow cursor-pointer group">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="size-10 rounded-xl bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                      <Award className="size-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-sm">Trust Signals</h3>
+                      <p className="text-xs text-muted-foreground mt-1">Verify your identity to increase trust and win more jobs.</p>
+                      <Button asChild size="sm" className="mt-3 h-8 text-xs shadow-sm shadow-blue-500/15 bg-blue-600 hover:bg-blue-700 text-white">
+                        <Link href="/kyc/status">{user.artisanVerified ? "View Verification" : "Get Verified"}</Link>
                       </Button>
                     </div>
                   </div>
