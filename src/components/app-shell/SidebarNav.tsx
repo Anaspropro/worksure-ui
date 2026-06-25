@@ -43,7 +43,7 @@ export default function SidebarNav({
               className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
                   ? "text-primary"
-                  : "text-white hover:text-sidebar-foreground hover:bg-sidebar-accent"
+                  : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent"
               }`}
             >
               {active && (

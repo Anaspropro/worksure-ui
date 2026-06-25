@@ -16,6 +16,7 @@ import {
 } from "@/hooks/useContracts";
 import { motion } from "framer-motion";
 import {
+  Award,
   BriefcaseBusiness,
   CheckCircle2,
   ChevronRight,
@@ -36,7 +37,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { Input } from "@/components/ui/input";
 import { formatAmount } from "@/components/dashboard/workspace/format";
 import dynamic from "next/dynamic";
-const ArtisanWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/ArtisanWorkspaceSection"), { ssr: false });
+
 const AdminWorkspaceSection = dynamic(() => import("@/components/dashboard/workspace/AdminWorkspaceSection"), { ssr: false });
 
 /* ── Shared animation helpers ───────────────────────────────── */
@@ -225,8 +226,12 @@ export default function WorkspaceDashboard({
   const { data: contractsResponse } = useContracts();
 
   const jobs = jobsResponse?.jobs ?? [];
-  const proposals = proposalsResponse?.proposals ?? [];
   const contracts = contractsResponse?.data ?? [];
+  
+  const contractedJobIds = new Set(contracts.map((c) => c.job.id));
+  const proposals = (proposalsResponse?.proposals ?? []).filter(
+    (p) => !contractedJobIds.has(p.job.id)
+  );
 
   const createProposalMutation = useCreateProposal();
   const acceptProposalMutation = useAcceptProposal();
@@ -282,7 +287,7 @@ export default function WorkspaceDashboard({
     <div className="space-y-6">
       {/* ── Header row ── */}
       <motion.div
-        className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-[var(--brand-hero-from)] via-[var(--brand-hero-via)] to-[var(--brand-hero-to)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
+        className="relative overflow-hidden rounded-xl border border-white/10 bg-[var(--brand-hero-via)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
@@ -461,7 +466,7 @@ export default function WorkspaceDashboard({
       </motion.div>
 
       {/* ── Role-specific forms ── */}
-      {roleView === "ARTISAN" && (
+      {/* {roleView === "ARTISAN" && (
         <ArtisanWorkspaceSection
           jobs={jobs}
           proposalJobId={proposalJobId}
@@ -475,7 +480,7 @@ export default function WorkspaceDashboard({
           formatAmount={formatAmount}
           artisanVerified={Boolean(user.artisanVerified)}
         />
-      )}
+      )} */}
       {roleView === "ADMIN" && <AdminWorkspaceSection />}
 
       {/* ── Main content: Contracts + Activity ── */}
@@ -606,6 +611,24 @@ export default function WorkspaceDashboard({
                       <p className="text-xs text-muted-foreground mt-1">Post a job and get proposals from verified artisans.</p>
                       <Button asChild size="sm" className="mt-3 h-8 text-xs shadow-sm shadow-primary/15">
                         <Link href="/jobs/create">Post a New Job</Link>
+                      </Button>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            {roleView === "ARTISAN" && (
+              <Card className="border-border bg-gradient-to-br from-blue-500/8 to-blue-500/3 hover:shadow-md transition-shadow cursor-pointer group">
+                <CardContent className="p-5">
+                  <div className="flex items-start gap-4">
+                    <div className="size-10 rounded-xl bg-blue-500/15 flex items-center justify-center flex-shrink-0">
+                      <Award className="size-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-sm">Trust Signals</h3>
+                      <p className="text-xs text-muted-foreground mt-1">Verify your identity to increase trust and win more jobs.</p>
+                      <Button asChild size="sm" className="mt-3 h-8 text-xs shadow-sm shadow-blue-500/15 bg-blue-600 hover:bg-blue-700 text-white">
+                        <Link href="/kyc/status">{user.artisanVerified ? "View Verification" : "Get Verified"}</Link>
                       </Button>
                     </div>
                   </div>
