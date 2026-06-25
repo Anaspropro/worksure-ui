@@ -225,8 +225,12 @@ export default function WorkspaceDashboard({
   const { data: contractsResponse } = useContracts();
 
   const jobs = jobsResponse?.jobs ?? [];
-  const proposals = proposalsResponse?.proposals ?? [];
   const contracts = contractsResponse?.data ?? [];
+  
+  const contractedJobIds = new Set(contracts.map((c) => c.job.id));
+  const proposals = (proposalsResponse?.proposals ?? []).filter(
+    (p) => !contractedJobIds.has(p.job.id)
+  );
 
   const createProposalMutation = useCreateProposal();
   const acceptProposalMutation = useAcceptProposal();
