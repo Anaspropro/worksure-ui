@@ -52,8 +52,7 @@ export function getDashboardLinks(role: User["role"]) {
         { href: "/admin/disputes", label: "Disputes", icon: ShieldPlus },
         { href: "/admin/payouts", label: "Payouts", icon: CreditCard },
         { href: "/admin/audit", label: "Audit Trail", icon: History },
-        { href: "/admin/reconciliation", label: "Reconciliation", icon: Scale },
-        { href: "/admin/monitoring", label: "Monitoring", icon: Activity },
+        { href: "/admin/reconciliation", label: "Reconciliation", icon: Scale }
       ],
     }[role] ?? []
   );

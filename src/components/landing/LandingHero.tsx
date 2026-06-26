@@ -32,7 +32,7 @@ export default function LandingHero() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute -top-[10%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-[radial-gradient(circle,rgba(16,185,129,0.08),transparent_60%)] blur-3xl"
+          className="absolute -top-[10%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-emerald-500/5 blur-3xl"
         />
         <motion.div
           animate={{
@@ -45,7 +45,7 @@ export default function LandingHero() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-[30%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-[radial-gradient(circle,rgba(79,70,229,0.06),transparent_60%)] blur-3xl"
+          className="absolute top-[30%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/5 blur-3xl"
         />
       </div>
 

@@ -132,7 +132,7 @@ export default function InteractiveEscrowVisualizer() {
 
           {/* Interactive Flow Diagram Visuals */}
           <div className="relative h-[280px] w-full rounded-2xl bg-muted/20 border border-border/80 flex items-center justify-center p-4 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(16,185,129,0.08),transparent_70%)]" />
+            <div className="absolute inset-0 bg-success/5" />
             
             <AnimatePresence mode="wait">
               {activeStep === "draft" && (
