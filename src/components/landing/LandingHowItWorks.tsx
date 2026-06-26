@@ -59,7 +59,7 @@ export default function LandingHowItWorks() {
             >
               {/* Connector line */}
               {i < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-8 left-[60%] w-full h-[2px] bg-gradient-to-r from-primary/40 to-transparent" />
+                <div className="hidden lg:block absolute top-8 left-[60%] w-full h-[2px] bg-primary/20" />
               )}
               <div className="relative z-10 mx-auto mb-5 size-16 rounded-2xl bg-primary text-white flex items-center justify-center text-xl font-bold shadow-lg shadow-primary/20">
                 {step.num}

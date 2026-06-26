@@ -75,11 +75,11 @@ export default function LandingHero() {
             >
               Find Vetted Artisans.
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">
+              <span className="text-primary">
                 Pay Only
               </span>{" "}
               When the Job is{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-emerald-400">
+              <span className="text-primary">
                 Done Right.
               </span>
             </motion.h1>
@@ -157,7 +157,7 @@ export default function LandingHero() {
           <div className="lg:col-span-5 relative w-full flex items-center justify-center">
             
             {/* Visual background gradient circle */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-indigo-500/5 rounded-full blur-2xl filter pointer-events-none" />
+            <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl filter pointer-events-none" />
 
             <motion.div
               className="relative w-full max-w-[420px] bg-card/60 backdrop-blur-lg border border-border/60 rounded-3xl p-6 shadow-2xl shadow-black/15"
