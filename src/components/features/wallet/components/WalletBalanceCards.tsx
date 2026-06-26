@@ -72,7 +72,7 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
 
       <motion.div variants={itemVariants}>
         <Card size="sm" className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-emerald-500/20">
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-transparent pointer-events-none" />
+          <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-emerald-500">
             <CreditCard className="size-16" />
           </div>

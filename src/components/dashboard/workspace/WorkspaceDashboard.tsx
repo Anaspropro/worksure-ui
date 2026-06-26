@@ -75,8 +75,8 @@ function StatCard({
       custom={index}
       whileHover={{ y: -3, transition: { duration: 0.18 } }}
     >
-      <Card className="group relative overflow-hidden border-border bg-gradient-to-br from-card to-muted/20 hover:border-primary/40 hover:shadow-lg transition-all duration-300">
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <Card className="group relative overflow-hidden border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300">
+        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <CardContent className="relative p-5 flex items-start justify-between gap-4 z-10">
           <div className="space-y-1">
             <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
@@ -316,7 +316,7 @@ export default function WorkspaceDashboard({
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15, duration: 0.4 }}
         >
-          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
+          <Card className="border-primary/20 bg-primary/5">
             <CardHeader className="pb-3">
               <div className="flex items-center gap-3">
                 <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -583,7 +583,7 @@ export default function WorkspaceDashboard({
             transition={{ delay: 0.5, duration: 0.4 }}
           >
             {roleView === "CLIENT" && (
-              <Card className="border-border bg-gradient-to-br from-primary/8 to-primary/3 hover:shadow-md transition-shadow cursor-pointer group">
+              <Card className="border-border bg-primary/5 hover:shadow-md transition-shadow cursor-pointer group">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
                     <div className="size-10 rounded-xl bg-primary/15 flex items-center justify-center flex-shrink-0">
@@ -601,7 +601,7 @@ export default function WorkspaceDashboard({
               </Card>
             )}
             {roleView === "ARTISAN" && (
-              <Card className="border-border bg-gradient-to-br from-blue-500/8 to-blue-500/3 hover:shadow-md transition-shadow cursor-pointer group">
+              <Card className="border-border bg-blue-500/5 hover:shadow-md transition-shadow cursor-pointer group">
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
                     <div className="size-10 rounded-xl bg-blue-500/15 flex items-center justify-center flex-shrink-0">
@@ -618,7 +618,7 @@ export default function WorkspaceDashboard({
                 </CardContent>
               </Card>
             )}
-            <Card className="border-border bg-gradient-to-br from-success/8 to-success/3 hover:shadow-md transition-shadow cursor-pointer">
+            <Card className="border-border bg-success/5 hover:shadow-md transition-shadow cursor-pointer">
               <CardContent className="p-5">
                 <div className="flex items-start gap-4">
                   <div className="size-10 rounded-xl bg-success/15 flex items-center justify-center flex-shrink-0">

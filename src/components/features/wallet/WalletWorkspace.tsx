@@ -65,7 +65,7 @@ export default function WalletWorkspace() {
             <Wallet className="size-40" />
           </div>
           <CardHeader className="relative z-10">
-            <CardTitle className="text-3xl tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Wallet</CardTitle>
+            <CardTitle className="text-3xl tracking-tight text-foreground">Wallet</CardTitle>
             <CardDescription className="max-w-3xl text-base leading-7">
               Your wallet holds funds used for escrow payments. When you hire an artisan, money
               moves from your wallet into secure escrow until the job is complete.
@@ -104,7 +104,7 @@ export default function WalletWorkspace() {
         {/* Explainer Card */}
         <motion.div variants={itemVariants} className="h-full">
           <Card className="border-border/50 bg-primary/5 shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50 pointer-events-none" />
+            <div className="absolute inset-0 bg-primary/5 opacity-50 pointer-events-none" />
             <CardHeader className="relative z-10">
               <div className="size-10 rounded-xl bg-background/50 border border-primary/20 flex items-center justify-center mb-2 shadow-sm">
                 <Info className="size-5 text-primary" />

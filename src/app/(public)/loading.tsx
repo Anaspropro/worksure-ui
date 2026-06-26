@@ -15,7 +15,7 @@ export default function Loading() {
         />
 
         <motion.div
-          className="relative flex items-center justify-center size-20 rounded-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20 shadow-2xl shadow-primary/20 backdrop-blur-sm"
+          className="relative flex items-center justify-center size-20 rounded-2xl bg-primary/10 border border-primary/20 shadow-2xl shadow-primary/20 backdrop-blur-sm"
           initial={{ opacity: 0, scale: 0.8, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}

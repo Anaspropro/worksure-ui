@@ -266,7 +266,7 @@ export default function AdminDashboardWorkspace() {
                     </p>
                   </div>
 
-                  <div className="col-span-2 rounded-xl border border-border/50 bg-gradient-to-r from-success/10 to-success/5 p-4 hover:from-success/15 hover:to-success/10 transition-colors">
+                  <div className="col-span-2 rounded-xl border border-border/50 bg-success/10 p-4 hover:bg-success/15 transition-colors">
                     <div className="flex items-center gap-2 text-success mb-2">
                       <Activity className="size-4" />
                       <span className="text-sm font-medium">Total System Value (Wallet + Escrow)</span>

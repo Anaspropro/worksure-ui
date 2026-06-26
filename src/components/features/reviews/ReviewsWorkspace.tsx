@@ -90,7 +90,7 @@ export default function ReviewsWorkspace() {
             <MessageSquareQuote className="size-40" />
           </div>
           <CardHeader className="relative z-10">
-            <CardTitle className="text-3xl tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Reviews & Reputation</CardTitle>
+            <CardTitle className="text-3xl tracking-tight text-foreground">Reviews & Reputation</CardTitle>
             <CardDescription className="max-w-3xl text-base leading-7">
               Reviews help both sides understand delivery quality, communication, and trust after a completed contract.
             </CardDescription>

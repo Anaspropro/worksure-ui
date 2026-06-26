@@ -71,7 +71,7 @@ export default function ProfileWorkspace() {
             <UserIcon className="size-40" />
           </div>
           <CardHeader className="relative z-10">
-            <CardTitle className="text-3xl tracking-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Profile and Trust Signals</CardTitle>
+            <CardTitle className="text-3xl tracking-tight text-foreground">Profile and Trust Signals</CardTitle>
             <CardDescription className="max-w-3xl text-base leading-7">
               Manage your account identity and public profile that supports hiring confidence.
             </CardDescription>
@@ -157,7 +157,7 @@ export default function ProfileWorkspace() {
         <div className="space-y-6 flex flex-col">
           <motion.div variants={itemVariants}>
             <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-colors hover:border-primary/20">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent opacity-50 pointer-events-none" />
+              <div className="absolute inset-0 bg-primary/5 opacity-50 pointer-events-none" />
               <CardHeader className="relative z-10">
                 <CardTitle className="flex items-center gap-2">
                   <ShieldCheck className="size-5 text-primary" />
