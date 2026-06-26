@@ -33,7 +33,7 @@ export function NetworkStatus() {
         >
           <div className="bg-destructive/90 backdrop-blur text-destructive-foreground px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium border border-destructive/20 pointer-events-auto">
             <WifiOff className="size-4" />
-            <span>You are offline. Showing cached data.</span>
+            <span>You are offline.</span>
           </div>
         </motion.div>
       )}
