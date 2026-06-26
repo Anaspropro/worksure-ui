@@ -56,10 +56,10 @@ export default function AdminMonitoringWorkspace() {
 
   const formatUptime = (seconds?: number) => {
     if (seconds === undefined) return "N/A";
-    const d = Math.floor(seconds / (3600*24));
-    const h = Math.floor(seconds % (3600*24) / 3600);
+    const d = Math.floor(seconds / (3600 * 24));
+    const h = Math.floor(seconds % (3600 * 24) / 3600);
     const m = Math.floor(seconds % 3600 / 60);
-    
+
     const parts = [];
     if (d > 0) parts.push(`${d}d`);
     if (h > 0) parts.push(`${h}h`);
@@ -101,7 +101,7 @@ export default function AdminMonitoringWorkspace() {
             )}
           </CardContent>
         </Card>
-        
+
         <Card className="border-border bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Memory Usage (RSS)</CardTitle>
@@ -139,101 +139,6 @@ export default function AdminMonitoringWorkspace() {
         </Card>
       </div>
 
-      <Card className="border-border bg-card">
-        <CardHeader>
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <CardTitle className="flex items-center gap-2">
-                <AlertTriangle className="size-5 text-destructive" />
-                Error Logs
-              </CardTitle>
-              <CardDescription>
-                Recent system errors and critical events. Total records: {logsLoading ? "Loading..." : String(total)}
-              </CardDescription>
-            </div>
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-destructive border-destructive/20 hover:bg-destructive/10"
-              onClick={() => {
-                if (confirm("Are you sure you want to clear all system logs?")) {
-                  clearLogsMutation.mutate();
-                  setPage(1);
-                }
-              }}
-              disabled={logsLoading || logs.length === 0 || clearLogsMutation.status === "pending"}
-            >
-              <Trash2 className="size-4 mr-2" />
-              Clear logs
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="rounded-md border border-border overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/50 border-b border-border">
-                <tr>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground w-48">Timestamp</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground w-24">Level</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground w-48">Context</th>
-                  <th className="px-4 py-3 text-left font-medium text-muted-foreground">Message</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                {logsLoading ? (
-                  Array.from({ length: 5 }).map((_, i) => (
-                    <tr key={i}>
-                      <td colSpan={4} className="px-4 py-4">
-                        <Skeleton className="h-4 w-full" />
-                      </td>
-                    </tr>
-                  ))
-                ) : logs.length === 0 ? (
-                  <tr>
-                    <td colSpan={4} className="px-4 py-8 text-center text-muted-foreground italic">
-                      No system logs found. Looks like smooth sailing!
-                    </td>
-                  </tr>
-                ) : (
-                  logs.map((log) => (
-                    <tr key={log.id} className="hover:bg-muted/30 transition-colors group">
-                      <td className="px-4 py-4 text-muted-foreground whitespace-nowrap align-top">
-                        {formatDate(log.createdAt)}
-                      </td>
-                      <td className="px-4 py-4 align-top">
-                        {getLevelBadge(log.level)}
-                      </td>
-                      <td className="px-4 py-4 align-top">
-                        <Badge variant="outline" className="font-mono text-xs font-normal">
-                          {log.context}
-                        </Badge>
-                      </td>
-                      <td className="px-4 py-4 align-top">
-                        <div className="font-medium text-foreground">{log.message}</div>
-                        {log.trace && (
-                          <div className="mt-2 text-xs text-muted-foreground font-mono bg-muted p-2 rounded-md overflow-x-auto whitespace-pre-wrap max-h-32 overflow-y-auto">
-                            {log.trace}
-                          </div>
-                        )}
-                        {log.metadata && Object.keys(log.metadata).length > 0 && (
-                          <div className="mt-2 text-xs text-muted-foreground font-mono">
-                            {JSON.stringify(log.metadata)}
-                          </div>
-                        )}
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
-          <div className="flex items-center justify-between mt-4">
-            <Button variant="outline" size="sm" onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}>Previous</Button>
-            <span className="text-sm text-muted-foreground">Page {page}</span>
-            <Button variant="outline" size="sm" onClick={() => setPage(p => p + 1)} disabled={logs.length < 20}>Next</Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

@@ -214,12 +214,7 @@ export default function WorkspaceDashboard({
   roleView: User["role"];
   user: User;
 }) {
-  const [proposalJobId, setProposalJobId] = useState("");
-  const [proposalAmountInput, setProposalAmountInput] = useState("");
-  const [proposalMessage, setProposalMessage] = useState("");
   const [contractSearch, setContractSearch] = useState("");
-
-  const proposalAmount = Number(proposalAmountInput || 0);
 
   const { data: jobsResponse } = useJobs();
   const { data: proposalsResponse } = useProposals({ userId: user.id, role: roleView });
@@ -267,19 +262,7 @@ export default function WorkspaceDashboard({
     contractSearch === "" || c.job.title.toLowerCase().includes(contractSearch.toLowerCase()),
   );
 
-  const handleSubmitProposal = () => {
-    const toastId = toast.loading("Submitting proposal...");
-    createProposalMutation.mutate(
-      { jobId: proposalJobId, amount: proposalAmount, message: proposalMessage.trim() },
-      {
-        onSuccess: () => {
-          toast.success("Proposal submitted.", { id: toastId });
-          setProposalJobId(""); setProposalAmountInput(""); setProposalMessage("");
-        },
-        onError: (e) => toast.error(e.message || "Unable to submit.", { id: toastId }),
-      },
-    );
-  };
+
 
   const firstName = user.name.split(" ")[0];
 

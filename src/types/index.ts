@@ -459,6 +459,7 @@ export interface AdminOverviewReport {
     flaggedJobs: number;
     pendingArtisansCount?: number;
     pendingPayoutsCount?: number;
+    totalSystemValue?: number;
   };
 }
 
