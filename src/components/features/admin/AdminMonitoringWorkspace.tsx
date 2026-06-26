@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { Server, Database, MemoryStick, AlertTriangle } from "lucide-react";
 import { useAdminSystemHealth, useAdminSystemLogs, useClearSystemLogs } from "@/hooks/useAdmin";
-import { formatDate } from "@/lib/formatters";
-import { Trash2 } from "lucide-react";
 
 interface HealthMetrics {
   metrics?: {
@@ -75,15 +73,6 @@ export default function AdminMonitoringWorkspace() {
 
   return (
     <div className="space-y-8 py-4">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
-          System Monitoring
-        </h1>
-        <p className="text-muted-foreground max-w-3xl">
-          Real-time engineering dashboard tracking platform health, memory usage, and caught application errors.
-        </p>
-      </div>
-
       <div className="grid gap-4 md:grid-cols-3">
         <Card className="border-border bg-card">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">

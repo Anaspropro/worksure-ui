@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAdminReports } from "@/hooks/useAdmin";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import AdminMonitoringWorkspace from "./AdminMonitoringWorkspace";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -285,6 +286,8 @@ export default function AdminDashboardWorkspace() {
           </Card>
         </motion.div>
       </div>
+
+      <AdminMonitoringWorkspace />
     </motion.main>
   );
 }
