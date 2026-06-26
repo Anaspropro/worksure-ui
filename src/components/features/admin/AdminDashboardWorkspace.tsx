@@ -52,10 +52,7 @@ export default function AdminDashboardWorkspace() {
     >
       {/* ── Hero Section ── */}
       <motion.div variants={itemVariants}>
-        <Card className="relative overflow-hidden border-border bg-card shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
-          
+        <Card className="relative overflow-hidden border-border bg-card shadow-lg">
           <CardHeader className="relative z-10 pb-8 pt-10 px-8">
             <CardTitle className="text-3xl font-bold tracking-tight mb-2">
               Operations Center
