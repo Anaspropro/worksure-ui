@@ -1,14 +1,13 @@
 "use client";
 
-import { Bell, Trash2, Check } from "lucide-react";
+import { Bell, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { useMyNotifications, useNotificationStats, useDeleteNotification } from "@/hooks/useNotifications";
+import { useMyNotifications, useDeleteNotification } from "@/hooks/useNotifications";
 
 export function NotificationDropdown({ role }: { role: string }) {
-  const { data: stats } = useNotificationStats();
   const { data: allNotifications } = useMyNotifications();
   const deleteMutation = useDeleteNotification();
 

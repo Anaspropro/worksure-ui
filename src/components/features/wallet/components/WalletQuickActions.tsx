@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ArrowDownToLine, ArrowUpFromLine, Loader2 } from "lucide-react";
+import { ArrowDownToLine, ArrowUpFromLine, Loader2, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useWalletDepositInit, useWalletPayoutRequest, useBanks } from "@/hooks/useWallet";
 
@@ -69,26 +70,32 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
   };
 
   return (
-    <Card className="border-border/80 bg-card">
-      <CardHeader>
-        <CardTitle>Quick actions</CardTitle>
+    <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
+      <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+        <Zap className="size-24" />
+      </div>
+      <CardHeader className="relative z-10">
+        <CardTitle className="flex items-center gap-2">
+          <Zap className="size-5 text-primary" />
+          Quick Actions
+        </CardTitle>
         <CardDescription>
           Add funds to your wallet or withdraw to your bank account.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-6 relative z-10">
         {/* Action buttons */}
-        <div className="flex gap-2">
+        <div className="grid grid-cols-2 gap-3">
           <Button
             variant={activeAction === "deposit" ? "default" : "outline"}
             onClick={() => {
               setActiveAction(activeAction === "deposit" ? null : "deposit");
               setAmountInput("");
             }}
-            className="flex-1"
+            className={`h-14 transition-all ${activeAction === "deposit" ? "shadow-md" : "hover:bg-background/60 hover:border-primary/30"}`}
           >
-            <ArrowDownToLine className="size-4 mr-2" />
-            Add funds
+            <ArrowDownToLine className={`size-5 mr-2 ${activeAction === "deposit" ? "" : "text-emerald-500"}`} />
+            Add Funds
           </Button>
           <Button
             variant={activeAction === "withdraw" ? "default" : "outline"}
@@ -98,88 +105,108 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
               setBankCode(user.payoutBankCode || "");
               setAccountNumber(user.payoutAccountNumber || "");
             }}
-            className="flex-1"
+            className={`h-14 transition-all ${activeAction === "withdraw" ? "shadow-md" : "hover:bg-background/60 hover:border-primary/30"}`}
           >
-            <ArrowUpFromLine className="size-4 mr-2" />
+            <ArrowUpFromLine className={`size-5 mr-2 ${activeAction === "withdraw" ? "" : "text-rose-500"}`} />
             Request Payout
           </Button>
         </div>
 
         {/* Action form */}
-        {activeAction && (
-          <div className="rounded-lg border border-border bg-surface-muted/30 p-4 space-y-3">
-            <p className="text-sm font-medium text-foreground">
-              {activeAction === "deposit" ? "Add funds to wallet" : "Request payout to bank account"}
-            </p>
-            
-            {activeAction === "withdraw" && (
-              <>
-                <div className="flex items-center gap-2">
-                  <Select value={bankCode} onValueChange={setBankCode} disabled={banksQuery.isLoading}>
-                    <SelectTrigger className="w-full">
-                      <SelectValue placeholder={banksQuery.isLoading ? "Loading banks..." : "Select your bank"} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {banksList.filter(b => b && b.code).map((bank) => (
-                        <SelectItem key={bank.code.toString()} value={bank.code.toString()}>
-                          {bank.name || "Unknown Bank"}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+        <AnimatePresence mode="wait">
+          {activeAction && (
+            <motion.div 
+              initial={{ opacity: 0, height: 0, y: -10 }}
+              animate={{ opacity: 1, height: "auto", y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -10 }}
+              className="rounded-xl border border-border/50 bg-background/40 p-5 space-y-4 shadow-sm"
+            >
+              <p className="text-sm font-semibold text-foreground border-b border-border/30 pb-3">
+                {activeAction === "deposit" ? "Add Funds via Paystack" : "Withdraw to Bank Account"}
+              </p>
+              
+              {activeAction === "withdraw" && (
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Select Bank</label>
+                    <Select value={bankCode} onValueChange={setBankCode} disabled={banksQuery.isLoading}>
+                      <SelectTrigger className="w-full h-11 bg-background/50 border-border/50 focus:ring-primary/20 transition-colors">
+                        <SelectValue placeholder={banksQuery.isLoading ? "Loading banks..." : "Select your bank"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {banksList.filter(b => b && b.code).map((bank) => (
+                          <SelectItem key={bank.code.toString()} value={bank.code.toString()}>
+                            {bank.name || "Unknown Bank"}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Account Number</label>
+                    <Input
+                      type="text"
+                      placeholder="e.g. 0123456789"
+                      value={accountNumber}
+                      onChange={(e) => setAccountNumber(e.target.value)}
+                      className="bg-background/50 border-border/50 focus-visible:ring-primary/20 h-11 transition-colors"
+                    />
+                  </div>
                 </div>
-                <Input
-                  type="text"
-                  placeholder="Account Number (10 digits)"
-                  value={accountNumber}
-                  onChange={(e) => setAccountNumber(e.target.value)}
-                />
-              </>
-            )}
+              )}
 
-            <Input
-              type="number"
-              placeholder="Enter amount (₦)"
-              value={amountInput}
-              onChange={(e) => setAmountInput(e.target.value)}
-              min={1}
-            />
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground uppercase tracking-wider">Amount (₦)</label>
+                <div className="relative">
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">₦</span>
+                  <Input
+                    type="number"
+                    placeholder="0.00"
+                    value={amountInput}
+                    onChange={(e) => setAmountInput(e.target.value)}
+                    min={1}
+                    className="pl-8 bg-background/50 border-border/50 focus-visible:ring-primary/20 h-11 text-lg font-medium transition-colors"
+                  />
+                </div>
+              </div>
 
-            <div className="flex gap-2">
-              <Button
-                disabled={
-                  amount <= 0 ||
-                  (activeAction === "deposit"
-                    ? depositInitMutation.status === "pending"
-                    : payoutRequestMutation.status === "pending")
-                }
-                onClick={activeAction === "deposit" ? handleAddFunds : handleWithdrawFunds}
-                className="flex-1"
-              >
-                {(activeAction === "deposit"
-                  ? depositInitMutation.status
-                  : payoutRequestMutation.status) === "pending" ? (
-                  <><Loader2 className="size-4 mr-2 animate-spin" /> Processing...</>
-                ) : activeAction === "deposit" ? (
-                  "Proceed to Payment"
-                ) : (
-                  "Submit Payout Request"
-                )}
-              </Button>
-              <Button
-                variant="ghost"
-                onClick={() => {
-                  setActiveAction(null);
-                  setAmountInput("");
-                  setBankCode("");
-                  setAccountNumber("");
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
-          </div>
-        )}
+              <div className="flex gap-3 pt-2">
+                <Button
+                  disabled={
+                    amount <= 0 ||
+                    (activeAction === "deposit"
+                      ? depositInitMutation.status === "pending"
+                      : payoutRequestMutation.status === "pending")
+                  }
+                  onClick={activeAction === "deposit" ? handleAddFunds : handleWithdrawFunds}
+                  className="flex-1 shadow-sm"
+                >
+                  {(activeAction === "deposit"
+                    ? depositInitMutation.status
+                    : payoutRequestMutation.status) === "pending" ? (
+                    <><Loader2 className="size-4 mr-2 animate-spin" /> Processing...</>
+                  ) : activeAction === "deposit" ? (
+                    "Proceed to Payment"
+                  ) : (
+                    "Submit Payout Request"
+                  )}
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setActiveAction(null);
+                    setAmountInput("");
+                    setBankCode("");
+                    setAccountNumber("");
+                  }}
+                  className="hover:bg-destructive/10 hover:text-destructive transition-colors"
+                >
+                  Cancel
+                </Button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </CardContent>
     </Card>
   );

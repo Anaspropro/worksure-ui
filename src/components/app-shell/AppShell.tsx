@@ -2,14 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Menu, LogOut, X, Bell, ShieldCheck } from "lucide-react";
+import { Menu, X, ShieldCheck, LogOut } from "lucide-react";
 
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarNav from "@/components/app-shell/SidebarNav";
 import SidebarProfile from "@/components/app-shell/SidebarProfile";
 import { Button } from "@/components/ui/button";
 import { useLogout } from "@/hooks/useAuth";
-import { useNotificationStats } from "@/hooks/useNotifications";
 import type { User } from "@/types";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { NotificationDropdown } from "@/components/app-shell/NotificationDropdown";

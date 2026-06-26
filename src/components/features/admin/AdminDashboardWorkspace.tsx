@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { useAdminReports } from "@/hooks/useAdmin";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
+import AdminMonitoringWorkspace from "./AdminMonitoringWorkspace";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -69,7 +70,7 @@ export default function AdminDashboardWorkspace() {
       {/* ── Quick Stats Grid ── */}
       <motion.section variants={containerVariants} className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <motion.div variants={itemVariants}>
-          <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
+          <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-primary/10 rounded-lg">
@@ -85,7 +86,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
+          <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-warning/10 rounded-lg">
@@ -101,7 +102,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
+          <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-danger/10 rounded-lg">
@@ -117,7 +118,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         <motion.div variants={itemVariants}>
-          <Card className="bg-card/40 backdrop-blur-md border-border/60 hover:bg-card/60 transition-colors shadow-sm">
+          <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
                 <div className="p-2 bg-destructive/10 rounded-lg">
@@ -137,7 +138,7 @@ export default function AdminDashboardWorkspace() {
       <div className="grid gap-6 md:grid-cols-2">
         {/* Moderation Priorities */}
         <motion.div variants={itemVariants} className="flex flex-col h-full">
-          <Card className="border-border/60 bg-card/40 backdrop-blur-md shadow-sm flex-1 flex flex-col overflow-hidden">
+          <Card className="border-border/60 bg-card shadow-sm flex-1 flex flex-col overflow-hidden">
             <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <AlertTriangle className="size-5 text-warning" />
@@ -218,7 +219,7 @@ export default function AdminDashboardWorkspace() {
 
         {/* Platform Snapshot */}
         <motion.div variants={itemVariants} className="flex flex-col">
-          <Card className="border-border/60 bg-card/40 backdrop-blur-md shadow-sm flex-1 flex flex-col overflow-hidden">
+          <Card className="border-border/60 bg-card shadow-sm flex-1 flex flex-col overflow-hidden">
             <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Activity className="size-5 text-primary" />
@@ -264,6 +265,16 @@ export default function AdminDashboardWorkspace() {
                       NGN {report.totals.platformFees.toLocaleString()}
                     </p>
                   </div>
+
+                  <div className="col-span-2 rounded-xl border border-border/50 bg-gradient-to-r from-success/10 to-success/5 p-4 hover:from-success/15 hover:to-success/10 transition-colors">
+                    <div className="flex items-center gap-2 text-success mb-2">
+                      <Activity className="size-4" />
+                      <span className="text-sm font-medium">Total System Value (Wallet + Escrow)</span>
+                    </div>
+                    <p className="text-2xl font-semibold text-success">
+                      NGN {(report.totals.totalSystemValue || 0).toLocaleString()}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <div className="flex flex-col items-center justify-center h-full min-h-[160px] text-muted-foreground">
@@ -275,6 +286,8 @@ export default function AdminDashboardWorkspace() {
           </Card>
         </motion.div>
       </div>
+
+      <AdminMonitoringWorkspace />
     </motion.main>
   );
 }
