@@ -63,19 +63,19 @@ const roleOptions: Array<{
   description: string;
   icon: typeof Briefcase;
 }> = [
-  {
-    value: "CLIENT",
-    label: "Client",
-    description: "Post jobs & hire verified artisans",
-    icon: Briefcase,
-  },
-  {
-    value: "ARTISAN",
-    label: "Artisan",
-    description: "Find work & get paid securely",
-    icon: Wrench,
-  },
-];
+    {
+      value: "CLIENT",
+      label: "Client",
+      description: "Post jobs & hire verified artisans",
+      icon: Briefcase,
+    },
+    {
+      value: "ARTISAN",
+      label: "Artisan",
+      description: "Find work & get paid securely",
+      icon: Wrench,
+    },
+  ];
 
 const formFieldVariants = {
   hidden: { opacity: 0, y: 16 },
@@ -100,7 +100,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [role, setRole] = useState<UserRole>("CLIENT");
   const hasHydrated = useSyncExternalStore(
-    () => () => {},
+    () => () => { },
     () => true,
     () => false,
   );
@@ -220,7 +220,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               {mode === "login" ? "Welcome back!" : "Create your account"}
             </h1>
             <p className="text-base text-muted-foreground flex max-w-[280px]">
-               {mode === "login" ? "Log in to your account to continue." : "Join WorkSure and start connecting today."}
+              {mode === "login" ? "Log in to your account to continue." : "Join WorkSure and start connecting today."}
             </p>
           </motion.div>
 
@@ -468,28 +468,24 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
                         type="button"
                         onClick={() => setRole(value)}
                         whileTap={{ scale: 0.97 }}
-                        className={`group relative flex flex-col gap-2 rounded-xl border p-3.5 text-left transition-all duration-200 ${
-                          selected
+                        className={`group relative flex flex-col gap-2 rounded-xl border p-3.5 text-left transition-all duration-200 ${selected
                             ? "border-primary bg-primary/5 ring-2 ring-primary/20 shadow-sm"
                             : "border-border bg-input hover:border-primary/40 hover:bg-primary/10"
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <div
-                            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${
-                              selected ? "bg-primary/15" : "bg-muted group-hover:bg-primary/10"
-                            }`}
+                            className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors ${selected ? "bg-primary/15" : "bg-muted group-hover:bg-primary/10"
+                              }`}
                           >
                             <Icon
-                              className={`size-4 transition-colors ${
-                                selected ? "text-primary" : "text-muted-foreground group-hover:text-primary"
-                              }`}
+                              className={`size-4 transition-colors ${selected ? "text-primary" : "text-muted-foreground group-hover:text-primary"
+                                }`}
                             />
                           </div>
                           <div
-                            className={`h-4 w-4 rounded-full border-2 transition-all ${
-                              selected ? "border-primary bg-primary scale-110" : "border-muted-foreground/30"
-                            }`}
+                            className={`h-4 w-4 rounded-full border-2 transition-all ${selected ? "border-primary bg-primary scale-110" : "border-muted-foreground/30"
+                              }`}
                           />
                         </div>
                         <div>
@@ -543,12 +539,12 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
             </motion.div>
           </form>
 
-            <p className="text-center text-sm text-foreground mt-6">
-              {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
-              <Link href={mode === "login" ? "/auth/register" : "/auth/login"} className="font-semibold text-primary hover:text-primary-dark">
-                 {mode === "login" ? "Sign up" : "Sign in"}
-              </Link>
-            </p>
+          <p className="text-center text-sm text-foreground mt-6">
+            {mode === "login" ? "Don't have an account?" : "Already have an account?"}{" "}
+            <Link href={mode === "login" ? "/auth/register" : "/auth/login"} className="font-semibold text-primary hover:text-primary-dark">
+              {mode === "login" ? "Sign up" : "Sign in"}
+            </Link>
+          </p>
 
           {/* Footer note */}
           <p className="text-center text-xs leading-5 text-muted-foreground">
