@@ -99,12 +99,14 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 * **Wallet**: View balances, deposit, and withdraw funds.
 * **KYC System**: Document submission and verification tracking.
 * **Reviews & Proof of Work**: Upload images/videos, rate users.
+* **Admin Operations Center**: Comprehensive dashboard for platform health, dispute resolution, and auditing.
+* **Network Resilience**: Real-time offline indicators with cached data fallback.
 
 ---
 
 ## 🎯 UI/UX Principles
 
-* **Clean and minimal**: Focus on the task at hand.
-* **Mobile-first**: Fully responsive design.
-* **Trust-focused**: Clear status badges, escrow safety explanations.
-* **Feedback-driven**: Toast alerts and loading skeletons for all actions.
+* **Clean and minimal**: Focus on the task at hand with flat modern design.
+* **Mobile-first**: Fully responsive design with optimized mobile rendering.
+* **Trust-focused**: Clear status badges, escrow safety explanations, and branding.
+* **Feedback-driven**: Toast alerts, loading skeletons, and interactive state visuals.
