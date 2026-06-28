@@ -85,7 +85,7 @@ export default function ReviewsWorkspace() {
       animate="show"
     >
       <motion.div variants={itemVariants}>
-        <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm overflow-hidden relative">
+        <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <MessageSquareQuote className="size-40" />
           </div>
@@ -101,7 +101,7 @@ export default function ReviewsWorkspace() {
       {user.role === "CLIENT" ? (
         <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
           <motion.div variants={itemVariants}>
-            <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm h-full transition-colors hover:border-primary/20">
+            <Card className="border-border bg-card shadow-sm h-full transition-colors hover:border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="size-5 text-primary" />
@@ -160,7 +160,7 @@ export default function ReviewsWorkspace() {
           </motion.div>
 
           <motion.div variants={itemVariants}>
-            <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm h-full">
+            <Card className="border-border bg-card shadow-sm h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Info className="size-5 text-primary" />
@@ -179,7 +179,7 @@ export default function ReviewsWorkspace() {
       ) : null}
 
       <motion.div variants={itemVariants}>
-        <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm">
+        <Card className="border-border bg-card shadow-sm">
           <CardHeader>
             <CardTitle>{user.role === "ARTISAN" ? "Reviews About Your Work" : "Your Submitted Reviews"}</CardTitle>
             <CardDescription>Review history is grouped here so it is easy to reference during future work.</CardDescription>

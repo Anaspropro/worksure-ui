@@ -9,8 +9,8 @@ export function LandingCTA() {
   return (
     <section className="py-20 bg-background text-foreground relative overflow-hidden border-t border-border">
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute w-150 h-150 rounded-full bg-primary/20 -top-60 -right-40 blur-3xl" />
-        <div className="absolute w-96 h-96 rounded-full bg-primary/20 -bottom-40 -left-20 blur-3xl" />
+        <div className="absolute w-150 h-150 rounded-full bg-primary/5 -top-60 -right-40" />
+        <div className="absolute w-96 h-96 rounded-full bg-primary/5 -bottom-40 -left-20" />
       </div>
 
       <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 text-center">

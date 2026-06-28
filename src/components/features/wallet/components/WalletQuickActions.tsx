@@ -70,7 +70,7 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
   };
 
   return (
-    <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
+    <Card className="border-border bg-card shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
       <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
         <Zap className="size-24" />
       </div>

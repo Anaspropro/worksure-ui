@@ -60,7 +60,7 @@ export default function WalletWorkspace() {
 
       {/* ─── Page Header ─── */}
       <motion.div variants={itemVariants}>
-        <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm overflow-hidden relative">
+        <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <Wallet className="size-40" />
           </div>

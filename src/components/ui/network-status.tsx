@@ -31,7 +31,7 @@ export function NetworkStatus() {
           exit={{ y: -50, opacity: 0 }}
           className="fixed top-0 left-0 right-0 z-50 flex justify-center p-2 pointer-events-none"
         >
-          <div className="bg-destructive/90 backdrop-blur text-destructive-foreground px-4 py-2 rounded-full shadow-lg flex items-center gap-2 text-sm font-medium border border-destructive/20 pointer-events-auto">
+          <div className="bg-destructive text-destructive-foreground px-4 py-2 rounded-full shadow-md flex items-center gap-2 text-sm font-medium border border-destructive/20 pointer-events-auto">
             <WifiOff className="size-4" />
             <span>You are offline.</span>
           </div>

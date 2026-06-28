@@ -190,19 +190,19 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
       <aside className="hidden lg:flex lg:w-[45%] relative border-r border-border overflow-hidden flex-col justify-between p-12 bg-sidebar">
         {/* Floating decorative orbs */}
         <motion.div
-          className="absolute top-20 right-16 size-40 rounded-full bg-primary/5 blur-2xl"
+          className="absolute top-20 right-16 size-40 rounded-full bg-primary/5"
           animate={{ y: [0, -20, 0], scale: [1, 1.1, 1] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-32 left-10 size-56 rounded-full bg-primary/5 blur-3xl"
+          className="absolute bottom-32 left-10 size-56 rounded-full bg-primary/5"
           animate={{ y: [0, 15, 0], scale: [1.1, 1, 1.1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <div className="relative z-10 flex flex-col h-full gap-8">
           <Link href="/" className="flex items-center gap-2 mb-12">
-            <div className="flex bg-primary/10 backdrop-blur-sm rounded-lg p-1.5 border border-primary/20">
+            <div className="flex bg-primary/10 rounded-lg p-1.5 border border-primary/20">
               <ShieldCheck className="size-5 text-primary" />
             </div>
             <span className="text-xl font-bold tracking-tight text-foreground">
@@ -235,7 +235,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
               {trustFeatures.map((feature, i) => (
                 <motion.div
                   key={feature.title}
-                  className="flex items-start gap-3 rounded-xl bg-card backdrop-blur-sm border border-border p-4 shadow-sm"
+                  className="flex items-start gap-3 rounded-xl bg-card border border-border p-4 shadow-sm"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.5 + i * 0.12, duration: 0.4 }}

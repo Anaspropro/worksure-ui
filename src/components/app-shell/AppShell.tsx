@@ -88,8 +88,9 @@ export default function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 sm:p-6 lg:p-8">
-          <div className="mx-auto max-w-7xl">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-saas-pattern relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background pointer-events-none" />
+          <div className="relative mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
             {children}
           </div>
         </main>
@@ -100,7 +101,7 @@ export default function AppShell({
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
             <motion.div
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/60"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -109,7 +110,7 @@ export default function AppShell({
             />
 
             <motion.aside
-              className="relative flex w-full max-w-xs flex-col bg-sidebar border-r border-sidebar-border shadow-2xl h-full"
+              className="relative flex w-full max-w-xs flex-col bg-sidebar border-r border-sidebar-border shadow-lg h-full"
               initial={{ x: -320 }}
               animate={{ x: 0 }}
               exit={{ x: -320 }}
