@@ -94,11 +94,11 @@ export default function AdminKycWorkspace() {
     <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/5" />
           <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="space-y-4">
-              <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 px-3 py-1 text-primary backdrop-blur-md">
+              <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 px-3 py-1 text-primary">
                 Identity & Trust
               </Badge>
               <div className="space-y-2">
@@ -108,7 +108,7 @@ export default function AdminKycWorkspace() {
                 </CardDescription>
               </div>
             </div>
-            <div className="flex items-center gap-3 bg-card/5 p-4 rounded-2xl border border-white/10 backdrop-blur-sm">
+            <div className="flex items-center gap-3 bg-card/50 p-4 rounded-2xl border border-border">
               <div className="h-12 w-12 flex items-center justify-center rounded-xl bg-primary/20 text-primary">
                 <UserCheck className="size-6" />
               </div>

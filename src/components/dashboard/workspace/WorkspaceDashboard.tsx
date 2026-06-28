@@ -87,7 +87,7 @@ function StatCard({
               </p>
             )}
           </div>
-          <div className={`rounded-2xl ${iconBg} p-3 flex-shrink-0 group-hover:scale-110 transition-transform duration-300 ring-1 ring-black/5 dark:ring-white/5`}>
+          <div className={`rounded-2xl ${iconBg} p-3 flex-shrink-0 ring-1 ring-black/5 dark:ring-white/5`}>
             <Icon className={`size-5 ${iconColor}`} />
           </div>
         </CardContent>

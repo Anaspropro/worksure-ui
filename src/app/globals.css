@@ -342,3 +342,13 @@ select:-webkit-autofill:active {
   transition: background-color 5000s ease-in-out 0s !important;
   background-color: var(--input) !important;
 }
+
+/* Dashboard Background Patterns (Performant SVG Data URIs) */
+.bg-saas-pattern {
+  background-color: var(--background);
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%230F172A' fill-opacity='0.06'/%3E%3C/svg%3E");
+}
+
+.dark .bg-saas-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%23FFFFFF' fill-opacity='0.04'/%3E%3C/svg%3E");
+}

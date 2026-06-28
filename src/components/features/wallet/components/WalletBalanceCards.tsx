@@ -33,7 +33,7 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
       animate="show"
     >
       <motion.div variants={itemVariants}>
-        <Card size="sm" className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-primary/20">
+        <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-primary/20">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
             <Wallet className="size-16" />
           </div>
@@ -52,7 +52,7 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card size="sm" className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-amber-500/20">
+        <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-amber-500/20">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-amber-500">
             <ShieldCheck className="size-16" />
           </div>
@@ -71,7 +71,7 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
       </motion.div>
 
       <motion.div variants={itemVariants}>
-        <Card size="sm" className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-emerald-500/20">
+        <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-emerald-500/20">
           <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-emerald-500">
             <CreditCard className="size-16" />
@@ -95,7 +95,7 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
 
 function SkeletonCard() {
   return (
-    <Card size="sm" className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm">
+    <Card size="sm" className="border-border bg-card shadow-sm">
       <CardContent className="space-y-3 py-4 animate-pulse">
         <div className="flex items-center gap-2">
           <div className="size-7 rounded-md bg-muted" />

@@ -115,8 +115,8 @@ export default function VerifyEmailWorkspace() {
   return (
     <main className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
       {/* Decorative Orbs */}
-      <div className="absolute top-[-10%] right-[-10%] size-96 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute bottom-[-10%] left-[-10%] size-96 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute top-[-10%] right-[-10%] size-96 rounded-full bg-primary/5" />
+      <div className="absolute bottom-[-10%] left-[-10%] size-96 rounded-full bg-primary/5" />
 
       <div className="absolute top-8 left-8">
         <Link href="/" className="flex items-center gap-2">

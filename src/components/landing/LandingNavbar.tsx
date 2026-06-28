@@ -29,7 +29,7 @@ export default function LandingNavbar() {
     <motion.div
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         scrolled
-          ? "bg-background/80 border-border/80 shadow-lg backdrop-blur-md"
+          ? "bg-background border-border shadow-md"
           : "bg-transparent border-transparent"
       }`}
       initial={{ y: -80, opacity: 0 }}

@@ -58,7 +58,7 @@ export default function InteractiveEscrowVisualizer() {
   const activeIndex = steps.findIndex(s => s.id === activeStep);
 
   return (
-    <Card className="border border-border/60 bg-card/60 backdrop-blur-md shadow-2xl rounded-3xl overflow-hidden max-w-5xl mx-auto">
+    <Card className="border border-border bg-card shadow-lg rounded-3xl overflow-hidden max-w-5xl mx-auto">
       <CardContent className="p-6 md:p-10 grid gap-8 lg:grid-cols-[280px_1fr]">
         
         {/* Step Selector Navigation */}

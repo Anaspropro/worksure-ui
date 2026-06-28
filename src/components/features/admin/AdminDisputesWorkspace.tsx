@@ -89,10 +89,10 @@ export default function AdminDisputesWorkspace() {
     <div className="space-y-8">
         {/* ── Header ─────────────────────────────────────────────────── */}
         <section className="relative overflow-hidden rounded-2xl border border-border bg-card p-8 text-card-foreground shadow-[0_10px_40px_rgba(0,0,0,0.5)]">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl" />
-          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/10 blur-3xl" />
+          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-primary/5" />
+          <div className="absolute -bottom-20 -left-20 h-64 w-64 rounded-full bg-primary/5" />
           <div className="relative z-10 space-y-4">
-            <Badge variant="outline" className="rounded-full border-white/20 bg-card/10 px-3 py-1 text-white backdrop-blur-md">
+            <Badge variant="outline" className="rounded-full border-primary/20 bg-primary/10 px-3 py-1 text-primary">
               Admin Governance
             </Badge>
             <div className="flex items-center justify-between">
@@ -102,7 +102,7 @@ export default function AdminDisputesWorkspace() {
                   Monitor and resolve conflicts between clients and artisans with fairness and visibility.
                 </CardDescription>
               </div>
-              <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-card/10 border border-white/20 backdrop-blur-md lg:flex">
+              <div className="hidden h-16 w-16 items-center justify-center rounded-2xl bg-card/50 border border-border lg:flex">
                 <ShieldAlert className="size-8 text-warning" />
               </div>
             </div>

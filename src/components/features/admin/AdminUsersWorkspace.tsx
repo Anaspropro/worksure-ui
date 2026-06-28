@@ -225,17 +225,17 @@ export default function AdminUsersWorkspace() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={closeModal}
-              className="fixed inset-0 z-50 backdrop-blur-xs"
+              className="fixed inset-0 z-50 bg-black/60"
             />
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", duration: 0.5, bounce: 0 }}
-              className="fixed left-1/2 top-1/2 z-50 w-[95vw] sm:w-[90vw] md:max-w-4xl -translate-x-1/2 -translate-y-1/2 max-h-[85vh] flex flex-col rounded-xl overflow-hidden shadow-2xl bg-card border border-border"
+              className="fixed left-1/2 top-1/2 z-50 w-[95vw] sm:w-[90vw] md:max-w-4xl -translate-x-1/2 -translate-y-1/2 max-h-[85vh] flex flex-col rounded-xl overflow-hidden shadow-lg bg-card border border-border"
             >
               <Card className="border-none shadow-none bg-transparent flex flex-col h-full overflow-hidden">
-                <CardHeader className="sticky top-0 z-10 bg-card/95 backdrop-blur border-b border-border pb-4 rounded-t-xl shrink-0 flex flex-row items-start justify-between">
+                <CardHeader className="sticky top-0 z-10 bg-card border-b border-border pb-4 rounded-t-xl shrink-0 flex flex-row items-start justify-between">
                   <div>
                     <CardTitle className="text-xl">User Profile Review</CardTitle>
                     <CardDescription>

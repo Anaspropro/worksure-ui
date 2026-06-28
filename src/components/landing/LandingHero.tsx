@@ -32,7 +32,7 @@ export default function LandingHero() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute -top-[10%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-emerald-500/5 blur-3xl"
+          className="absolute -top-[10%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-emerald-500/5"
         />
         <motion.div
           animate={{
@@ -45,7 +45,7 @@ export default function LandingHero() {
             repeat: Infinity,
             ease: "easeInOut"
           }}
-          className="absolute top-[30%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/5 blur-3xl"
+          className="absolute top-[30%] -left-[10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/5"
         />
       </div>
 
@@ -56,7 +56,7 @@ export default function LandingHero() {
           <div className="lg:col-span-7 space-y-8 text-left">
             
             <motion.div
-              className="flex items-center gap-2 w-fit rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 backdrop-blur-sm"
+              className="flex items-center gap-2 w-fit rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5"
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
@@ -113,7 +113,7 @@ export default function LandingHero() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="h-12 rounded-xl px-8 text-base bg-card/45 border-border/80 text-foreground hover:bg-accent backdrop-blur-sm"
+                className="h-12 rounded-xl px-8 text-base bg-card border-border text-foreground hover:bg-accent"
               >
                 <Link href="#how-it-works">How it Works</Link>
               </Button>
@@ -157,10 +157,10 @@ export default function LandingHero() {
           <div className="lg:col-span-5 relative w-full flex items-center justify-center">
             
             {/* Visual background gradient circle */}
-            <div className="absolute inset-0 bg-primary/10 rounded-full blur-2xl filter pointer-events-none" />
+            <div className="absolute inset-0 bg-primary/5 rounded-full pointer-events-none" />
 
             <motion.div
-              className="relative w-full max-w-[420px] bg-card/60 backdrop-blur-lg border border-border/60 rounded-3xl p-6 shadow-2xl shadow-black/15"
+              className="relative w-full max-w-[420px] bg-card border border-border rounded-3xl p-6 shadow-xl"
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.6 }}
@@ -219,7 +219,7 @@ export default function LandingHero() {
 
               {/* Floating indicators */}
               <motion.div
-                className="absolute -top-6 -right-6 bg-card/80 border border-border/80 shadow-lg rounded-2xl p-3 flex items-center gap-2.5 backdrop-blur-md"
+                className="absolute -top-6 -right-6 bg-card border border-border shadow-md rounded-2xl p-3 flex items-center gap-2.5"
                 animate={{ y: [0, -6, 0] }}
                 transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
               >
@@ -233,7 +233,7 @@ export default function LandingHero() {
               </motion.div>
 
               <motion.div
-                className="absolute -bottom-6 -left-6 bg-card/80 border border-border/80 shadow-lg rounded-2xl p-3 flex items-center gap-2.5 backdrop-blur-md"
+                className="absolute -bottom-6 -left-6 bg-card border border-border shadow-md rounded-2xl p-3 flex items-center gap-2.5"
                 animate={{ y: [0, 6, 0] }}
                 transition={{ repeat: Infinity, duration: 4, delay: 2, ease: "easeInOut" }}
               >

@@ -9,13 +9,13 @@ export default function DashboardLoadingState() {
       <div className="relative flex flex-col items-center justify-center p-8">
         {/* Ambient Glow behind the logo */}
         <motion.div 
-          className="absolute inset-0 bg-primary/20 blur-3xl rounded-full"
+          className="absolute inset-0 bg-primary/5 rounded-full"
           animate={{ scale: [1, 1.2, 1], opacity: [0.5, 0.8, 0.5] }}
           transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
         />
 
         <motion.div
-          className="relative flex items-center justify-center size-20 rounded-2xl bg-primary/10 border border-primary/20 shadow-2xl shadow-primary/20 backdrop-blur-sm"
+          className="relative flex items-center justify-center size-20 rounded-2xl bg-primary/5 border border-primary/20 shadow-lg shadow-primary/10"
           initial={{ opacity: 0, scale: 0.8, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}

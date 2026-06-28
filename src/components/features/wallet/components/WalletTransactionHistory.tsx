@@ -59,7 +59,7 @@ function getAmountColor(type: string, status: string) {
 
 export function WalletTransactionHistory({ transactions, isLoading }: WalletTransactionHistoryProps) {
   return (
-    <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm">
+    <Card className="border-border bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="text-xl">Transaction History</CardTitle>
         <CardDescription>Every balance change is recorded here.</CardDescription>

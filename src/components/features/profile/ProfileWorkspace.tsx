@@ -66,7 +66,7 @@ export default function ProfileWorkspace() {
       animate="show"
     >
       <motion.div variants={itemVariants}>
-        <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm overflow-hidden relative">
+        <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <UserIcon className="size-40" />
           </div>
@@ -81,7 +81,7 @@ export default function ProfileWorkspace() {
 
       <section className="grid gap-6 xl:grid-cols-2">
         <motion.div variants={itemVariants}>
-          <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm h-full flex flex-col transition-colors hover:border-primary/20">
+          <Card className="border-border bg-card shadow-sm h-full flex flex-col transition-colors hover:border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <UserIcon className="size-5 text-primary" />
@@ -156,7 +156,7 @@ export default function ProfileWorkspace() {
 
         <div className="space-y-6 flex flex-col">
           <motion.div variants={itemVariants}>
-            <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm relative overflow-hidden transition-colors hover:border-primary/20">
+            <Card className="border-border bg-card shadow-sm relative overflow-hidden transition-colors hover:border-primary/20">
               <div className="absolute inset-0 bg-primary/5 opacity-50 pointer-events-none" />
               <CardHeader className="relative z-10">
                 <CardTitle className="flex items-center gap-2">
@@ -218,7 +218,7 @@ export default function ProfileWorkspace() {
 
           <motion.div variants={itemVariants} className="flex-1 flex flex-col">
             {user.role === "ARTISAN" ? (
-              <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm flex-1 flex flex-col transition-colors hover:border-primary/20">
+              <Card className="border-border bg-card shadow-sm flex-1 flex flex-col transition-colors hover:border-primary/20">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Briefcase className="size-5 text-primary" />
@@ -292,7 +292,7 @@ export default function ProfileWorkspace() {
                 </CardContent>
               </Card>
             ) : (
-              <Card className="border-border/50 bg-card/40 backdrop-blur-xl shadow-sm flex-1">
+              <Card className="border-border bg-card shadow-sm flex-1">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <UserIcon className="size-5 text-primary" />
