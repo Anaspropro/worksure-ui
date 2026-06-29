@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,18 +18,7 @@ import { useKycStatus } from "@/hooks/useKyc";
 import { ShieldCheck, Info, User as UserIcon, Briefcase, Star, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
 
 export default function ProfileWorkspace() {
   const userQuery = useUser();
@@ -59,13 +47,10 @@ export default function ProfileWorkspace() {
       : "";
 
   return (
-    <motion.main 
+    <main 
       className="space-y-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
     >
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <UserIcon className="size-40" />
@@ -77,10 +62,10 @@ export default function ProfileWorkspace() {
             </CardDescription>
           </CardHeader>
         </Card>
-      </motion.div>
+      </div>
 
       <section className="grid gap-6 xl:grid-cols-2">
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="border-border bg-card shadow-sm h-full flex flex-col transition-colors hover:border-primary/20">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -152,10 +137,10 @@ export default function ProfileWorkspace() {
               </Button>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         <div className="space-y-6 flex flex-col">
-          <motion.div variants={itemVariants}>
+          <div>
             <Card className="border-border bg-card shadow-sm relative overflow-hidden transition-colors hover:border-primary/20">
               <div className="absolute inset-0 bg-primary/5 opacity-50 pointer-events-none" />
               <CardHeader className="relative z-10">
@@ -168,13 +153,10 @@ export default function ProfileWorkspace() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4 relative z-10">
-                <AnimatePresence mode="wait">
+                
                   {kycStatusQuery.data?.kycVerified ? (
-                    <motion.div
+                    <div
                       key="verified"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
                       <Alert className="border-success/30 bg-success/10 text-success-foreground relative overflow-hidden">
                         <div className="absolute inset-0 bg-success/5 animate-pulse" />
@@ -186,13 +168,10 @@ export default function ProfileWorkspace() {
                           Your identity has been successfully verified via Paystack. You have full access to platform features.
                         </AlertDescription>
                       </Alert>
-                    </motion.div>
+                    </div>
                   ) : (
-                    <motion.div
+                    <div
                       key="pending"
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
                       className="space-y-4"
                     >
                       <Alert className="border-warning/30 bg-warning/5 text-warning-foreground">
@@ -209,14 +188,14 @@ export default function ProfileWorkspace() {
                       >
                         Start KYC Verification
                       </Button>
-                    </motion.div>
+                    </div>
                   )}
-                </AnimatePresence>
+                
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants} className="flex-1 flex flex-col">
+          <div className="flex-1 flex flex-col">
             {user.role === "ARTISAN" ? (
               <Card className="border-border bg-card shadow-sm flex-1 flex flex-col transition-colors hover:border-primary/20">
                 <CardHeader>
@@ -307,9 +286,9 @@ export default function ProfileWorkspace() {
                 </CardContent>
               </Card>
             )}
-          </motion.div>
+          </div>
         </div>
       </section>
-    </motion.main>
+    </main>
   );
 }

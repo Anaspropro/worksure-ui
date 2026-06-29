@@ -2,18 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
 import { getDashboardLinks } from "@/components/app-shell/navigation";
 import type { User } from "@/types";
-
-const navItemVariants = {
-  hidden: { opacity: 0, x: -12 },
-  visible: (i: number) => ({
-    opacity: 1,
-    x: 0,
-    transition: { delay: i * 0.04, duration: 0.3, ease: "easeOut" as const },
-  }),
-};
 
 export default function SidebarNav({
   role,
@@ -30,33 +20,20 @@ export default function SidebarNav({
       {navItems.map(({ href, label, icon: Icon }, i) => {
         const active = pathname === href || pathname.startsWith(`${href}/`);
         return (
-          <motion.div
-            key={href}
-            custom={i}
-            variants={navItemVariants}
-            initial="hidden"
-            animate="visible"
-          >
+          <div key={href}>
             <Link
               href={href}
               onClick={onItemClick}
               className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
-                  ? "text-primary"
+                  ? "text-primary bg-primary/10 border border-primary/20"
                   : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent"
               }`}
             >
-              {active && (
-                <motion.div
-                  layoutId="activeNavIndicator"
-                  className="absolute inset-0 rounded-lg bg-primary/10 border border-primary/20"
-                  transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                />
-              )}
               <Icon className="relative z-10 size-4 flex-shrink-0" />
               <span className="relative z-10 flex-1">{label}</span>
             </Link>
-          </motion.div>
+          </div>
         );
       })}
     </nav>

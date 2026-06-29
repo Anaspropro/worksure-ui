@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Menu, X, ShieldCheck, LogOut } from "lucide-react";
 
-import { motion, AnimatePresence } from "framer-motion";
+
 import SidebarNav from "@/components/app-shell/SidebarNav";
 import SidebarProfile from "@/components/app-shell/SidebarProfile";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ export default function AppShell({
 
 
   return (
-    <div className="flex h-screen bg-background text-foreground overflow-hidden">
+    <div className="flex h-[100dvh] bg-background text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 flex-col border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
         <div className="p-6">
@@ -88,33 +88,23 @@ export default function AppShell({
           </div>
         </header>
 
-        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-saas-pattern relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background pointer-events-none" />
-          <div className="relative mx-auto max-w-7xl p-4 sm:p-6 lg:p-8">
+        <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-7xl">
             {children}
           </div>
         </main>
       </div>
 
-      {/* Mobile Sidebar with Framer Motion */}
-      <AnimatePresence>
+      {/* Mobile Sidebar without Framer Motion */}
         {mobileMenuOpen && (
           <div className="fixed inset-0 z-50 lg:hidden flex">
-            <motion.div
+            <div
               className="absolute inset-0 bg-black/60"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.25 }}
               onClick={() => setMobileMenuOpen(false)}
             />
 
-            <motion.aside
+            <aside
               className="relative flex w-full max-w-xs flex-col bg-sidebar border-r border-sidebar-border shadow-lg h-full"
-              initial={{ x: -320 }}
-              animate={{ x: 0 }}
-              exit={{ x: -320 }}
-              transition={{ type: "spring", damping: 28, stiffness: 300 }}
             >
               <div className="flex items-center justify-between p-6">
                 <Link href="/" className="flex items-center gap-2" onClick={() => setMobileMenuOpen(false)}>
@@ -150,10 +140,9 @@ export default function AppShell({
                   <LogOut className="size-4 mr-3" /> Logout
                 </Button>
               </div>
-            </motion.aside>
+            </aside>
           </div>
         )}
-      </AnimatePresence>
     </div>
   );
 }

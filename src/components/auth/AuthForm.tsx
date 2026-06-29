@@ -175,7 +175,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
 
   if (!hasHydrated || userQuery.isAuthLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-background">
+      <main className="min-h-[100dvh] flex items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
           <div className="size-8 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
           <p className="text-sm text-muted-foreground">Checking authentication...</p>
@@ -185,7 +185,7 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
   }
 
   return (
-    <main className="min-h-screen flex">
+    <main className="min-h-[100dvh] flex">
       {/* ── Brand side panel ───────────────────────────────────── */}
       <aside className="hidden lg:flex lg:w-[45%] relative border-r border-border overflow-hidden flex-col justify-between p-12 bg-sidebar">
         {/* Floating decorative orbs */}

@@ -1,7 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { FinancialAmount } from "@/components/ui/financial-amount";
 import { CreditCard, ShieldCheck, Wallet } from "lucide-react";
-import { motion, Variants } from "framer-motion";
 
 interface WalletBalanceCardsProps {
   balance: {
@@ -11,28 +10,16 @@ interface WalletBalanceCardsProps {
   };
 }
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
+
+
 
 export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
   return (
-    <motion.section 
+    <section 
       className="grid gap-4 md:grid-cols-3"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
     >
-      <motion.div variants={itemVariants}>
+      <div>
         <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-primary/20">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
             <Wallet className="size-16" />
@@ -49,9 +36,9 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
             </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants}>
+      <div>
         <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-amber-500/20">
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-amber-500">
             <ShieldCheck className="size-16" />
@@ -68,9 +55,9 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
             </p>
           </CardContent>
         </Card>
-      </motion.div>
+      </div>
 
-      <motion.div variants={itemVariants}>
+      <div>
         <Card size="sm" className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:shadow-md hover:border-emerald-500/20">
           <div className="absolute inset-0 bg-emerald-500/5 pointer-events-none" />
           <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none text-emerald-500">
@@ -88,8 +75,8 @@ export function WalletBalanceCards({ balance }: WalletBalanceCardsProps) {
             </p>
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.section>
+      </div>
+    </section>
   );
 }
 

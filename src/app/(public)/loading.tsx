@@ -5,7 +5,7 @@ import { ShieldCheck } from "lucide-react";
 
 export default function Loading() {
   return (
-    <main className="min-h-screen bg-background flex items-center justify-center overflow-hidden">
+    <main className="min-h-[100dvh] bg-background flex items-center justify-center overflow-hidden">
       <div className="relative flex flex-col items-center justify-center p-8">
         {/* Ambient Glow behind the logo */}
         <motion.div 
