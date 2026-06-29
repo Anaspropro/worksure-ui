@@ -65,7 +65,7 @@ export default function AdminDashboardWorkspace() {
       </motion.div>
 
       {/* ── Quick Stats Grid ── */}
-      <section className="grid gap-4 grid-cols-2 md:grid-cols-4">
+      {/* <section className="grid gap-4 grid-cols-2 md:grid-cols-4">
         <div>
           <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
             <CardContent className="p-4">
@@ -129,7 +129,7 @@ export default function AdminDashboardWorkspace() {
             </CardContent>
           </Card>
         </div>
-      </section>
+      </section> */}
 
       {/* ── Main Content Grid ── */}
       <div className="grid gap-6 md:grid-cols-2">
@@ -215,7 +215,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         {/* Platform Snapshot */}
-        <div className="flex flex-col">
+        {/* <div className="flex flex-col">
           <Card className="border-border/60 bg-card shadow-sm flex-1 flex flex-col overflow-hidden">
             <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -281,7 +281,7 @@ export default function AdminDashboardWorkspace() {
               )}
             </CardContent>
           </Card>
-        </div>
+        </div> */}
       </div>
 
       <AdminMonitoringWorkspace />
