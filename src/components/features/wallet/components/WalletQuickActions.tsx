@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -113,12 +112,9 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
         </div>
 
         {/* Action form */}
-        <AnimatePresence mode="wait">
+        
           {activeAction && (
-            <motion.div 
-              initial={{ opacity: 0, height: 0, y: -10 }}
-              animate={{ opacity: 1, height: "auto", y: 0 }}
-              exit={{ opacity: 0, height: 0, y: -10 }}
+            <div
               className="rounded-xl border border-border/50 bg-background/40 p-5 space-y-4 shadow-sm"
             >
               <p className="text-sm font-semibold text-foreground border-b border-border/30 pb-3">
@@ -204,9 +200,9 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
                   Cancel
                 </Button>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        
       </CardContent>
     </Card>
   );

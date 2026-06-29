@@ -14,7 +14,6 @@ import {
   useReleaseEscrow,
   useRefundContract,
 } from "@/hooks/useContracts";
-import { motion } from "framer-motion";
 import {
   Award,
   BriefcaseBusiness,
@@ -70,10 +69,7 @@ function StatCard({
   index: number;
 }) {
   return (
-    <motion.div
-      variants={fadeUp}
-      custom={index}
-      whileHover={{ y: -3, transition: { duration: 0.18 } }}
+    <div
     >
       <Card className="group relative overflow-hidden border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300">
         <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -92,7 +88,7 @@ function StatCard({
           </div>
         </CardContent>
       </Card>
-    </motion.div>
+    </div>
   );
 }
 
@@ -108,8 +104,7 @@ function ContractRow({ contract, user, onFund, onConfirm, onRelease, isBusy }: {
   const isClient = user.id === contract.clientId;
 
   return (
-    <motion.div
-      variants={fadeUp}
+    <div
       className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-4 hover:border-primary/30 hover:bg-primary/3 transition-all cursor-pointer"
     >
       <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -151,7 +146,7 @@ function ContractRow({ contract, user, onFund, onConfirm, onRelease, isBusy }: {
       </div>
 
       <ChevronRight className="size-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -165,7 +160,7 @@ function ActivityItem({ icon: Icon, iconColor, iconBg, title, sub, time }: {
   time: string;
 }) {
   return (
-    <motion.div variants={fadeUp} className="relative flex items-start gap-4 pb-6 last:pb-0 group">
+    <div className="relative flex items-start gap-4 pb-6 last:pb-0 group">
       {/* Timeline line */}
       <div className="absolute left-[15px] top-8 bottom-0 w-px bg-border group-last:hidden" />
       
@@ -179,15 +174,14 @@ function ActivityItem({ icon: Icon, iconColor, iconBg, title, sub, time }: {
         </div>
         <p className="text-xs text-muted-foreground mt-0.5">{sub}</p>
       </div>
-    </motion.div>
+    </div>
   );
 }
 
 /* ── Job row ────────────────────────────────────────────────── */
 function JobRow({ job }: { job: Job }) {
   return (
-    <motion.div
-      variants={fadeUp}
+    <div
       className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-4 hover:border-primary/30 hover:bg-primary/3 transition-all"
     >
       <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
@@ -202,7 +196,7 @@ function JobRow({ job }: { job: Job }) {
         <StatusBadge status={job.status} />
       </div>
       <ChevronRight className="size-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
-    </motion.div>
+    </div>
   );
 }
 
@@ -269,11 +263,8 @@ export default function WorkspaceDashboard({
   return (
     <div className="space-y-6">
       {/* ── Header row ── */}
-      <motion.div
+      <div
         className="relative overflow-hidden rounded-xl border border-white/10 bg-[var(--brand-hero-via)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
       >
 
         <div className="relative flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 text-secondary-foreground">
@@ -307,14 +298,11 @@ export default function WorkspaceDashboard({
             )}
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Getting Started Onboarding ── */}
       {(!contracts || contracts.length === 0) && roleView !== "ADMIN" && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
+        <div
         >
           <Card className="border-primary/20 bg-primary/5">
             <CardHeader className="pb-3">
@@ -400,15 +388,12 @@ export default function WorkspaceDashboard({
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       )}
 
       {/* ── Stat cards ── */}
-      <motion.div
+      <div
         className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
-        variants={staggerContainer}
-        initial="hidden"
-        animate="visible"
       >
         <StatCard
           label="Active Contracts"
@@ -446,33 +431,15 @@ export default function WorkspaceDashboard({
           iconColor="text-success"
           index={3}
         />
-      </motion.div>
+      </div>
 
-      {/* ── Role-specific forms ── */}
-      {/* {roleView === "ARTISAN" && (
-        <ArtisanWorkspaceSection
-          jobs={jobs}
-          proposalJobId={proposalJobId}
-          proposalAmountInput={proposalAmountInput}
-          proposalMessage={proposalMessage}
-          setProposalJobId={setProposalJobId}
-          setProposalAmountInput={setProposalAmountInput}
-          setProposalMessage={setProposalMessage}
-          onSubmitProposal={handleSubmitProposal}
-          isBusy={isBusy}
-          formatAmount={formatAmount}
-          artisanVerified={Boolean(user.artisanVerified)}
-        />
-      )} */}
+      {/* ── Role-specific forms ── */}      
       {roleView === "ADMIN" && <AdminWorkspaceSection />}
 
       {/* ── Main content: Contracts + Activity ── */}
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         {/* Active Contracts */}
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+        <div
         >
           <Card className="border-border bg-card h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -541,12 +508,12 @@ export default function WorkspaceDashboard({
               )}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
         {/* Right column: Recent activity + CTA */}
         <div className="space-y-6">
           {/* Recent Activity */}
-          <motion.div variants={staggerContainer} initial="hidden" animate="visible">
+          <div>
             <Card className="border-border bg-card">
               <CardHeader className="pb-4">
                 <CardTitle className="text-base">Recent Activity</CardTitle>
@@ -573,14 +540,11 @@ export default function WorkspaceDashboard({
                 )}
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
           {/* CTA cards */}
-          <motion.div
+          <div
             className="grid gap-3"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
           >
             {roleView === "CLIENT" && (
               <Card className="border-border bg-primary/5 hover:shadow-md transition-shadow cursor-pointer group">
@@ -636,16 +600,13 @@ export default function WorkspaceDashboard({
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </div>
       </div>
 
       {/* ── Jobs grid ── */}
       {visibleJobs.length > 0 && (
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+        <div
         >
           <Card className="border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -667,15 +628,12 @@ export default function WorkspaceDashboard({
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       )}
 
       {/* ── Proposals (artisan/client) ── */}
       {proposals && proposals.length > 0 && (
-        <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          animate="visible"
+        <div
         >
           <Card className="border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
@@ -691,9 +649,8 @@ export default function WorkspaceDashboard({
             </CardHeader>
             <CardContent className="space-y-2">
               {proposals.slice(0, 2).map((proposal) => (
-                <motion.div
+                <div
                   key={proposal.id}
-                  variants={fadeUp}
                   className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-4 hover:border-primary/30 transition-all"
                 >
                   <div className="size-10 rounded-xl bg-warning/10 flex items-center justify-center flex-shrink-0">
@@ -740,11 +697,11 @@ export default function WorkspaceDashboard({
                       </Button>
                     )}
                   </div>
-                </motion.div>
+                </div>
               ))}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       )}
     </div>
   );

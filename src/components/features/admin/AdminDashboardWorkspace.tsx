@@ -53,9 +53,9 @@ export default function AdminDashboardWorkspace() {
       {/* ── Hero Section ── */}
       <motion.div variants={itemVariants}>
         <Card className="relative overflow-hidden border-border bg-card shadow-lg">
-          <CardHeader className="relative z-10 pb-8 pt-10 px-8">
+          <CardHeader className="relative z-10 px-6">
             <CardTitle className="text-3xl font-bold tracking-tight mb-2">
-              Operations Center
+              Admin Dashboard
             </CardTitle>
             <CardDescription className="max-w-2xl text-base text-muted-foreground leading-relaxed">
               Monitor platform health, resolve disputes, and verify artisans from a single, unified operational dashboard. Keep the marketplace running smoothly.
@@ -65,71 +65,71 @@ export default function AdminDashboardWorkspace() {
       </motion.div>
 
       {/* ── Quick Stats Grid ── */}
-      <motion.section variants={containerVariants} className="grid gap-4 grid-cols-2 md:grid-cols-4">
-        <motion.div variants={itemVariants}>
+      <section className="grid gap-4 grid-cols-2 md:grid-cols-4">
+        <div>
           <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-primary/10 rounded-lg">
-                  <Users className="size-5 text-primary" />
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-1.5 bg-primary/10 rounded-lg">
+                  <Users className="size-4 text-primary" />
                 </div>
               </div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Total Users</p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="text-2xl font-bold text-foreground">
                 {usersCount}
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-warning/10 rounded-lg">
-                  <ShieldAlert className="size-5 text-warning" />
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-1.5 bg-warning/10 rounded-lg">
+                  <ShieldAlert className="size-4 text-warning" />
                 </div>
               </div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Pending KYC</p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="text-2xl font-bold text-foreground">
                 {pendingArtisansCount}
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-danger/10 rounded-lg">
-                  <Scale className="size-5 text-danger" />
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-1.5 bg-danger/10 rounded-lg">
+                  <Scale className="size-4 text-danger" />
                 </div>
               </div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Open Disputes</p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="text-2xl font-bold text-foreground">
                 {openDisputesCount}
               </p>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
 
-        <motion.div variants={itemVariants}>
+        <div>
           <Card className="bg-card border-border/60 hover:bg-card/60 transition-colors shadow-sm">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-2 bg-destructive/10 rounded-lg">
-                  <Flag className="size-5 text-destructive" />
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="p-1.5 bg-destructive/10 rounded-lg">
+                  <Flag className="size-4 text-destructive" />
                 </div>
               </div>
               <p className="text-sm font-medium text-muted-foreground mb-1">Flagged Jobs</p>
-              <p className="text-3xl font-bold text-foreground">
+              <p className="text-2xl font-bold text-foreground">
                 {report?.totals.flaggedJobs ?? 0}
               </p>
             </CardContent>
           </Card>
-        </motion.div>
-      </motion.section>
+        </div>
+      </section>
 
       {/* ── Main Content Grid ── */}
       <div className="grid gap-6 md:grid-cols-2">
@@ -215,7 +215,7 @@ export default function AdminDashboardWorkspace() {
         </motion.div>
 
         {/* Platform Snapshot */}
-        <motion.div variants={itemVariants} className="flex flex-col">
+        <div className="flex flex-col">
           <Card className="border-border/60 bg-card shadow-sm flex-1 flex flex-col overflow-hidden">
             <CardHeader className="border-b border-border/40 bg-muted/20 pb-4">
               <CardTitle className="text-lg flex items-center gap-2">
@@ -281,7 +281,7 @@ export default function AdminDashboardWorkspace() {
               )}
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </div>
 
       <AdminMonitoringWorkspace />

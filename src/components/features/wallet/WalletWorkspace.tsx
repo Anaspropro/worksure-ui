@@ -1,7 +1,6 @@
 "use client";
 
 import { Suspense } from "react";
-import { motion, Variants } from "framer-motion";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Info, Wallet } from "lucide-react";
 import { useUser } from "@/hooks/useAuth";
@@ -14,18 +13,9 @@ import { WalletQuickActions } from "./components/WalletQuickActions";
 import { WalletTransactionHistory } from "./components/WalletTransactionHistory";
 import { WalletOnboarding } from "./components/WalletOnboarding";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
+
+
 
 export default function WalletWorkspace() {
   const userQuery = useUser();
@@ -43,11 +33,8 @@ export default function WalletWorkspace() {
   const isClient = user.role === "CLIENT";
 
   return (
-    <motion.main 
+    <main 
       className="space-y-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
     >
       {/* ─── Suspend verification hook reading URL params ─── */}
       <Suspense fallback={null}>
@@ -59,7 +46,7 @@ export default function WalletWorkspace() {
       </Suspense>
 
       {/* ─── Page Header ─── */}
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <Wallet className="size-40" />
@@ -72,37 +59,37 @@ export default function WalletWorkspace() {
             </CardDescription>
           </CardHeader>
         </Card>
-      </motion.div>
+      </div>
 
       {/* ─── First-time User Onboarding ─── */}
       {!isInitializing && transactions.length === 0 && (
-        <motion.div variants={itemVariants}>
+        <div>
           <WalletOnboarding 
             isClient={isClient} 
             onDeposit={() => {
               window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
             }} 
           />
-        </motion.div>
+        </div>
       )}
 
       {/* ─── Balance Cards ─── */}
-      <motion.div variants={itemVariants}>
+      <div>
         {isInitializing ? (
           <BalanceCardsSkeleton />
         ) : (
           <WalletBalanceCards balance={balance!} />
         )}
-      </motion.div>
+      </div>
 
       {/* ─── Quick Actions & Explainer ─── */}
       <section className="grid gap-6 xl:grid-cols-[1fr_1fr]">
-        <motion.div variants={itemVariants} className="h-full">
+        <div className="h-full">
           <WalletQuickActions user={user} />
-        </motion.div>
+        </div>
 
         {/* Explainer Card */}
-        <motion.div variants={itemVariants} className="h-full">
+        <div className="h-full">
           <Card className="border-border/50 bg-primary/5 shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
             <div className="absolute inset-0 bg-primary/5 opacity-50 pointer-events-none" />
             <CardHeader className="relative z-10">
@@ -126,17 +113,17 @@ export default function WalletWorkspace() {
               </div>
             </CardContent>
           </Card>
-        </motion.div>
+        </div>
       </section>
 
       {/* ─── Transaction History ─── */}
-      <motion.div variants={itemVariants}>
+      <div>
         <WalletTransactionHistory 
           transactions={transactions} 
           isLoading={transactionsQuery.isLoading} 
         />
-      </motion.div>
-    </motion.main>
+      </div>
+    </main>
   );
 }
 

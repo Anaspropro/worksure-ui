@@ -5,7 +5,7 @@ import VerifyEmailWorkspace from "@/components/features/auth/VerifyEmailWorkspac
 export default function VerifyEmailPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <div className="min-h-[100dvh] flex items-center justify-center bg-background p-4">
         <Loader2 className="size-8 text-muted-foreground animate-spin" />
       </div>
     }>

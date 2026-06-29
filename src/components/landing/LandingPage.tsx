@@ -9,7 +9,7 @@ import LandingNavbar from "./LandingNavbar";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-[100dvh] bg-background text-foreground">
       <LandingNavbar />
       <main>
         <LandingHero />

@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function NotFound() {
   return (
-    <main className="min-h-screen bg-background px-6 py-10">
+    <main className="min-h-[100dvh] bg-background px-6 py-10">
       <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
         <motion.div
           initial={{ opacity: 0, y: 24 }}

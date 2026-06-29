@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
@@ -12,18 +11,9 @@ import { useCreateReview, useMyReviews, useReviews } from "@/hooks/useReviews";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 import { Star, MessageSquareQuote, Info } from "lucide-react";
 
-const containerVariants: Variants = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1 }
-  }
-};
 
-const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
+
+
 
 function StarRating({ rating, setRating, readOnly = false }: { rating: number, setRating?: (r: number) => void, readOnly?: boolean }) {
   return (
@@ -78,13 +68,10 @@ export default function ReviewsWorkspace() {
   const visibleReviews = user.role === "ARTISAN" ? reviewsQuery.data ?? [] : myReviewsQuery.data ?? [];
 
   return (
-    <motion.main 
+    <main 
       className="space-y-6"
-      variants={containerVariants}
-      initial="hidden"
-      animate="show"
     >
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="border-border bg-card shadow-sm overflow-hidden relative">
           <div className="absolute top-0 right-0 p-12 opacity-5 pointer-events-none">
             <MessageSquareQuote className="size-40" />
@@ -96,11 +83,11 @@ export default function ReviewsWorkspace() {
             </CardDescription>
           </CardHeader>
         </Card>
-      </motion.div>
+      </div>
 
       {user.role === "CLIENT" ? (
         <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
-          <motion.div variants={itemVariants}>
+          <div>
             <Card className="border-border bg-card shadow-sm h-full transition-colors hover:border-primary/20">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -157,9 +144,9 @@ export default function ReviewsWorkspace() {
                 </Button>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
 
-          <motion.div variants={itemVariants}>
+          <div>
             <Card className="border-border bg-card shadow-sm h-full">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -174,11 +161,11 @@ export default function ReviewsWorkspace() {
                 </div>
               </CardContent>
             </Card>
-          </motion.div>
+          </div>
         </section>
       ) : null}
 
-      <motion.div variants={itemVariants}>
+      <div>
         <Card className="border-border bg-card shadow-sm">
           <CardHeader>
             <CardTitle>{user.role === "ARTISAN" ? "Reviews About Your Work" : "Your Submitted Reviews"}</CardTitle>
@@ -187,13 +174,10 @@ export default function ReviewsWorkspace() {
           <CardContent>
             {visibleReviews.length ? (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                <AnimatePresence>
+                
                   {visibleReviews.map((review, index) => (
-                    <motion.div
+                    <div
                       key={review.id}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.05 }}
                       className="rounded-xl border border-border/50 bg-background/40 p-5 flex flex-col justify-between transition-all hover:bg-background/60 hover:border-primary/30 hover:shadow-md"
                     >
                       <div>
@@ -211,9 +195,9 @@ export default function ReviewsWorkspace() {
                         <span>{user.role === "ARTISAN" ? `By ${review.client.name}` : `For ${review.artisan.name}`}</span>
                         <span>{formatDate(review.createdAt)}</span>
                       </div>
-                    </motion.div>
+                    </div>
                   ))}
-                </AnimatePresence>
+                
               </div>
             ) : (
               <div className="rounded-xl border border-dashed border-border/60 bg-surface-muted/30 p-12 text-center flex flex-col items-center justify-center">
@@ -226,7 +210,7 @@ export default function ReviewsWorkspace() {
             )}
           </CardContent>
         </Card>
-      </motion.div>
-    </motion.main>
+      </div>
+    </main>
   );
 }
