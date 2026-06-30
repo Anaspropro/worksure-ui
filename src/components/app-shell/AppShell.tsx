@@ -134,8 +134,9 @@ export default function AppShell({
               <div className="p-4 border-t border-sidebar-border mt-auto">
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-sidebar-foreground"
+                  className="w-full justify-start text-sidebar-foreground hover:bg-sidebar-accent text-sm"
                   onClick={handleLogout}
+                  disabled={logoutMutation.status === "pending"}
                 >
                   <LogOut className="size-4 mr-3" /> Logout
                 </Button>
