@@ -6,6 +6,9 @@ const INTERNAL_API_PREFIX = "/api/proxy";
 
 export const apiClient = createClient<paths>({
   baseUrl: INTERNAL_API_PREFIX,
+  fetch: (request: Request) => {
+    return fetch(request, { cache: "no-store" } as RequestInit);
+  },
 });
 
 // We can add a middleware to handle 401s if we want to mimic current behavior

@@ -71,9 +71,19 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
 
   const contentType = upstreamResponse.headers.get("content-type");
   const body = await upstreamResponse.arrayBuffer();
+  
+  const responseHeaders = new Headers();
+  if (contentType) {
+    responseHeaders.set("content-type", contentType);
+  }
+  // Prevent caching of proxied responses
+  responseHeaders.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  responseHeaders.set("Pragma", "no-cache");
+  responseHeaders.set("Expires", "0");
+
   const response = new NextResponse(body.byteLength ? body : null, {
     status: upstreamResponse.status,
-    headers: contentType ? { "content-type": contentType } : undefined,
+    headers: responseHeaders,
   });
 
   const shouldPersistSession =
