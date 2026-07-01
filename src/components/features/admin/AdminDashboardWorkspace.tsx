@@ -54,11 +54,9 @@ export default function AdminDashboardWorkspace() {
         </Card>
       </motion.div>
 
-      <div>
-        <Card>
-
-        </Card>
-      </div>
+      {/* <div>
+        <Card></Card>
+      </div> */}
 
       {/* ── Main Content Grid ── */}
       <motion.div variants={itemVariants} className="flex flex-col h-full">
