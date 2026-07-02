@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
-import { ChevronRight, AlertTriangle} from "lucide-react";
+import { ChevronRight, AlertTriangle, Users, Wallet, Lock, Activity } from "lucide-react";
 import { useAdminReports } from "@/hooks/useAdmin";
+import { formatCurrency } from "@/lib/formatters";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import AdminMonitoringWorkspace from "./AdminMonitoringWorkspace";
 
@@ -32,6 +33,10 @@ export default function AdminDashboardWorkspace() {
   const pendingArtisansCount = report?.totals.pendingArtisansCount ?? 0;
   const openDisputesCount = report?.totals.openDisputes ?? 0;
   const pendingPayoutsCount = report?.totals.pendingPayoutsCount ?? 0;
+  
+  const totalSystemValue = report?.totals.totalSystemValue ?? 0;
+  const lockedInEscrow = report?.totals.lockedInEscrow ?? 0;
+  const platformFees = report?.totals.platformFees ?? 0;
 
   return (
     <motion.main 
@@ -54,9 +59,79 @@ export default function AdminDashboardWorkspace() {
         </Card>
       </motion.div>
 
-      {/* <div>
-        <Card></Card>
-      </div> */}
+      {/* ── Platform Snapshot Cards ── */}
+      <motion.div 
+        variants={itemVariants} 
+        className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+      >
+        <Card className="border-border/60 bg-card shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Users
+            </CardTitle>
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <Users className="h-4 w-4 text-primary" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{usersCount.toLocaleString()}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Registered platform users
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/60 bg-card shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Total Value in System
+            </CardTitle>
+            <div className="h-8 w-8 rounded-full bg-success/10 flex items-center justify-center">
+              <Wallet className="h-4 w-4 text-success" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(totalSystemValue)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Combined wallets and escrow
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/60 bg-card shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Locked in Escrow
+            </CardTitle>
+            <div className="h-8 w-8 rounded-full bg-warning/10 flex items-center justify-center">
+              <Lock className="h-4 w-4 text-warning" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(lockedInEscrow)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Active contracts funding
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card className="border-border/60 bg-card shadow-sm hover:shadow-md transition-shadow">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
+              Platform Fees Generated
+            </CardTitle>
+            <div className="h-8 w-8 rounded-full bg-indigo-500/10 flex items-center justify-center">
+              <Activity className="h-4 w-4 text-indigo-500" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{formatCurrency(platformFees)}</div>
+            <p className="text-xs text-muted-foreground mt-1">
+              All-time revenue collected
+            </p>
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* ── Main Content Grid ── */}
       <motion.div variants={itemVariants} className="flex flex-col h-full">
