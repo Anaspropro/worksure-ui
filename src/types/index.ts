@@ -460,6 +460,7 @@ export interface AdminOverviewReport {
     pendingArtisansCount?: number;
     pendingPayoutsCount?: number;
     totalSystemValue?: number;
+    lockedInEscrow?: number;
   };
 }
 
