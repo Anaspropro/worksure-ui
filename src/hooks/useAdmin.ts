@@ -5,15 +5,16 @@ import { proxyFetch, proxyFetchRaw } from "@/api-client";
 import type { AdminCollection, AdminContractStats, AdminDisputeRecord, AdminOverviewReport, AdminUserDetail, AdminUserRecord, Contract, Job, AuditLog, SystemLog, SystemHealth, ApiEnvelope, WalletTransaction } from "@/types";
 import { getReconciliationReports, triggerReconciliation, getSystemHealth, getSystemLogs } from "@/api-client";
 
-export function useAdminUsers(params: { search?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
+export function useAdminUsers(params: { search?: string; role?: string; cursor?: string; limit?: number; enabled?: boolean } = {}) {
   const query = new URLSearchParams();
   if (params.search) query.set("search", params.search);
+  if (params.role) query.set("role", params.role);
   if (params.cursor) query.set("cursor", params.cursor);
   if (params.limit) query.set("limit", params.limit.toString());
   const queryString = query.toString() ? `?${query.toString()}` : "";
 
   return useQuery<AdminCollection<AdminUserRecord>>({
-    queryKey: ["admin", "users", params.search, params.cursor, params.limit],
+    queryKey: ["admin", "users", params.search, params.role, params.cursor, params.limit],
     queryFn: () => proxyFetchRaw<AdminCollection<AdminUserRecord>>(`/admin/users${queryString}`),
     enabled: params.enabled,
   });
