@@ -46,29 +46,24 @@ export default function AdminKycWorkspace() {
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState<"ALL" | "PENDING" | "VERIFIED">("PENDING");
 
-  const { data: usersData, isLoading } = useAdminUsers();
+  const { data: usersData, isLoading } = useAdminUsers({
+    role: "ARTISAN",
+    search: searchTerm,
+    limit: 100
+  });
   const verifyMutation = useVerifyArtisan();
   const rejectMutation = useRejectArtisanVerification();
   const banUserMutation = useBanUser();
 
-  const artisans = useMemo(() => {
-    return usersData?.data.filter(u => u.role === "ARTISAN") || [];
-  }, [usersData]);
-  
   const filteredArtisans = useMemo(() => {
+    const artisans = usersData?.data || [];
     return artisans.filter(a => {
-      const matchesSearch = 
-        a.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        a.email.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesFilter = 
-        filter === "ALL" || 
-        (filter === "PENDING" && !a.artisanVerified) ||
-        (filter === "VERIFIED" && a.artisanVerified);
-        
-      return matchesSearch && matchesFilter;
+      if (filter === "ALL") return true;
+      if (filter === "PENDING") return !a.artisanVerified;
+      if (filter === "VERIFIED") return a.artisanVerified;
+      return true;
     });
-  }, [artisans, searchTerm, filter]);
+  }, [usersData, filter]);
 
   const handleVerify = async (userId: string) => {
     const toastId = toast.loading("Verifying artisan...");
@@ -114,7 +109,7 @@ export default function AdminKycWorkspace() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Pending Review</p>
-                <p className="text-2xl font-bold">{artisans.filter(a => !a.artisanVerified).length}</p>
+                <p className="text-2xl font-bold">{(usersData?.data || []).filter(a => !a.artisanVerified).length}</p>
               </div>
             </div>
           </div>
