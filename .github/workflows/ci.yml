@@ -18,10 +18,15 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version-file: '.nvmrc'
           cache: npm
 
       - run: npm ci
       - run: npm run lint
       - run: npm test
-      - run: npm run build
+
+      - name: Cypress run
+        uses: cypress-io/github-action@v6
+        with:
+          build: npm run build
+          start: npm start
