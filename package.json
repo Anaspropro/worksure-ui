@@ -2,12 +2,18 @@
   "name": "worksure-ui",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": ">=24",
+    "npm": ">=10"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:e2e": "cypress run",
+    "cypress:open": "cypress open",
     "generate:api": "openapi-typescript ../worksure-server/openapi.json -o src/api/generated/schema.ts"
   },
   "dependencies": {
