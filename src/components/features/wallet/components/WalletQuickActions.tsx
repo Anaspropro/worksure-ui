@@ -6,11 +6,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowDownToLine, ArrowUpFromLine, Loader2, Zap } from "lucide-react";
 import { toast } from "sonner";
 import { useWalletDepositInit, useWalletPayoutRequest, useBanks } from "@/hooks/useWallet";
+import { UserRole } from "@/types";
 
 interface WalletQuickActionsProps {
   user: {
     payoutBankCode?: string | null;
     payoutAccountNumber?: string | null;
+    role?: UserRole | string;
   };
 }
 
@@ -68,8 +70,10 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
     );
   };
 
+  const role: UserRole = (user.role as UserRole) || "CLIENT";
+
   return (
-    <Card className="border-border bg-card shadow-sm h-full relative overflow-hidden transition-all hover:border-primary/20">
+    <Card className="border-border bg-card shadow-sm relative overflow-hidden transition-all hover:border-primary/20">
       <div className="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
         <Zap className="size-24" />
       </div>
@@ -78,14 +82,13 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
           <Zap className="size-5 text-primary" />
           Quick Actions
         </CardTitle>
-        <CardDescription>
-          Add funds to your wallet or withdraw to your bank account.
-        </CardDescription>
+        {role === "CLIENT" && <CardDescription>Add funds to your wallet </CardDescription>}
+        {role === "ARTISAN" && <CardDescription> Reqquest payout to your bank account.</CardDescription>}
       </CardHeader>
-      <CardContent className="space-y-6 relative z-10">
+      <CardContent className="">
         {/* Action buttons */}
-        <div className="grid grid-cols-2 gap-3">
-          <Button
+        <div className="">
+          {role === "CLIENT" && <Button
             variant={activeAction === "deposit" ? "default" : "outline"}
             onClick={() => {
               setActiveAction(activeAction === "deposit" ? null : "deposit");
@@ -96,7 +99,8 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
             <ArrowDownToLine className={`size-5 mr-2 ${activeAction === "deposit" ? "" : "text-emerald-500"}`} />
             Add Funds
           </Button>
-          <Button
+          }
+          {role === "ARTISAN" && <Button
             variant={activeAction === "withdraw" ? "default" : "outline"}
             onClick={() => {
               setActiveAction(activeAction === "withdraw" ? null : "withdraw");
@@ -108,7 +112,7 @@ export function WalletQuickActions({ user }: WalletQuickActionsProps) {
           >
             <ArrowUpFromLine className={`size-5 mr-2 ${activeAction === "withdraw" ? "" : "text-rose-500"}`} />
             Request Payout
-          </Button>
+          </Button>}
         </div>
 
         {/* Action form */}
