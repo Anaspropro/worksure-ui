@@ -1,5 +1,9 @@
-import CreateJobWorkspace from "@/components/features/jobs/CreateJobWorkspace";
+import { Workspaces } from "@/features/jobs";
 
 export default function CreateJobPage() {
-  return <CreateJobWorkspace />;
+  return (
+    <div className="py-6">
+      <Workspaces.CreateJobWizard />
+    </div>
+  );
 }

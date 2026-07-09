@@ -1,4 +1,5 @@
 import { StateBadge } from "./state-badge";
+import { CheckCircle2, Clock, AlertTriangle, XCircle, Ban } from "lucide-react";
 
 function toLabel(status: string) {
   return status.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, l => l.toUpperCase());
@@ -12,7 +13,12 @@ export function StatusBadge({
   className?: string;
 }) {
   if (!status || typeof status !== "string") {
-    return <StateBadge state="DRAFT" className={className}>Unknown</StateBadge>;
+    return (
+      <StateBadge state="DRAFT" className={className}>
+        <Clock className="size-3" />
+        Unknown
+      </StateBadge>
+    );
   }
 
   const normalized = status.toUpperCase().replace(/ /g, "_");
@@ -35,8 +41,26 @@ export function StatusBadge({
 
   const state = stateMap[normalized] ?? "DRAFT";
 
+  // Pick an icon based on state class
+  const getIcon = () => {
+    switch (state) {
+      case "PAID_OUT":
+      case "REFUNDED":
+        return <CheckCircle2 className="size-3 shrink-0" />;
+      case "DISPUTED":
+      case "PAYMENT_FAILED":
+        return <AlertTriangle className="size-3 shrink-0" />;
+      case "CANCELLED":
+      case "EXPIRED":
+        return <Ban className="size-3 shrink-0" />;
+      default:
+        return <Clock className="size-3 shrink-0" />;
+    }
+  };
+
   return (
     <StateBadge state={state} className={className}>
+      {getIcon()}
       {toLabel(status)}
     </StateBadge>
   );

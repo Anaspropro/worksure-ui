@@ -13,7 +13,7 @@ import {
   useConfirmCompletion,
   useReleaseEscrow,
   useRefundContract,
-} from "@/hooks/useContracts";
+} from "@/features/contracts";
 import {
   Award,
   BriefcaseBusiness,
