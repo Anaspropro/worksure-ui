@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Textarea } from "@/components/ui/textarea";
 import { useUser } from "@/features/auth";
-import { useContracts } from "@/hooks/useContracts";
+import { useContracts } from "@/features/contracts";
 import { useCreateReview, useMyReviews, useReviews } from "@/hooks/useReviews";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 import { Star, MessageSquareQuote, Info } from "lucide-react";

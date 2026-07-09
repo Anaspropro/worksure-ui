@@ -11,6 +11,21 @@ export const jobKeys = {
   list: (filter: Record<string, any>) => [...jobKeys.lists(), filter] as const,
   details: () => [...jobKeys.all, "detail"] as const,
   detail: (id: string) => [...jobKeys.details(), id] as const,
+  proposals: (id: string) => [...jobKeys.detail(id), "proposals"] as const,
+  timeline: (id: string) => [...jobKeys.detail(id), "timeline"] as const,
+  activity: (id: string) => [...jobKeys.detail(id), "activity"] as const,
+  matching: (id: string) => [...jobKeys.detail(id), "matching"] as const,
+  saved: () => [...jobKeys.all, "saved"] as const,
+};
+
+export const taxonomyKeys = {
+  all: ["taxonomy"] as const,
+  categories: () => [...taxonomyKeys.all, "categories"] as const,
+  category: (id: string) => [...taxonomyKeys.categories(), id] as const,
+  categoryTree: () => [...taxonomyKeys.categories(), "tree"] as const,
+  skills: () => [...taxonomyKeys.all, "skills"] as const,
+  skillsByCategory: (categoryId: string) => [...taxonomyKeys.skills(), { categoryId }] as const,
+  searchSkills: (query: string) => [...taxonomyKeys.skills(), { search: query }] as const,
 };
 
 export const contractKeys = {
@@ -19,6 +34,12 @@ export const contractKeys = {
   list: (filter: Record<string, any>) => [...contractKeys.lists(), filter] as const,
   details: () => [...contractKeys.all, "detail"] as const,
   detail: (id: string) => [...contractKeys.details(), id] as const,
+  timeline: (id: string) => [...contractKeys.detail(id), "timeline"] as const,
+  deliverables: (id: string) => [...contractKeys.detail(id), "deliverables"] as const,
+  reviews: (id: string) => [...contractKeys.detail(id), "reviews"] as const,
+  disputes: (id: string) => [...contractKeys.detail(id), "disputes"] as const,
+  activity: (id: string) => [...contractKeys.detail(id), "activity"] as const,
+  escrow: (id: string) => [...contractKeys.detail(id), "escrow"] as const,
 };
 
 export const chatKeys = {
@@ -64,6 +85,7 @@ export const adminKeys = {
 export const queryKeys = {
   auth: authKeys,
   jobs: jobKeys,
+  taxonomy: taxonomyKeys,
   contracts: contractKeys,
   chat: chatKeys,
   notifications: notificationKeys,

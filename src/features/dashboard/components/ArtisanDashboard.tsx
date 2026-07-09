@@ -7,7 +7,7 @@ import { Search, FileText, Clock, Wallet, CheckCircle2, ArrowRight, ShieldCheck,
 import type { User } from "@/types";
 import { useJobs } from "@/hooks/useJobs";
 import { useProposals } from "@/hooks/useProposals";
-import { useContracts, useConfirmCompletion } from "@/hooks/useContracts";
+import { useContracts, useConfirmCompletion } from "@/features/contracts";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

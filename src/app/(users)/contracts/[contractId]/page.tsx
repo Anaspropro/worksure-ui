@@ -1,11 +1,26 @@
-import ContractDetailWorkspace from "@/components/features/contracts/ContractDetailWorkspace";
+"use client";
 
-export default async function ContractDetailPage({
+import { use } from "react";
+import { useUser } from "@/features/auth";
+import { ClientContractDetail, ArtisanContractDetail } from "@/features/contracts";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
+
+export default function ContractDetailPage({
   params,
 }: {
   params: Promise<{ contractId: string }>;
 }) {
-  const { contractId } = await params;
+  const { contractId } = use(params);
+  const userQuery = useUser();
+  const user = userQuery.data;
 
-  return <ContractDetailWorkspace contractId={contractId} />;
+  if (userQuery.isLoading || !user) {
+    return <DashboardLoadingState />;
+  }
+
+  if (user.role === "CLIENT") {
+    return <ClientContractDetail contractId={contractId} user={user} />;
+  }
+
+  return <ArtisanContractDetail contractId={contractId} user={user} />;
 }

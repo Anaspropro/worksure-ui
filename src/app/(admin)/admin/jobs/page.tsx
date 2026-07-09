@@ -1,5 +1,5 @@
-import AdminJobsWorkspace from "@/components/features/admin/AdminJobsWorkspace";
+import { Workspaces } from "@/features/jobs";
 
 export default function AdminJobsPage() {
-  return <AdminJobsWorkspace />;
+  return <Workspaces.AdminJobsWorkspace />;
 }
