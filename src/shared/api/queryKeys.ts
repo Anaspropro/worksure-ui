@@ -20,12 +20,17 @@ export const jobKeys = {
 
 export const taxonomyKeys = {
   all: ["taxonomy"] as const,
-  categories: () => [...taxonomyKeys.all, "categories"] as const,
-  category: (id: string) => [...taxonomyKeys.categories(), id] as const,
-  categoryTree: () => [...taxonomyKeys.categories(), "tree"] as const,
-  skills: () => [...taxonomyKeys.all, "skills"] as const,
-  skillsByCategory: (categoryId: string) => [...taxonomyKeys.skills(), { categoryId }] as const,
-  searchSkills: (query: string) => [...taxonomyKeys.skills(), { search: query }] as const,
+  tree: () => [...taxonomyKeys.all, "tree"] as const,
+  skills: (categoryId?: string) => [...taxonomyKeys.all, "skills", categoryId] as const,
+  skillSearch: (query: string) => [...taxonomyKeys.all, "skills", "search", query] as const,
+};
+
+export const chatKeys = {
+  all: ["chat"] as const,
+  conversations: () => [...chatKeys.all, "conversations"] as const,
+  conversation: (id: string) => [...chatKeys.conversations(), id] as const,
+  messages: (conversationId: string) => [...chatKeys.conversation(conversationId), "messages"] as const,
+  attachments: (conversationId: string) => [...chatKeys.conversation(conversationId), "attachments"] as const,
 };
 
 export const contractKeys = {
@@ -42,12 +47,6 @@ export const contractKeys = {
   escrow: (id: string) => [...contractKeys.detail(id), "escrow"] as const,
 };
 
-export const chatKeys = {
-  all: ["chat"] as const,
-  rooms: () => [...chatKeys.all, "rooms"] as const,
-  messages: () => [...chatKeys.all, "messages"] as const,
-  messagesForRoom: (roomId: string) => [...chatKeys.messages(), roomId] as const,
-};
 
 export const notificationKeys = {
   all: ["notifications"] as const,

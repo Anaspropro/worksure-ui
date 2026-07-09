@@ -207,7 +207,7 @@ export function ArtisanContractDetail({
         )}
 
         {activeTab === "messages" && (
-          <ContractChatPanel contract={contract} user={user} />
+          <ContractChatPanel contract={contract} />
         )}
 
         {activeTab === "activity" && (
