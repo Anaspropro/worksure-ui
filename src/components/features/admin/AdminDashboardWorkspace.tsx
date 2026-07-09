@@ -204,7 +204,7 @@ export default function AdminDashboardWorkspace() {
                   </p>
                 </div>
                 <Button asChild variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Link href="/admin/payouts">
+                  <Link href="/admin/financial-operations">
                     Process <ChevronRight className="ml-1 size-4" />
                   </Link>
                 </Button>

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { ArrowRight, BriefcaseBusiness, FilePlus2, Sparkles } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import { JobsList } from "./components/JobsList";
 import { ProposalsList } from "./components/ProposalsList";
 import { CreateProposalForm } from "./components/CreateProposalForm";

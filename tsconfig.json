@@ -19,12 +19,23 @@
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
       "@/hooks/*": ["./src/hooks/*"],
+      "@/components/ui/financial-amount": ["./src/features/financial/shared/components/financial-amount"],
+      "@/components/ui/status-badge": ["./src/features/contracts/components/status-badge"],
+      "@/components/ui/state-badge": ["./src/features/contracts/components/state-badge"],
+      "@/components/ui": ["./src/shared/components/ui/index.ts"],
+      "@/components/ui/*": ["./src/shared/components/ui/*"],
       "@/components/*": ["./src/components/*"],
       "@/provider/*": ["./src/provider/*"],
       "@/proxy": ["./src/proxy.ts"],
-      "@/types": ["./src/types/index.ts"]
+      "@/types": ["./src/shared/types/index.ts"],
+      "@/shared/*": ["./src/shared/*"],
+      "@/features/*": ["./src/features/*"],
+      "@/providers/*": ["./src/providers/*"],
+      "@/lib/utils": ["./src/shared/lib/utils"],
+      "@/lib/formatters": ["./src/shared/lib/formatters"],
+      "@/lib/*": ["./src/shared/lib/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [

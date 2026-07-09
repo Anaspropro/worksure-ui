@@ -6,8 +6,8 @@ import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState"
 import ClientDashboard from "@/features/dashboard/components/ClientDashboard";
 import ArtisanDashboard from "@/features/dashboard/components/ArtisanDashboard";
 import AdminDashboardWorkspace from "@/components/features/admin/AdminDashboardWorkspace";
-import { useUser } from "@/hooks/useAuth";
-import { getDashboardPathForRole } from "@/api-client";
+import { useUser } from "@/features/auth";
+import { getDashboardPathForRole } from "@/shared/api/fetcher";
 import type { UserRole } from "@/types";
 
 export default function DashboardPage({

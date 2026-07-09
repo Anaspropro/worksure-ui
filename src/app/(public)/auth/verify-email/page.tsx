@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
-import VerifyEmailWorkspace from "@/components/features/auth/VerifyEmailWorkspace";
+import { VerifyEmailWorkspace } from "@/features/auth";
 
 export default function VerifyEmailPage() {
   return (

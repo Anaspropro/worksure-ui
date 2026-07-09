@@ -8,7 +8,7 @@ import { Menu, X, ShieldCheck, LogOut } from "lucide-react";
 import SidebarNav from "@/components/app-shell/SidebarNav";
 import SidebarProfile from "@/components/app-shell/SidebarProfile";
 import { Button } from "@/components/ui/button";
-import { useLogout } from "@/hooks/useAuth";
+import { useLogout } from "@/features/auth";
 import type { User } from "@/types";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { NotificationDropdown } from "@/components/app-shell/NotificationDropdown";

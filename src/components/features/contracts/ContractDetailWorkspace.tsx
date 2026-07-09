@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import ContractChatPanel from "@/components/features/contracts/ContractChatPanel";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import {
   useConfirmCompletion,
   useContract,
