@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
-import WorkspaceDashboard from "@/components/dashboard/workspace/WorkspaceDashboard";
-import { useUser } from "@/hooks/useAuth";
-import { getDashboardPathForRole } from "@/api-client";
+import ClientDashboard from "@/features/dashboard/components/ClientDashboard";
+import ArtisanDashboard from "@/features/dashboard/components/ArtisanDashboard";
+import AdminDashboardWorkspace from "@/components/features/admin/AdminDashboardWorkspace";
+import { useUser } from "@/features/auth";
+import { getDashboardPathForRole } from "@/shared/api/fetcher";
 import type { UserRole } from "@/types";
 
 export default function DashboardPage({
@@ -39,5 +41,19 @@ export default function DashboardPage({
     return <DashboardLoadingState />;
   }
 
-  return <WorkspaceDashboard roleView={role ?? user.role} user={user} />;
+  const activeRole = role ?? user.role;
+
+  if (activeRole === "CLIENT") {
+    return <ClientDashboard user={user} />;
+  }
+
+  if (activeRole === "ARTISAN") {
+    return <ArtisanDashboard user={user} />;
+  }
+
+  if (activeRole === "ADMIN") {
+    return <AdminDashboardWorkspace />;
+  }
+
+  return <DashboardLoadingState />;
 }

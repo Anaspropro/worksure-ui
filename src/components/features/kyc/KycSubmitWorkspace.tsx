@@ -4,9 +4,9 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronRight, FileUp, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument } from "@/hooks/useKyc";
-import { useBanks } from "@/hooks/useWallet";
+import { useBanks } from "@/features/financial/artisan/hooks/useArtisanEarnings";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";

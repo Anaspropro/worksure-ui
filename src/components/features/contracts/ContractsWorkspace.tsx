@@ -6,7 +6,7 @@ import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import {
   useConfirmCompletion,
   useContracts,

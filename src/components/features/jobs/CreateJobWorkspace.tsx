@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import { useCreateJob } from "@/hooks/useJobs";
 
 export default function CreateJobWorkspace() {

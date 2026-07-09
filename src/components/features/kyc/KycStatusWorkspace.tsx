@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import { useKyc } from "@/hooks/useKyc";
 
 export default function KycStatusWorkspace() {

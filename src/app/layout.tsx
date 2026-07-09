@@ -5,7 +5,7 @@ import {
   Plus_Jakarta_Sans,
 } from "next/font/google";
 import "./globals.css";
-import QueryProvider from "@/provider/providers";
+import QueryProvider from "@/providers/global-providers";
 import AnimatedPage from "@/components/AnimatedPage";
 import { Toaster } from "@/components/ui/sonner";
 

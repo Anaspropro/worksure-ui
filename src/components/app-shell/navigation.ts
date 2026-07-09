@@ -30,7 +30,7 @@ export function getDashboardLinks(role: User["role"]) {
         { href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard },
         { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
         { href: "/contracts", label: "Contracts", icon: FileText },
-        { href: "/wallet", label: "Wallet", icon: CreditCard },
+        { href: "/dashboard/client/finances", label: "Finances", icon: CreditCard },
         { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
         { href: "/profile", label: "Settings", icon: Settings },
       ],
@@ -39,7 +39,7 @@ export function getDashboardLinks(role: User["role"]) {
         { href: "/kyc/status", label: "Verification", icon: FileUser },
         { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
         { href: "/contracts", label: "Contracts", icon: FileText },
-        { href: "/wallet", label: "Wallet", icon: CreditCard },
+        { href: "/dashboard/artisan/earnings", label: "Earnings", icon: CreditCard },
         { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
         { href: "/profile", label: "Settings", icon: Settings },
       ],
@@ -50,9 +50,8 @@ export function getDashboardLinks(role: User["role"]) {
         { href: "/admin/jobs", label: "Jobs", icon: BriefcaseBusiness },
         { href: "/admin/contracts", label: "Contracts", icon: FileText },
         { href: "/admin/disputes", label: "Disputes", icon: ShieldPlus },
-        { href: "/admin/payouts", label: "Payouts", icon: CreditCard },
+        { href: "/admin/financial-operations", label: "Finances", icon: CreditCard },
         { href: "/admin/audit", label: "Audit Trail", icon: History },
-        { href: "/admin/reconciliation", label: "Reconciliation", icon: Scale }
       ],
     }[role] ?? []
   );

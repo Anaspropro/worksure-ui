@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Textarea } from "@/components/ui/textarea";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import { useContracts } from "@/hooks/useContracts";
 import { useCreateReview, useMyReviews, useReviews } from "@/hooks/useReviews";
 import { formatCurrency, formatDate } from "@/lib/formatters";

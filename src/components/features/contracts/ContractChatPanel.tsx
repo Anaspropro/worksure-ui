@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatWindow from "@/components/chat/ChatWindow";
-import { useContractConversation, useConversationMessages, useConversationSocket, useSendMessage } from "@/hooks/useChat";
+import { useContractConversation, useConversationMessages, useSendMessage } from "@/hooks/useChat";
 import { useUpload } from "@/hooks/useUpload";
+import { useChatSocket } from "@/features/chat/providers/ChatSocketProvider";
 import type { Contract, User } from "@/types";
 
 export default function ContractChatPanel({
@@ -22,7 +23,17 @@ export default function ContractChatPanel({
   const messagesQuery = useConversationMessages(conversation?.id, { enabled: Boolean(conversation?.id) });
   const messages = messagesQuery.data?.data ?? [];
   const sendMessageMutation = useSendMessage();
-  const { isConnected, socketReady, socket } = useConversationSocket(conversation?.id, Boolean(conversation?.id));
+  
+  const { isConnected, socketReady, socket, setActiveConversationId } = useChatSocket();
+
+  useEffect(() => {
+    if (conversation?.id) {
+      setActiveConversationId(conversation.id);
+    }
+    return () => {
+      setActiveConversationId(null);
+    };
+  }, [conversation?.id, setActiveConversationId]);
 
   const handleSend = async () => {
     if (!conversation || (!draft.trim() && !file)) {

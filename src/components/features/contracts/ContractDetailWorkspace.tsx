@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/status-badge";
 import ContractChatPanel from "@/components/features/contracts/ContractChatPanel";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import {
   useConfirmCompletion,
   useContract,
@@ -17,7 +17,7 @@ import {
   useVerifyContractPayment,
 } from "@/hooks/useContracts";
 import { formatCurrency, formatDate } from "@/lib/formatters";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 
 const sectionVariants = {
@@ -68,6 +68,12 @@ export default function ContractDetailWorkspace({
       );
     }
   }, [verifyPaymentMutation, contractQuery]);
+
+  const [confirmAction, setConfirmAction] = useState<{
+    title: string;
+    description: string;
+    onConfirm: () => void;
+  } | null>(null);
 
   if (!user) {
     return null;
@@ -195,20 +201,26 @@ export default function ContractDetailWorkspace({
                 {contract.status === "DRAFT" && user.id === contract.clientId ? (
                   <Button
                     onClick={() => {
-                      const toastId = toast.loading("Initializing payment...");
-                      fundContractMutation.mutate({
-                        contractId: contract.id,
-                        email: user.email,
-                        callbackUrl: window.location.href,
-                      }, {
-                        onSuccess: (data) => {
-                          toast.dismiss(toastId);
-                          if (data.authorizationUrl) {
-                            window.location.href = data.authorizationUrl;
-                          }
-                        },
-                        onError: (error) => {
-                          toast.error(error.message || "Failed to initialize payment.", { id: toastId });
+                      setConfirmAction({
+                        title: "Fund Contract Escrow",
+                        description: `Are you sure you want to fund this contract for ${formatCurrency(contract.amount)}? The money will be locked in escrow.`,
+                        onConfirm: () => {
+                          const toastId = toast.loading("Initializing payment...");
+                          fundContractMutation.mutate({
+                            contractId: contract.id,
+                            email: user.email,
+                            callbackUrl: window.location.href,
+                          }, {
+                            onSuccess: (data) => {
+                              toast.dismiss(toastId);
+                              if (data.authorizationUrl) {
+                                window.location.href = data.authorizationUrl;
+                              }
+                            },
+                            onError: (error) => {
+                              toast.error(error.message || "Failed to initialize payment.", { id: toastId });
+                            }
+                          });
                         }
                       });
                     }}
@@ -221,9 +233,14 @@ export default function ContractDetailWorkspace({
                   <Button
                     variant="outline"
                     onClick={() =>
-                      confirmCompletionMutation.mutate({
-                        contractId: contract.id,
-                        isClient: true,
+                      setConfirmAction({
+                        title: "Confirm Completion",
+                        description: "Are you sure you want to confirm completion as client? This indicates you are satisfied with the work done.",
+                        onConfirm: () =>
+                          confirmCompletionMutation.mutate({
+                            contractId: contract.id,
+                            isClient: true,
+                          })
                       })
                     }
                     disabled={confirmCompletionMutation.status === "pending"}
@@ -235,9 +252,14 @@ export default function ContractDetailWorkspace({
                   <Button
                     variant="outline"
                     onClick={() =>
-                      confirmCompletionMutation.mutate({
-                        contractId: contract.id,
-                        isClient: false,
+                      setConfirmAction({
+                        title: "Submit Work",
+                        description: "Are you sure you want to submit your work and ask the client to release the escrow?",
+                        onConfirm: () =>
+                          confirmCompletionMutation.mutate({
+                            contractId: contract.id,
+                            isClient: false,
+                          })
                       })
                     }
                     disabled={confirmCompletionMutation.status === "pending"}
@@ -251,7 +273,13 @@ export default function ContractDetailWorkspace({
                   !contract.escrowReleased &&
                   user.id === contract.clientId ? (
                   <Button
-                    onClick={() => releaseEscrowMutation.mutate(contract.id)}
+                    onClick={() =>
+                      setConfirmAction({
+                        title: "Release Escrow Payment",
+                        description: `Are you sure you want to release the escrow payment of ${formatCurrency(contract.amount)} to the artisan? This action is irreversible.`,
+                        onConfirm: () => releaseEscrowMutation.mutate(contract.id)
+                      })
+                    }
                     disabled={releaseEscrowMutation.status === "pending"}
                   >
                     Release payment
@@ -261,9 +289,14 @@ export default function ContractDetailWorkspace({
                   <Button
                     variant="outline"
                     onClick={() =>
-                      refundContractMutation.mutate({
-                        contractId: contract.id,
-                        reason: "Client requested refund",
+                      setConfirmAction({
+                        title: "Request Refund",
+                        description: "Are you sure you want to request a refund for this contract? This will cancel the agreement.",
+                        onConfirm: () =>
+                          refundContractMutation.mutate({
+                            contractId: contract.id,
+                            reason: "Client requested refund",
+                          })
                       })
                     }
                     disabled={refundContractMutation.status === "pending"}
@@ -282,6 +315,29 @@ export default function ContractDetailWorkspace({
 
           <ContractChatPanel contract={contract} user={user} />
         </>
+      )}
+
+      {confirmAction && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+          <div className="bg-card border border-border rounded-xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-in fade-in zoom-in duration-200">
+            <h3 className="text-lg font-bold text-foreground">{confirmAction.title}</h3>
+            <p className="text-sm text-muted-foreground">{confirmAction.description}</p>
+            <div className="flex justify-end gap-3 pt-2">
+              <Button variant="outline" onClick={() => setConfirmAction(null)}>
+                Cancel
+              </Button>
+              <Button
+                variant="default"
+                onClick={() => {
+                  confirmAction.onConfirm();
+                  setConfirmAction(null);
+                }}
+              >
+                Confirm
+              </Button>
+            </div>
+          </div>
+        </div>
       )}
     </main>
   );

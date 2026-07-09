@@ -95,12 +95,10 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
 
   if (shouldPersistSession) {
     const payload = body.byteLength
-      ? (JSON.parse(Buffer.from(body).toString("utf8")) as {
-          accessToken?: string;
-          data?: { accessToken?: string };
-        })
+      ? (JSON.parse(Buffer.from(body).toString("utf8")) as any)
       : null;
     const accessToken = payload?.data?.accessToken ?? payload?.accessToken;
+    const userRole = payload?.data?.user?.role ?? payload?.user?.role;
 
     if (accessToken) {
       response.cookies.set(TOKEN_KEY, accessToken, {
@@ -117,6 +115,15 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
         path: "/",
         maxAge: SESSION_MAX_AGE,
       });
+      if (userRole) {
+        response.cookies.set("user_role", userRole, {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+          sameSite: "lax",
+          path: "/",
+          maxAge: SESSION_MAX_AGE,
+        });
+      }
     }
   }
 
@@ -129,6 +136,13 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
       maxAge: 0,
     });
     response.cookies.set(SESSION_HINT_KEY, "", {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set("user_role", "", {
       httpOnly: false,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",

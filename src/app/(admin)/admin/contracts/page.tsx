@@ -2,7 +2,7 @@
 
 import AdminContractsWorkspace from "@/components/features/admin/AdminContractsWorkspace";
 import { FileText } from "lucide-react";
-import { useUser } from "@/hooks/useAuth";
+import { useUser } from "@/features/auth";
 import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
