@@ -7,7 +7,7 @@ import { AlertCircle, CheckCircle2, Info, ArrowRight } from "lucide-react";
 import { useUser } from "@/features/auth";
 
 interface NextRequiredActionProps {
-  job: Job;
+  job: any;
 }
 
 export function NextRequiredAction({ job }: NextRequiredActionProps) {

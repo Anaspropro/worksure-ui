@@ -6,7 +6,7 @@ const STALE_TIME = 1000 * 60 * 60 * 24; // 24 hours
 
 export function useCategories() {
   return useQuery({
-    queryKey: queryKeys.taxonomy.categories(),
+    queryKey: [...queryKeys.taxonomy.all, "categories"],
     queryFn: () => getCategories(),
     staleTime: STALE_TIME,
   });
@@ -14,7 +14,7 @@ export function useCategories() {
 
 export function useCategory(id: string) {
   return useQuery({
-    queryKey: queryKeys.taxonomy.category(id),
+    queryKey: [...queryKeys.taxonomy.all, "category", id],
     queryFn: () => getCategory(id),
     enabled: !!id,
     staleTime: STALE_TIME,
@@ -23,7 +23,7 @@ export function useCategory(id: string) {
 
 export function useSkillsByCategory(categoryId: string) {
   return useQuery({
-    queryKey: queryKeys.taxonomy.skillsByCategory(categoryId),
+    queryKey: queryKeys.taxonomy.skills(categoryId),
     queryFn: () => getSkillsByCategory(categoryId),
     enabled: !!categoryId,
     staleTime: STALE_TIME,
@@ -32,7 +32,7 @@ export function useSkillsByCategory(categoryId: string) {
 
 export function useSkillSearch(query: string) {
   return useQuery({
-    queryKey: queryKeys.taxonomy.searchSkills(query),
+    queryKey: queryKeys.taxonomy.skillSearch(query),
     queryFn: () => searchSkills(query),
     enabled: query.length > 0,
     staleTime: STALE_TIME,

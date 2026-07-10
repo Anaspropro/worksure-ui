@@ -1,6 +1,6 @@
 "use client";
 
-import { useJob, useUpdateJobStatus } from "../../hooks/useJobs";
+import { useJob, useUpdateJobStatus } from "@/features/jobs/api/useJobs";
 import { JobHeader } from "../../components/JobHeader";
 import { NextRequiredAction } from "../../components/NextRequiredAction";
 import { Skeleton } from "@/shared/components/ui/skeleton";

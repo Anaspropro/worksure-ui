@@ -14,7 +14,7 @@ import {
   Clock
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification, useBanUser } from "@/hooks/useAdmin";
+import { useAdminUsers, useVerifyArtisan, useRejectArtisanVerification, useBanUser } from "@/features/admin/api/useAdmin";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

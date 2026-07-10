@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useUser } from "@/features/auth";
-import { useKyc } from "@/hooks/useKyc";
+import { useKyc } from "@/features/kyc/api/useKyc";
 
 export default function KycStatusWorkspace() {
   const userQuery = useUser();

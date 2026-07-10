@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Server, Database, MemoryStick, AlertTriangle } from "lucide-react";
-import { useAdminSystemHealth, useAdminSystemLogs, useClearSystemLogs } from "@/hooks/useAdmin";
+import { useAdminSystemHealth, useAdminSystemLogs, useClearSystemLogs } from "@/features/admin/api/useAdmin";
 
 interface HealthMetrics {
   metrics?: {

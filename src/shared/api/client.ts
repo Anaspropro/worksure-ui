@@ -1,6 +1,6 @@
 import createClient, { Middleware } from "openapi-fetch";
 import type { paths } from "./generated/schema";
-import { clearSessionHint } from "../../api-client";
+import { clearSessionHint } from "./fetcher";
 
 const INTERNAL_API_PREFIX = "/api/proxy";
 

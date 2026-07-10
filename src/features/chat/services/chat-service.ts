@@ -1,0 +1,60 @@
+import apiClient from "@/shared/api/client";
+import { ApiError } from "@/shared/api/fetcher";
+import { Conversation, Message } from "../types";
+
+export interface GetMessagesParams {
+  conversationId: string;
+  cursor?: string;
+  limit?: number;
+}
+
+export interface PaginatedMessages {
+  messages: Message[];
+  nextCursor?: string;
+  hasMore: boolean;
+}
+
+export async function getConversations(context?: string, contextReferenceId?: string): Promise<Conversation[]> {
+  const { data, error, response } = await apiClient.GET("/chat/conversations", {
+    params: {
+      query: { context, contextReferenceId } as any
+    }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Conversation[];
+}
+
+export async function getConversation(id: string): Promise<Conversation> {
+  const { data, error, response } = await apiClient.GET("/chat/conversations/{id}" as any, {
+    params: { path: { id } }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Conversation;
+}
+
+export async function getMessages({ conversationId, cursor, limit = 50 }: GetMessagesParams): Promise<PaginatedMessages> {
+  const { data, error, response } = await apiClient.GET("/chat/conversations/{conversationId}/messages", {
+    params: {
+      path: { conversationId },
+      query: { cursor, limit } as any
+    }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as PaginatedMessages;
+}
+
+export async function sendMessage(conversationId: string, content: string, type: string, tempId: string): Promise<Message> {
+  const { data, error, response } = await apiClient.POST("/chat/conversations/{conversationId}/messages", {
+    params: { path: { conversationId } },
+    body: { content, type, tempId } as any
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Message;
+}
+
+export async function markAsRead(conversationId: string, messageId: string): Promise<void> {
+  const { error, response } = await apiClient.POST("/chat/conversations/{conversationId}/messages/{messageId}/read" as any, {
+    params: { path: { conversationId, messageId } }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+}

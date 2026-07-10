@@ -12,9 +12,9 @@ import {
   useProfile,
   useSaveArtisanProfile,
   useUpdateProfile,
-} from "@/hooks/useProfile";
-import { useReviewStats } from "@/hooks/useReviews";
-import { useKycStatus } from "@/hooks/useKyc";
+} from "@/features/profile/api/useProfile";
+import { useReviewStats } from "@/features/reviews/api/useReviews";
+import { useKycStatus } from "@/features/kyc/api/useKyc";
 import { ShieldCheck, Info, User as UserIcon, Briefcase, Star, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 

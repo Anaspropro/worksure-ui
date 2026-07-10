@@ -1,6 +1,6 @@
 "use client";
 
-import { useJobs } from "../../hooks/useJobs";
+import { useJobs } from "@/features/jobs/api/useJobs";
 import { JobStatusBadge } from "../../components/JobStatusBadge";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
@@ -20,7 +20,7 @@ export function ClientJobsWorkspace() {
     return <div className="text-sm text-destructive">Failed to load jobs.</div>;
   }
 
-  const jobs = jobsResponse.data;
+  const jobs = jobsResponse.data || jobsResponse.jobs || [];
 
   return (
     <div className="space-y-6">
@@ -51,7 +51,7 @@ export function ClientJobsWorkspace() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {jobs.map((job) => (
+          {jobs.map((job: any) => (
             <Card key={job.id} className="hover:border-primary/50 transition-colors cursor-pointer" onClick={() => router.push(`/client/jobs/${job.id}`)}>
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

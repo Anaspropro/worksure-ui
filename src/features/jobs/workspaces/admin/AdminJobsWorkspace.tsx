@@ -1,6 +1,6 @@
 "use client";
 
-import { useJobs } from "../../hooks/useJobs";
+import { useJobs } from "@/features/jobs/api/useJobs";
 import { JobStatusBadge } from "../../components/JobStatusBadge";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
@@ -52,13 +52,13 @@ export function AdminJobsWorkspace() {
         <div className="space-y-4"><Skeleton className="h-24 w-full" /><Skeleton className="h-24 w-full" /></div>
       ) : error || !jobsResponse ? (
         <div className="text-sm text-destructive">Failed to load jobs.</div>
-      ) : jobsResponse.data.length === 0 ? (
+      ) : (jobsResponse.data || jobsResponse.jobs || []).length === 0 ? (
         <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
           No jobs currently under review.
         </div>
       ) : (
         <div className="grid gap-3">
-          {jobsResponse.data.map((job) => (
+          {(jobsResponse.data || jobsResponse.jobs || []).map((job: any) => (
             <Card key={job.id} className="hover:border-primary/50 transition-colors">
               <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div className="flex items-start gap-4">

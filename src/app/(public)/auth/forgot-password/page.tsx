@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, ArrowRight, KeyRound, Loader2, Mail, ShieldCheck, CheckCircle2 } from "lucide-react";
-import { proxyFetch } from "@/api-client";
+import apiClient from "@/shared/api/client";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { toast } from "sonner";
@@ -25,10 +25,10 @@ export default function ForgotPasswordPage() {
     setErrorMessage("");
 
     try {
-      await proxyFetch("/auth/forgot-password", {
-        method: "POST",
-        body: JSON.stringify({ email: email.trim().toLowerCase() }),
+      const { error: apiError } = await apiClient.POST("/auth/forgot-password", {
+        body: { email: email.trim().toLowerCase() } as any,
       });
+      if (apiError) throw apiError;
       setStatus("success");
       toast.success("Password reset request sent!");
     } catch (err) {

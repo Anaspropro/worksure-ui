@@ -19,7 +19,7 @@ export function useClientFinances(options: { enabled?: boolean } = {}) {
 
   const transactionsQuery = useQuery({
     queryKey: financialQueryKeys.transactions(),
-    queryFn: financeApi.getTransactions,
+    queryFn: () => financeApi.getTransactions(),
     enabled: options.enabled,
   });
 

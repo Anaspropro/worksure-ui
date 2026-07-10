@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowLeft, Check, CheckCircle2, Eye, EyeOff, KeyRound, Loader2, Lock, ShieldCheck, XCircle } from "lucide-react";
-import { proxyFetch } from "@/api-client";
+import apiClient from "@/shared/api/client";
 import { Button } from "@/components/ui/button";
 import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from "@/components/ui/input-group";
 import { toast } from "sonner";
@@ -49,13 +49,13 @@ function ResetPasswordForm() {
     setErrorMessage("");
 
     try {
-      await proxyFetch("/auth/reset-password", {
-        method: "POST",
-        body: JSON.stringify({
+      const { error: apiError } = await apiClient.POST("/auth/reset-password", {
+        body: {
           token: token.trim(),
           newPassword: password,
-        }),
+        } as any,
       });
+      if (apiError) throw apiError;
       setStatus("success");
       toast.success("Password reset successful!");
     } catch (err) {

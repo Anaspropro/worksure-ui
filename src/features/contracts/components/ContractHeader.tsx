@@ -1,16 +1,25 @@
 "use client";
 
-import { FileText, Calendar, ShieldCheck, User } from "lucide-react";
+import { FileText, Calendar, ShieldCheck, User, MoreHorizontal, Flag } from "lucide-react";
 import type { Contract } from "@/types";
 import { formatCurrency, formatDate } from "@/shared/lib/formatters";
 import { StatusBadge } from "./status-badge";
+import { Button } from "@/shared/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/shared/components/ui/dropdown-menu";
 
 export function ContractHeader({
   contract,
   role,
+  onRaiseDispute,
 }: {
   contract: Contract;
   role: "CLIENT" | "ARTISAN" | "ADMIN";
+  onRaiseDispute?: () => void;
 }) {
   const isClient = role === "CLIENT";
   const partnerName = isClient ? contract.artisanName ?? contract.artisan?.name : contract.clientName ?? contract.client?.name;
@@ -90,6 +99,26 @@ export function ContractHeader({
               Status Badge
             </p>
             <StatusBadge status={contract.status} />
+          </div>
+          <div className="h-10 w-px bg-border/60 hidden md:block" />
+          <div className="space-y-2 flex flex-col justify-end">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="h-8">
+                  Actions <MoreHorizontal className="size-4 ml-2" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem 
+                  className="text-destructive focus:text-destructive flex items-center"
+                  disabled={contract.status === "COMPLETED" || contract.status === "PAID_OUT"}
+                  onClick={() => onRaiseDispute?.()}
+                >
+                  <Flag className="size-4 mr-2" />
+                  Raise Dispute
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>

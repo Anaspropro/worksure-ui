@@ -18,7 +18,7 @@ import {
   BriefcaseBusiness,
   Activity
 } from "lucide-react";
-import { useAdminUserDetail, useAdminUsers, useBanUser, useUnbanUser, useVerifyArtisan } from "@/hooks/useAdmin";
+import { useAdminUserDetail, useAdminUsers, useBanUser, useUnbanUser, useVerifyArtisan } from "@/features/admin/api/useAdmin";
 import { formatCurrency, formatDate } from "@/lib/formatters";
 import {
   Badge,

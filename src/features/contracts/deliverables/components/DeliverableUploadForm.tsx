@@ -20,7 +20,7 @@ export function DeliverableUploadForm({
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const submitMutation = useSubmitDeliverable();
+  const submitMutation = useSubmitDeliverable(conversationId);
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -60,7 +60,6 @@ export function DeliverableUploadForm({
     submitMutation.mutate(
       {
         contractId,
-        conversationId,
         content: description,
         file,
       },

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { ChevronRight, AlertTriangle, Users, Wallet, Lock, Activity } from "lucide-react";
-import { useAdminReports } from "@/hooks/useAdmin";
+import { useAdminReports } from "@/features/admin/api/useAdmin";
 import { formatCurrency } from "@/lib/formatters";
 import { Button, Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui";
 import AdminMonitoringWorkspace from "./AdminMonitoringWorkspace";

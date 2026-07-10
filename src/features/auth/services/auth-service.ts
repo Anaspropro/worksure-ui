@@ -1,5 +1,5 @@
 import apiClient from "@/shared/api/client";
-import { ApiError, proxyFetch } from "@/shared/api/fetcher";
+import { ApiError } from "@/shared/api/fetcher";
 import type { AuthSuccess, RegisterSuccess, User, UserRole } from "@/types";
 
 export async function login(email: string, password: string): Promise<AuthSuccess> {
@@ -64,15 +64,19 @@ export async function logoutRequest(): Promise<void> {
 }
 
 export async function verifyEmail(email: string, code: string): Promise<void> {
-  await proxyFetch("/auth/verify-email", {
-    method: "POST",
-    body: JSON.stringify({ email, token: code }),
+  const { error, response } = await apiClient.POST("/auth/verify-email", {
+    body: { email, token: code } as any
   });
+  if (error) {
+    throw new ApiError("Failed to verify email", (response as Response).status);
+  }
 }
 
 export async function resendVerification(email: string): Promise<void> {
-  await proxyFetch("/auth/resend-verification", {
-    method: "POST",
-    body: JSON.stringify({ email }),
+  const { error, response } = await apiClient.POST("/auth/resend-verification", {
+    body: { email } as any
   });
+  if (error) {
+    throw new ApiError("Failed to resend verification", (response as Response).status);
+  }
 }

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { History, X, ChevronRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAdminAuditLogs } from "@/hooks/useAdmin";
+import { useAdminAuditLogs } from "@/features/admin/api/useAdmin";
 import { formatDate } from "@/lib/formatters";
 import type { AuditLog } from "@/types";
 import {

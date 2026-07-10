@@ -1,115 +1,44 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import ChatWindow from "@/components/chat/ChatWindow";
-import { useContractConversation, useConversationMessages, useSendMessage } from "@/hooks/useChat";
-import { useUpload } from "@/hooks/useUpload";
-import { useChatSocket } from "@/features/chat/providers/ChatSocketProvider";
-import type { Contract, User } from "@/types";
+import { useConversations } from "@/features/chat/hooks/useConversations";
+import { ChatWindow } from "@/features/chat/components/layout/ChatWindow";
+import { useUser } from "@/features/auth/hooks/useAuth";
+import { Loader2 } from "lucide-react";
+import type { Contract } from "@/types";
 
 export function ContractChatPanel({
   contract,
-  user,
 }: {
   contract: Contract;
-  user: User;
 }) {
-  const [draft, setDraft] = useState("");
-  const [file, setFile] = useState<File | null>(null);
-  const { uploadFile, isUploading } = useUpload();
+  const { data: user } = useUser();
+  // Fetch conversation specific to this contract
+  const { data: conversations, isLoading } = useConversations("CONTRACT", contract.id);
   
-  const conversationQuery = useContractConversation(contract.id, { enabled: Boolean(user) });
-  const conversation = conversationQuery.data;
-  const messagesQuery = useConversationMessages(conversation?.id, { enabled: Boolean(conversation?.id) });
-  const messages = messagesQuery.data?.data ?? [];
-  const sendMessageMutation = useSendMessage();
-  
-  const { isConnected, socketReady, socket, setActiveConversationId } = useChatSocket();
+  if (isLoading || !user) {
+    return (
+      <div className="flex h-96 items-center justify-center rounded-2xl border bg-card">
+        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
 
-  useEffect(() => {
-    if (conversation?.id) {
-      setActiveConversationId(conversation.id);
-    }
-    return () => {
-      setActiveConversationId(null);
-    };
-  }, [conversation?.id, setActiveConversationId]);
+  const conversation = conversations?.[0];
 
-  const handleSend = async () => {
-    if (!conversation || (!draft.trim() && !file)) {
-      return;
-    }
-
-    let uploadedInfo: {
-      fileUrl: string;
-      fileType: string;
-      fileName: string;
-      fileSize: number;
-    } | undefined = undefined;
-
-    if (file) {
-      const result = await uploadFile(file);
-      if (result) {
-        uploadedInfo = {
-          fileUrl: result.secure_url,
-          fileType: file.type,
-          fileName: file.name,
-          fileSize: result.bytes,
-        };
-      }
-    }
-
-    if (socketReady && isConnected && socket) {
-      socket.emit("sendMessage", {
-        conversationId: conversation.id,
-        content: draft.trim() || undefined,
-        type: uploadedInfo
-          ? uploadedInfo.fileType?.startsWith("image/")
-            ? "IMAGE"
-            : uploadedInfo.fileType?.startsWith("video/")
-              ? "VIDEO"
-              : uploadedInfo.fileType?.startsWith("audio/")
-                ? "AUDIO"
-                : "FILE"
-          : "TEXT",
-        ...uploadedInfo,
-      });
-      setDraft("");
-      setFile(null);
-      return;
-    }
-
-    await sendMessageMutation.mutateAsync({
-      conversationId: conversation.id,
-      content: draft,
-      file: null,
-      fileUrl: uploadedInfo?.fileUrl,
-      fileType: uploadedInfo?.fileType,
-      fileName: uploadedInfo?.fileName,
-      fileSize: uploadedInfo?.fileSize,
-    });
-    
-    setDraft("");
-    setFile(null);
-  };
+  if (!conversation) {
+    return (
+      <div className="flex flex-col h-96 items-center justify-center rounded-2xl border bg-card text-muted-foreground">
+        <p>No conversation found for this contract.</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="rounded-2xl border border-border/80 bg-card overflow-hidden shadow-sm">
+    <div className="rounded-2xl border border-border/80 bg-card overflow-hidden shadow-sm h-[600px] flex flex-col">
       <ChatWindow
-        user={user}
         conversation={conversation}
-        messages={messages}
-        draft={draft}
-        file={file}
-        isConnected={isConnected}
-        socketReady={socketReady}
-        pending={sendMessageMutation.status === "pending" || isUploading}
-        onDraftChange={setDraft}
-        onFileChange={setFile}
-        onClearFile={() => setFile(null)}
-        onSend={handleSend}
+        currentUserId={user.id}
       />
     </div>
   );
 }
-export default ContractChatPanel;

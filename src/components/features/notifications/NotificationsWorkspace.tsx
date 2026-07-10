@@ -9,7 +9,7 @@ import {
   useDeleteNotification,
   useMyNotifications,
   useNotificationStats,
-} from "@/hooks/useNotifications";
+} from "@/features/notifications/api/useNotifications";
 import { formatDate } from "@/lib/formatters";
 
 export default function NotificationsWorkspace() {

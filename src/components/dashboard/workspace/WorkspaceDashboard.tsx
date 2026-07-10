@@ -4,8 +4,8 @@ import { useState } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 import type { User, Contract, Job } from "@/types";
-import { useJobs } from "@/hooks/useJobs";
-import { useProposals, useCreateProposal, useAcceptProposal } from "@/hooks/useProposals";
+import { useJobs } from "@/features/jobs/api/useJobs";
+import { useProposals, useCreateProposal, useAcceptProposal } from "@/features/jobs/api/useProposals";
 import {
   useContracts,
   useCreateContract,
