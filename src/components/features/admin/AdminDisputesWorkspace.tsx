@@ -12,7 +12,7 @@ import {
   History
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useAdminDisputes, useResolveAdminDispute } from "@/hooks/useAdmin";
+import { useAdminDisputes, useResolveAdminDispute } from "@/features/admin/api/useAdmin";
 import type { AdminDisputeRecord } from "@/types";
 import { 
   Card, 

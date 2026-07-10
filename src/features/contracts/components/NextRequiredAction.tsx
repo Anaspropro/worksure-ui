@@ -10,6 +10,7 @@ export type NextActionType =
   | "CLIENT_APPROVE"
   | "RELEASE_PAYMENT"
   | "ADMIN_DISPUTE"
+  | "LEAVE_REVIEW"
   | "NONE";
 
 export function NextRequiredAction({
@@ -80,9 +81,10 @@ export function NextRequiredAction({
         severity = "info";
       }
     } else if (contract.status === "COMPLETED" || contract.status === "PAID_OUT") {
-      actionType = "NONE";
+      actionType = "LEAVE_REVIEW";
       message = "Contract successfully completed.";
       description = "All funds have been released. Don't forget to submit your review for this contract.";
+      ctaText = "Leave a Review";
       severity = "success";
     } else {
       actionType = "NONE";
@@ -121,9 +123,10 @@ export function NextRequiredAction({
         severity = "info";
       }
     } else if (contract.status === "COMPLETED" || contract.status === "PAID_OUT") {
-      actionType = "NONE";
+      actionType = "LEAVE_REVIEW";
       message = "Payout processed successfully.";
       description = "Funds have been released to your earnings ledger. Submit your review for this client.";
+      ctaText = "Leave a Review";
       severity = "success";
     } else {
       actionType = "NONE";

@@ -6,7 +6,7 @@ import { formatDate } from "@/lib/formatters";
 import { Loader2, RefreshCw, AlertCircle, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { useAdminSystemHealth } from "@/hooks/useAdmin";
+import { useAdminSystemHealth } from "@/features/admin/api/useAdmin";
 
 export function ReconciliationPanel() {
   const { data: reportsData, isLoading: reportsLoading } = useReconciliationReports();

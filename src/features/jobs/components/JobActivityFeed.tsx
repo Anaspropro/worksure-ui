@@ -1,6 +1,6 @@
 "use client";
 
-import { useJobTimeline } from "../hooks/useJobs";
+import { useJobTimeline } from "@/features/jobs/api/useJobs";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Avatar, AvatarFallback } from "@/shared/components/ui/avatar";
 import { getInitials } from "@/shared/lib/utils";

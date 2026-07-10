@@ -1,10 +1,11 @@
 "use client";
 
-import { useJob } from "../../hooks/useJobs";
+import { useJob } from "@/features/jobs/api/useJobs";
 import { JobHeader } from "../../components/JobHeader";
 import { JobTimeline } from "../../components/JobTimeline";
 import { NextRequiredAction } from "../../components/NextRequiredAction";
-import { useJobProposals, ProposalCard, ProposalDetail, ProposalActions } from "../../proposals";
+import { ProposalCard, ProposalDetail, ProposalActions } from "../../proposals";
+import { useProposals } from "@/features/jobs/api/useProposals";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { useState } from "react";
@@ -16,7 +17,8 @@ interface ClientJobDetailProps {
 
 export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
   const { data: job, isLoading, error } = useJob(jobId);
-  const { data: proposals, isLoading: isProposalsLoading } = useJobProposals(jobId);
+  const { data: proposalsResponse, isLoading: isProposalsLoading } = useProposals({ jobId });
+  const proposals = proposalsResponse?.proposals;
   
   const [selectedProposalId, setSelectedProposalId] = useState<string | null>(null);
 
@@ -32,16 +34,16 @@ export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
 
   return (
     <div className="space-y-6">
-      <NextRequiredAction job={job} />
+      <NextRequiredAction job={job as any} />
       
-      <JobHeader job={job} />
+      <JobHeader job={job as any} />
 
       <Tabs defaultValue="proposals" className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="proposals">
             Proposals
             <span className="ml-2 rounded-full bg-muted px-2 py-0.5 text-xs">
-              {job.proposalsCount}
+              {(job as any).proposalsCount || 0}
             </span>
           </TabsTrigger>
           <TabsTrigger value="details">Details</TabsTrigger>
@@ -60,7 +62,7 @@ export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
               {proposals.map(proposal => (
                 <ProposalCard 
                   key={proposal.id} 
-                  proposal={proposal} 
+                  proposal={proposal as any} 
                   onClick={() => setSelectedProposalId(proposal.id)}
                 />
               ))}
@@ -89,10 +91,10 @@ export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
           
           {selectedProposal && (
             <div className="space-y-8 pb-12">
-              <ProposalDetail proposal={selectedProposal} />
+              <ProposalDetail proposal={selectedProposal as any} />
               
               <div className="border-t pt-6 mt-6">
-                <ProposalActions proposal={selectedProposal} />
+                <ProposalActions proposal={selectedProposal as any} />
               </div>
             </div>
           )}

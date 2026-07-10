@@ -1,6 +1,7 @@
 "use client";
 
-import { proxyFetch, proxyFetchRaw } from "@/shared/api/fetcher";
+import apiClient from "@/shared/api/client";
+import { ApiError } from "@/shared/api/fetcher";
 import type { ApiPagination, Contract, ContractStatus, AdminContractStats, AdminCollection } from "@/types";
 
 // ── Types ──────────────────────────────────────────────────────────────
@@ -54,29 +55,30 @@ export type ContractTimelineEvent = {
   attachments?: { url: string; name: string; type: string }[];
 };
 
-// ── Query Parameter Builder ────────────────────────────────────────────
 
-function buildQuery(params: Record<string, unknown> = {}): string {
-  const query = new URLSearchParams();
-  Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== "") {
-      query.set(key, String(value));
-    }
-  });
-  if (!query.has("limit")) {
-    query.set("limit", "50");
-  }
-  return query.toString();
-}
 
 // ── Contract Queries ───────────────────────────────────────────────────
 
 export async function getContracts(params: ContractsFilter = {}): Promise<ContractsResponse> {
-  return proxyFetchRaw<ContractsResponse>(`/contracts?${buildQuery(params)}`);
+  const { data, error, response } = await apiClient.GET("/contracts", {
+    params: {
+      query: {
+        status: params.status,
+        page: params.page,
+        limit: params.limit,
+      } as any
+    }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as ContractsResponse;
 }
 
 export async function getContractById(id: string): Promise<Contract> {
-  return proxyFetch<Contract>(`/contracts/${id}`);
+  const { data, error, response } = await apiClient.GET("/contracts/{id}", {
+    params: { path: { id } }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Contract;
 }
 
 /**
@@ -212,44 +214,54 @@ export function deriveTimelineFromContract(contract: Contract): ContractTimeline
 // ── Contract Mutations ─────────────────────────────────────────────────
 
 export async function createContract(proposalId: string): Promise<Contract> {
-  return proxyFetch<Contract>("/contracts", {
-    method: "POST",
-    body: JSON.stringify({ proposalId }),
+  const { data, error, response } = await apiClient.POST("/contracts", {
+    body: { proposalId } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Contract;
 }
 
 export async function fundContract(input: FundContractInput): Promise<FundContractResult> {
-  return proxyFetch<FundContractResult>(`/contracts/${input.contractId}/fund`, {
-    method: "POST",
-    body: JSON.stringify(input),
+  const { data, error, response } = await apiClient.POST("/contracts/{id}/fund", {
+    params: { path: { id: input.contractId } },
+    body: input as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as FundContractResult;
 }
 
 export async function verifyPayment(reference: string): Promise<unknown> {
-  return proxyFetch<unknown>("/payments/paystack/verify", {
-    method: "POST",
-    body: JSON.stringify({ reference }),
+  const { data, error, response } = await apiClient.POST("/payments/paystack/verify", {
+    body: { reference } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data;
 }
 
 export async function confirmCompletion(input: ConfirmCompletionInput): Promise<Contract> {
-  return proxyFetch<Contract>(`/contracts/${input.contractId}/confirm-completion`, {
-    method: "POST",
-    body: JSON.stringify(input),
+  const { data, error, response } = await apiClient.POST("/contracts/{id}/confirm-completion", {
+    params: { path: { id: input.contractId } },
+    body: { notes: input.notes } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Contract;
 }
 
 export async function releaseEscrow(contractId: string): Promise<{ message: string }> {
-  return proxyFetch<{ message: string }>(`/contracts/${contractId}/release-escrow`, {
-    method: "POST",
+  const { data, error, response } = await apiClient.POST("/contracts/{id}/release-escrow", {
+    params: { path: { id: contractId } },
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as { message: string };
 }
 
 export async function refundContract(input: RefundInput): Promise<{ message: string }> {
-  return proxyFetch<{ message: string }>(`/contracts/${input.contractId}/refund`, {
-    method: "POST",
-    body: JSON.stringify(input),
+  const { data, error, response } = await apiClient.POST("/contracts/{id}/refund", {
+    params: { path: { id: input.contractId } },
+    body: { reason: input.reason } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as { message: string };
 }
 
 // ── Admin Queries ──────────────────────────────────────────────────────
@@ -262,17 +274,17 @@ export type AdminContractsFilter = {
 };
 
 export async function getAdminContracts(params: AdminContractsFilter = {}): Promise<AdminCollection<Contract>> {
-  const query = new URLSearchParams();
-  if (params.search) query.set("search", params.search);
-  if (params.status) query.set("status", params.status);
-  if (params.cursor) query.set("cursor", params.cursor);
-  if (params.limit) query.set("limit", params.limit.toString());
-  const qs = query.toString() ? `?${query.toString()}` : "";
-  return proxyFetchRaw<AdminCollection<Contract>>(`/admin/contracts${qs}`);
+  const { data, error, response } = await apiClient.GET("/admin/contracts", {
+    params: { query: params as any }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as AdminCollection<Contract>;
 }
 
 export async function getAdminContractStats(): Promise<AdminContractStats> {
-  return proxyFetch<AdminContractStats>("/admin/contracts/stats");
+  const { data, error, response } = await apiClient.GET("/admin/contracts/stats");
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as AdminContractStats;
 }
 
 export async function resolveDispute(
@@ -280,8 +292,10 @@ export async function resolveDispute(
   decision: string,
   notes?: string,
 ): Promise<unknown> {
-  return proxyFetch(`/admin/disputes/${disputeId}/resolve`, {
-    method: "PATCH",
-    body: JSON.stringify({ decision, notes }),
+  const { data, error, response } = await apiClient.PATCH("/admin/disputes/{id}/resolve", {
+    params: { path: { id: disputeId } },
+    body: { decision, notes } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data;
 }

@@ -16,7 +16,8 @@ import { ParticipantCard } from "../../components/ParticipantCard";
 import { ActivityFeed } from "../../components/ActivityFeed";
 import { ContractChatPanel } from "../../components/ContractChatPanel";
 import { DeliverableList } from "../../deliverables/components/DeliverableList";
-
+import { ReviewForm } from "@/features/reviews/components/ReviewForm";
+import { DisputeForm } from "@/features/disputes/components/DisputeForm";
 import {
   useContract,
   useConfirmCompletion,
@@ -34,6 +35,8 @@ export function ArtisanContractDetail({
   const confirmCompletionMutation = useConfirmCompletion();
 
   const [activeTab, setActiveTab] = useState<"overview" | "timeline" | "deliverables" | "escrow" | "messages" | "activity">("overview");
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [isDisputeFormOpen, setIsDisputeFormOpen] = useState(false);
   const [confirmAction, setConfirmAction] = useState<{
     title: string;
     description: string;
@@ -82,6 +85,8 @@ export function ArtisanContractDetail({
           });
         }
       });
+    } else if (action === "LEAVE_REVIEW") {
+      setIsReviewFormOpen(true);
     }
   };
 
@@ -108,7 +113,11 @@ export function ArtisanContractDetail({
       </div>
 
       {/* Reusable premium ContractHeader */}
-      <ContractHeader contract={contract} role="ARTISAN" />
+      <ContractHeader 
+        contract={contract} 
+        role="ARTISAN" 
+        onRaiseDispute={() => setIsDisputeFormOpen(true)}
+      />
 
       {/* Prominent Next Required Action */}
       <NextRequiredAction
@@ -167,11 +176,13 @@ export function ArtisanContractDetail({
                 </CardHeader>
                 <CardContent className="flex flex-col gap-2">
                   {contract.status === "COMPLETED" && (
-                    <Button asChild variant="outline" className="w-full text-xs">
-                      <Link href="/reviews">
-                        <Star className="size-4 mr-2" />
-                        Submit Review
-                      </Link>
+                    <Button 
+                      variant="outline" 
+                      className="w-full text-xs"
+                      onClick={() => setIsReviewFormOpen(true)}
+                    >
+                      <Star className="size-4 mr-2" />
+                      Submit Review
                     </Button>
                   )}
                   <p className="text-[10px] text-center text-muted-foreground leading-normal mt-2">
@@ -239,6 +250,20 @@ export function ArtisanContractDetail({
           </div>
         </div>
       )}
+
+      {/* Review Modal */}
+      <ReviewForm
+        contractId={contract.id}
+        open={isReviewFormOpen}
+        onOpenChange={setIsReviewFormOpen}
+      />
+
+      {/* Dispute Modal */}
+      <DisputeForm
+        contractId={contract.id}
+        open={isDisputeFormOpen}
+        onOpenChange={setIsDisputeFormOpen}
+      />
     </div>
   );
 }

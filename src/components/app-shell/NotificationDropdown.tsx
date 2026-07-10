@@ -5,7 +5,7 @@ import { formatDistanceToNow } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { useMyNotifications, useDeleteNotification } from "@/hooks/useNotifications";
+import { useMyNotifications, useDeleteNotification } from "@/features/notifications/api/useNotifications";
 
 export function NotificationDropdown({ role }: { role: string }) {
   const { data: allNotifications } = useMyNotifications();

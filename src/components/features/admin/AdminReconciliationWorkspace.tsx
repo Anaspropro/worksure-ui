@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Calculator } from "lucide-react";
 import { toast } from "sonner";
-import { useAdminReconciliationReports, useTriggerReconciliation } from "@/hooks/useAdmin";
+import { useAdminReconciliationReports, useTriggerReconciliation } from "@/features/admin/api/useAdmin";
 import { formatDate } from "@/lib/formatters";
 import {
   Badge,

@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronRight, FileUp, Loader2, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { useUser } from "@/features/auth";
-import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument } from "@/hooks/useKyc";
+import { useKyc, useSaveKyc, useVerifyIdentity, useUploadKycDocument } from "@/features/kyc/api/useKyc";
 import { useBanks } from "@/features/financial/artisan/hooks/useArtisanEarnings";
 
 import { Button } from "@/components/ui/button";

@@ -1,4 +1,5 @@
-import { proxyFetch } from "@/shared/api/fetcher";
+import apiClient from "@/shared/api/client";
+import { ApiError } from "@/shared/api/fetcher";
 import { Conversation, Message } from "../types";
 
 export interface GetMessagesParams {
@@ -14,35 +15,46 @@ export interface PaginatedMessages {
 }
 
 export async function getConversations(context?: string, contextReferenceId?: string): Promise<Conversation[]> {
-  const query = new URLSearchParams();
-  if (context) query.append("context", context);
-  if (contextReferenceId) query.append("contextReferenceId", contextReferenceId);
-  
-  const queryString = query.toString();
-  return proxyFetch<Conversation[]>(`/chat/conversations${queryString ? `?${queryString}` : ""}`);
+  const { data, error, response } = await apiClient.GET("/chat/conversations", {
+    params: {
+      query: { context, contextReferenceId } as any
+    }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Conversation[];
 }
 
 export async function getConversation(id: string): Promise<Conversation> {
-  return proxyFetch<Conversation>(`/chat/conversations/${id}`);
+  const { data, error, response } = await apiClient.GET("/chat/conversations/{id}" as any, {
+    params: { path: { id } }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Conversation;
 }
 
 export async function getMessages({ conversationId, cursor, limit = 50 }: GetMessagesParams): Promise<PaginatedMessages> {
-  const query = new URLSearchParams();
-  if (cursor) query.append("cursor", cursor);
-  query.append("limit", limit.toString());
-  
-  return proxyFetch<PaginatedMessages>(`/chat/conversations/${conversationId}/messages?${query.toString()}`);
+  const { data, error, response } = await apiClient.GET("/chat/conversations/{conversationId}/messages", {
+    params: {
+      path: { conversationId },
+      query: { cursor, limit } as any
+    }
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as PaginatedMessages;
 }
 
 export async function sendMessage(conversationId: string, content: string, type: string, tempId: string): Promise<Message> {
-  return proxyFetch<Message>(`/chat/conversations/${conversationId}/messages`, {
-    method: "POST",
-    body: JSON.stringify({ content, type, tempId }),
+  const { data, error, response } = await apiClient.POST("/chat/conversations/{conversationId}/messages", {
+    params: { path: { conversationId } },
+    body: { content, type, tempId } as any
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return data as unknown as Message;
 }
 
 export async function markAsRead(conversationId: string, messageId: string): Promise<void> {
-  return proxyFetch<void>(`/chat/conversations/${conversationId}/messages/${messageId}/read`, {
-    method: "POST",
+  const { error, response } = await apiClient.POST("/chat/conversations/{conversationId}/messages/{messageId}/read" as any, {
+    params: { path: { conversationId, messageId } }
   });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
 }

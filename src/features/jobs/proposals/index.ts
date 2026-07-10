@@ -5,7 +5,7 @@ export { ProposalTimeline } from "./components/ProposalTimeline";
 export { ProposalActions } from "./components/ProposalActions";
 
 // Hooks
-export * from "./hooks/useProposals";
+export * from "@/features/jobs/api/useProposals";
 
 // Types & Schemas
 export * from "./types";

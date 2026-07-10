@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useCreateJob } from "../../hooks/useJobs";
+import { useCreateJob } from "@/features/jobs/api/useJobs";
 import { CreateJobPayload } from "../../schemas";
 import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
@@ -39,7 +39,7 @@ export function CreateJobWizard() {
   const handleSubmit = async () => {
     try {
       // In a real app, validate with zod before submission
-      const newJob = await createJob.mutateAsync(formData as CreateJobPayload);
+      const newJob = await createJob.mutateAsync(formData as any);
       toast.success("Job posted successfully!");
       router.push(`/client/jobs/${newJob.id}`);
     } catch (error) {

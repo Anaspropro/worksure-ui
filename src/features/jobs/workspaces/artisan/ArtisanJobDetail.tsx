@@ -1,6 +1,6 @@
 "use client";
 
-import { useJob } from "../../hooks/useJobs";
+import { useJob } from "@/features/jobs/api/useJobs";
 import { JobHeader } from "../../components/JobHeader";
 import { NextRequiredAction } from "../../components/NextRequiredAction";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Input } from "@/shared/components/ui/input";
 import { useState } from "react";
-import { useSubmitProposal, useJobProposals } from "../../proposals";
+import { useProposals, useCreateProposal } from "@/features/jobs/api/useProposals";
 import { toast } from "sonner";
 import { ArrowRight, Info, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
@@ -20,15 +20,16 @@ interface ArtisanJobDetailProps {
 
 export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
   const { data: job, isLoading, error } = useJob(jobId);
-  const { data: proposals } = useJobProposals(jobId);
-  const submitProposal = useSubmitProposal(jobId);
+  const { data: proposalsResponse } = useProposals({ jobId });
+  const proposals = proposalsResponse?.proposals;
+  const createProposal = useCreateProposal();
   
   const [coverLetter, setCoverLetter] = useState("");
   const [bidAmount, setBidAmount] = useState<number | "">("");
   const [estimatedDuration, setEstimatedDuration] = useState("");
   
-  const hasSubmitted = proposals?.some(p => p.artisanId === "artisan-current");
-  const myProposal = proposals?.find(p => p.artisanId === "artisan-current");
+  const hasSubmitted = proposals?.some(p => p.artisan?.id === "artisan-current");
+  const myProposal = proposals?.find(p => p.artisan?.id === "artisan-current");
 
   if (isLoading) {
     return <div className="space-y-4"><Skeleton className="h-48 w-full" /><Skeleton className="h-64 w-full" /></div>;
@@ -41,10 +42,10 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await submitProposal.mutateAsync({
-        coverLetter,
-        bidAmount: Number(bidAmount),
-        estimatedDuration,
+      await createProposal.mutateAsync({
+        jobId,
+        amount: Number(bidAmount),
+        message: coverLetter,
       });
       toast.success("Proposal submitted successfully!");
     } catch (err) {
@@ -88,7 +89,7 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
                 <div className="bg-background rounded-md p-3 border text-sm space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Your Bid:</span>
-                    <span className="font-medium">${myProposal.bidAmount.toLocaleString()}</span>
+                    <span className="font-medium">${(myProposal as any).bidAmount?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Status:</span>
@@ -153,9 +154,9 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
                     <Button 
                       type="submit" 
                       className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                      disabled={submitProposal.isPending || coverLetter.length < 50}
+                      disabled={createProposal.isPending || coverLetter.length < 50}
                     >
-                      {submitProposal.isPending ? "Submitting..." : (
+                      {createProposal.isPending ? "Submitting..." : (
                         <>Submit Proposal <ArrowRight className="ml-2 h-4 w-4" /></>
                       )}
                     </Button>

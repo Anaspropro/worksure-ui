@@ -5,7 +5,7 @@ import { Clock, MapPin, Users, DollarSign, Briefcase } from "lucide-react";
 import { CategoryBadge, SkillBadge } from "@/features/taxonomy";
 
 interface JobHeaderProps {
-  job: Job;
+  job: any;
 }
 
 export function JobHeader({ job }: JobHeaderProps) {
@@ -48,7 +48,7 @@ export function JobHeader({ job }: JobHeaderProps) {
             
             {job.skills && job.skills.length > 0 && (
               <div className="flex flex-wrap gap-2 pt-2">
-                {job.skills.map(skill => (
+                {job.skills.map((skill: any) => (
                   <SkillBadge key={skill.id} skill={skill} />
                 ))}
               </div>

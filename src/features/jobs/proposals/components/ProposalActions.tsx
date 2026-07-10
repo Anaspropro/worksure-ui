@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Proposal } from "../types";
-import { useUpdateProposalStatus } from "../hooks/useProposals";
+import { useAcceptProposal, useRejectProposal } from "@/features/jobs/api/useProposals";
 import { Button } from "@/shared/components/ui/button";
 import { useUser } from "@/features/auth";
 import { CheckCircle2, XCircle, MessageSquare } from "lucide-react";
@@ -14,7 +14,8 @@ interface ProposalActionsProps {
 
 export function ProposalActions({ proposal }: ProposalActionsProps) {
   const { data: user } = useUser();
-  const updateStatus = useUpdateProposalStatus();
+  const acceptProposal = useAcceptProposal();
+  const rejectProposal = useRejectProposal();
   
   if (!user || user.role !== "CLIENT" || proposal.status !== "PENDING" && proposal.status !== "UNDER_REVIEW") {
     return null;
@@ -22,7 +23,7 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
 
   const handleAccept = async () => {
     try {
-      await updateStatus.mutateAsync({ id: proposal.id, status: "ACCEPTED" });
+      await acceptProposal.mutateAsync(proposal.id);
       toast.success("Proposal accepted! You can now create a contract.");
     } catch (error) {
       toast.error("Failed to accept proposal");
@@ -31,7 +32,7 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
 
   const handleReject = async () => {
     try {
-      await updateStatus.mutateAsync({ id: proposal.id, status: "REJECTED" });
+      await rejectProposal.mutateAsync(proposal.id);
       toast.success("Proposal rejected");
     } catch (error) {
       toast.error("Failed to reject proposal");
@@ -42,7 +43,7 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
     <div className="flex flex-wrap items-center gap-3">
       <Button 
         onClick={handleAccept} 
-        disabled={updateStatus.isPending}
+        disabled={acceptProposal.isPending || rejectProposal.isPending}
         className="bg-emerald-600 hover:bg-emerald-700 text-white"
       >
         <CheckCircle2 className="mr-2 h-4 w-4" />
@@ -60,7 +61,7 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
       <Button 
         variant="ghost" 
         onClick={handleReject}
-        disabled={updateStatus.isPending}
+        disabled={acceptProposal.isPending || rejectProposal.isPending}
         className="text-destructive hover:bg-destructive/10"
       >
         <XCircle className="mr-2 h-4 w-4" />

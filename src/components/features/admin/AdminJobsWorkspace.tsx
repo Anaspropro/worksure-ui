@@ -13,7 +13,7 @@ import {
   X,
   MapPin
 } from "lucide-react";
-import { useAdminJobs } from "@/hooks/useAdmin";
+import { useAdminJobs } from "@/features/admin/api/useAdmin";
 import {
   Card,
   CardContent,

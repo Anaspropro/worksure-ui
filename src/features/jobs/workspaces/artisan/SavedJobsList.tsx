@@ -1,6 +1,6 @@
 "use client";
 
-import { useJobs } from "../../hooks/useJobs";
+import { useJobs } from "@/features/jobs/api/useJobs";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent } from "@/shared/components/ui/card";
 import { useRouter } from "next/navigation";
@@ -10,7 +10,7 @@ import { Bookmark, ArrowRight } from "lucide-react";
 export function SavedJobsList() {
   const router = useRouter();
   // Using a mock filter for saved jobs
-  const { data: jobsResponse, isLoading, error } = useJobs({ saved: true });
+  const { data: jobsResponse, isLoading, error } = useJobs({ saved: true } as any);
 
   if (isLoading) {
     return <div className="space-y-4"><Skeleton className="h-32 w-full" /><Skeleton className="h-32 w-full" /></div>;
@@ -19,6 +19,8 @@ export function SavedJobsList() {
   if (error || !jobsResponse) {
     return <div className="text-sm text-destructive">Failed to load saved jobs.</div>;
   }
+  
+  const jobsList = jobsResponse.data || jobsResponse.jobs || [];
 
   return (
     <div className="space-y-6">
@@ -27,7 +29,7 @@ export function SavedJobsList() {
         <p className="text-sm text-muted-foreground mt-1">Jobs you have bookmarked for later.</p>
       </div>
 
-      {jobsResponse.data.length === 0 ? (
+      {jobsList.length === 0 ? (
         <Card className="border-dashed bg-muted/30">
           <CardContent className="flex flex-col items-center justify-center p-12 text-center">
             <div className="rounded-full bg-primary/10 p-4 mb-4">
@@ -44,7 +46,7 @@ export function SavedJobsList() {
         </Card>
       ) : (
         <div className="grid gap-4">
-          {jobsResponse.data.map((job) => (
+          {jobsList.map((job: any) => (
             <Card key={job.id} className="hover:border-primary/50 transition-colors">
               <CardContent className="p-6 flex items-center justify-between">
                 <div>

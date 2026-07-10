@@ -3,7 +3,7 @@ export * from "./types";
 export * from "./schemas";
 
 // Hooks
-export * from "./hooks/useJobs";
+export * from "@/features/jobs/api/useJobs";
 
 // Core Components
 export { JobStatusBadge } from "./components/JobStatusBadge";
