@@ -53,9 +53,7 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         message: formData.message!,
         estimatedDuration: formData.estimatedDuration,
         attachments: formData.attachments,
-        // Assuming the API might take an action or status for Drafts, but our CreateProposalDto 
-        // doesn't have status, it defaults to SUBMITTED.
-        // We will just do a standard submission for now and a toast if it's draft.
+        isDraft,
       });
       toast.success(isDraft ? "Draft saved successfully!" : "Proposal submitted successfully!");
     } catch (err) {
