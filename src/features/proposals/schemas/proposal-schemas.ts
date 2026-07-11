@@ -24,6 +24,7 @@ export const createProposalSchema = z.object({
   message: z.string().min(10, 'Cover letter must be at least 10 characters.'),
   estimatedDuration: z.string().optional(),
   attachments: z.array(proposalAttachmentSchema).optional(),
+  isDraft: z.boolean().optional(),
 });
 
 export type CreateProposalInput = z.infer<typeof createProposalSchema>;

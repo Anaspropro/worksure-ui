@@ -28,7 +28,7 @@ export function ProposalCard({ proposal, onClick }: ProposalCardProps) {
             </span>
           </div>
         </div>
-        <Badge variant={proposal.status === "PENDING" ? "outline" : proposal.status === "ACCEPTED" ? "default" : "secondary"}>
+        <Badge variant={proposal.status === "SUBMITTED" ? "outline" : proposal.status === "ACCEPTED" ? "default" : "secondary"}>
           {proposal.status}
         </Badge>
       </CardHeader>

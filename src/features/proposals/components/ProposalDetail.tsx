@@ -26,7 +26,7 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
           </div>
         </div>
         
-        <Badge className="w-fit text-sm py-1 px-3" variant={proposal.status === "PENDING" ? "outline" : proposal.status === "ACCEPTED" ? "default" : "secondary"}>
+        <Badge className="w-fit text-sm py-1 px-3" variant={proposal.status === "SUBMITTED" ? "outline" : proposal.status === "ACCEPTED" ? "default" : "secondary"}>
           {proposal.status}
         </Badge>
       </div>

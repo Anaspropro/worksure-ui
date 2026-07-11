@@ -17,7 +17,7 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
   const acceptProposal = useAcceptProposal();
   const rejectProposal = useRejectProposal();
   
-  if (!user || user.role !== "CLIENT" || proposal.status !== "PENDING" && proposal.status !== "UNDER_REVIEW") {
+  if (!user || user.role !== "CLIENT" || proposal.status !== "SUBMITTED" && proposal.status !== "VIEWED") {
     return null;
   }
 

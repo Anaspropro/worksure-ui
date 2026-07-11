@@ -6,12 +6,34 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/shared/c
 import { Badge } from "@/shared/components/ui/badge";
 import { Button } from "@/shared/components/ui/button";
 import { DollarSign, Clock, MapPin, XCircle, FileEdit, Trash2 } from "lucide-react";
+import { toast } from "sonner";
+import { apiClient } from "@/shared/api/client";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { proposalKeys } from "../api/useProposals";
 
 export function ArtisanProposalDashboard() {
   // Assuming the user is an Artisan, we fetch their proposals
   // In a real app we'd pass `artisanId: 'current'` or let the backend infer it from the auth token
   const { data: response, isLoading } = useProposals({});
-  const { mutate: performAction, isPending } = useProposalAction('');
+  // We cannot use `useProposalAction` here since it requires an ID on initialization. 
+  // Instead, we rely on a custom wrapper or just the queryClient mutation natively if needed, 
+  // but let's assume we refactored it or we map over items to pass IDs. 
+  // Actually, we can use the apiClient directly here for list-based actions, or create a list action hook.
+  // Wait, I will use apiClient directly to keep it simple, since `useProposalAction` binds to one ID.
+  const queryClient = useQueryClient();
+  
+  const withdrawMutation = useMutation({
+    mutationFn: async (id: string) => {
+      const { data, error } = await apiClient.PATCH('/proposals/{id}/withdraw', {
+        params: { path: { id } }
+      });
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: proposalKeys.lists() });
+    }
+  });
 
   if (isLoading) {
     return (
@@ -29,16 +51,10 @@ export function ArtisanProposalDashboard() {
   const proposals = response || [];
 
   const activeProposals = proposals.filter((p: any) => ['SUBMITTED', 'VIEWED'].includes(p.status));
+  const draftProposals = proposals.filter((p: any) => p.status === 'DRAFT');
   const shortlistedProposals = proposals.filter((p: any) => p.status === 'SHORTLISTED');
   const pastProposals = proposals.filter((p: any) => ['REJECTED', 'EXPIRED', 'WITHDRAWN', 'ACCEPTED'].includes(p.status));
 
-  const handleWithdraw = (id: string) => {
-    if (confirm("Are you sure you want to withdraw this proposal?")) {
-      // Re-use useProposalAction or just call API
-      // Wait, we need the ID in useProposalAction, so we'll do it manually or via a separate hook call.
-      // But we can't call hooks conditionally. 
-    }
-  };
 
   return (
     <div className="p-6 h-full bg-background overflow-hidden flex flex-col">
@@ -62,11 +78,15 @@ export function ArtisanProposalDashboard() {
             <Badge variant="secondary">{activeProposals.length}</Badge>
           </div>
           <div className="space-y-4 overflow-y-auto flex-1 pr-2 pb-4">
-            {activeProposals.length === 0 ? (
-              <div className="text-sm text-center py-8 text-muted-foreground bg-background rounded-lg border border-dashed">No active proposals</div>
-            ) : (
-              activeProposals.map((p: any) => <ProposalKanbanCard key={p.id} proposal={p} />)
+            {activeProposals.length === 0 && draftProposals.length === 0 && (
+              <div className="text-center p-6 text-sm text-muted-foreground border-2 border-dashed rounded-lg">
+                No active proposals.
+              </div>
             )}
+            {draftProposals.map((p: any) => (
+              <ProposalMiniCard key={p.id} proposal={p} onEdit={() => window.location.href = `/jobs/${p.jobId}?editDraft=${p.id}`} />
+            ))}
+            {activeProposals.map((p: any) => <ProposalKanbanCard key={p.id} proposal={p} onWithdraw={() => withdrawMutation.mutate(p.id)} />)}
           </div>
         </div>
 
@@ -83,7 +103,7 @@ export function ArtisanProposalDashboard() {
             {shortlistedProposals.length === 0 ? (
               <div className="text-sm text-center py-8 text-muted-foreground bg-background rounded-lg border border-dashed">No shortlisted proposals</div>
             ) : (
-              shortlistedProposals.map((p: any) => <ProposalKanbanCard key={p.id} proposal={p} isHighlighted />)
+              shortlistedProposals.map((p: any) => <ProposalKanbanCard key={p.id} proposal={p} isHighlighted onWithdraw={() => withdrawMutation.mutate(p.id)} />)
             )}
           </div>
         </div>
@@ -111,9 +131,19 @@ export function ArtisanProposalDashboard() {
   );
 }
 
-function ProposalKanbanCard({ proposal, isHighlighted, isArchived }: { proposal: any; isHighlighted?: boolean; isArchived?: boolean }) {
-  const { mutate: performAction } = useProposalAction(proposal.id);
+function ProposalMiniCard({ proposal, onEdit }: { proposal: any; onEdit: () => void }) {
+  return (
+    <Card className="p-3 border-dashed border-muted-foreground/20">
+      <div className="flex justify-between items-center">
+        <span className="text-xs font-medium text-amber-600">Draft</span>
+        <Button variant="ghost" size="sm" onClick={onEdit}>Edit</Button>
+      </div>
+      <p className="text-sm truncate">{proposal.job.title}</p>
+    </Card>
+  );
+}
 
+function ProposalKanbanCard({ proposal, isHighlighted, isArchived, onWithdraw }: { proposal: any; isHighlighted?: boolean; isArchived?: boolean; onWithdraw?: () => void }) {
   return (
     <Card className={`transition-all ${isHighlighted ? 'border-amber-400 shadow-sm shadow-amber-200/20' : ''} ${isArchived ? 'opacity-75 bg-muted/50 grayscale-[0.3]' : 'hover:shadow-md hover:-translate-y-0.5'}`}>
       <CardContent className="p-4">
@@ -146,12 +176,12 @@ function ProposalKanbanCard({ proposal, isHighlighted, isArchived }: { proposal:
               <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground">
                 Edit
               </Button>
-              <Button size="sm" variant="ghost" className="h-6 px-2 text-xs text-destructive hover:bg-destructive/10 hover:text-destructive" onClick={() => {
+              <Button variant="outline" size="sm" className="w-full text-xs h-8 text-destructive hover:bg-destructive hover:text-white" onClick={() => {
                 if (confirm("Withdraw this proposal?")) {
-                  performAction({ action: 'WITHDRAW' });
+                  onWithdraw?.();
                 }
               }}>
-                Withdraw
+                <Trash2 className="w-3 h-3 mr-1"/> Withdraw
               </Button>
             </div>
           </div>

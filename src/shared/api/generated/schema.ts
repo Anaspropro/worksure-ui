@@ -1946,11 +1946,12 @@ export interface components {
             /** @description Evidence messages */
             evidenceMessages?: string[];
         };
+        Object: Record<string, never>;
         UpdateDisputeDto: {
             /** @description Dispute status */
-            status?: string;
+            status?: Record<string, never>;
             /** @description Resolution decision */
-            resolutionDecision?: string;
+            resolutionDecision?: Record<string, never>;
             /** @description Resolution notes */
             resolutionNotes?: string;
             /** @description Resolver ID */
@@ -1992,7 +1993,7 @@ export interface components {
             /** @description Job deadline */
             deadline?: string;
             /** @description Job status */
-            status?: string;
+            status?: Record<string, never>;
             /** @description Additional job requirements */
             requirements?: string;
         };
@@ -2017,6 +2018,8 @@ export interface components {
             estimatedDuration?: string;
             /** @description Attachments */
             attachments?: components["schemas"]["ProposalAttachmentDto"][];
+            /** @description Save as draft */
+            isDraft?: boolean;
         };
         ProposalJobDto: {
             id: string;
@@ -2051,8 +2054,11 @@ export interface components {
             amount: number;
             /** @description Estimated duration */
             estimatedDuration?: string;
-            /** @description Proposal status */
-            status: string;
+            /**
+             * @description Proposal status
+             * @enum {string}
+             */
+            status: "DRAFT" | "SUBMITTED" | "VIEWED" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "EXPIRED" | "CANCELLED";
             /** @description Creation date */
             createdAt: string;
             /** @description Last update date */
@@ -2920,7 +2926,6 @@ export interface operations {
         parameters: {
             query: {
                 search: string;
-                role: string;
                 cursor: string;
                 limit: string;
             };
@@ -3180,10 +3185,10 @@ export interface operations {
     AdminController_generateReports: {
         parameters: {
             query?: {
-                /** @description Report type to generate */
-                reportType?: string;
                 /** @description Optional YYYY-MM month selector */
                 month?: string;
+                /** @description Report type to generate */
+                reportType?: unknown;
             };
             header?: never;
             path?: never;
@@ -3512,9 +3517,7 @@ export interface operations {
     };
     ContractsController_getUserContracts: {
         parameters: {
-            query: {
-                status: string;
-            };
+            query?: never;
             header?: never;
             path?: never;
             cookie?: never;
@@ -3907,7 +3910,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: "OPEN" | "RESOLVED";
+                status?: components["schemas"]["Object"];
                 /** @description Filter by contract ID */
                 contractId?: string;
                 /** @description Filter by job ID */
@@ -4230,7 +4233,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "FORCE_CLOSED";
+                status?: components["schemas"]["Object"];
                 /** @description Filter by client ID */
                 clientId?: string;
                 /** @description Filter by artisan ID */
@@ -4426,7 +4429,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: "DRAFT" | "SUBMITTED" | "VIEWED" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "EXPIRED" | "CANCELLED";
+                status?: components["schemas"]["Object"];
                 /** @description Filter by job ID */
                 jobId?: string;
                 /** @description Filter by client ID */
