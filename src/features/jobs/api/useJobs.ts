@@ -93,7 +93,7 @@ export function useJob(jobId?: string, options: { enabled?: boolean } = {}) {
 }
 
 export function useJobTimeline(id: string) {
-  return useQuery({
+  return useQuery<JobEvent[]>({
     queryKey: ["jobs", "timeline", id],
     queryFn: async () => {
       const response = await fetch(`/api/proxy/jobs/${id}/timeline`, { cache: "no-store" });
