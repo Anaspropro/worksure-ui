@@ -1,3 +1,5 @@
+"use client";
+
 import { useProposalCompare } from '../api/useProposals';
 import { components } from '@/shared/api/generated/schema';
 import { Skeleton } from '@/shared/components/ui/skeleton';
