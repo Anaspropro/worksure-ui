@@ -80,11 +80,13 @@ export function useJob(jobId?: string, options: { enabled?: boolean } = {}) {
   return useQuery<Job>({
     queryKey: ["jobs", "detail", jobId],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/jobs/{id}" as any, {
-        params: { path: { id: jobId! } }
-      });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as Job;
+      const response = await fetch(`/api/proxy/jobs/${jobId}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: Boolean(jobId) && (options.enabled ?? true),
   });
@@ -94,11 +96,13 @@ export function useJobTimeline(id: string) {
   return useQuery({
     queryKey: ["jobs", "timeline", id],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/jobs/{id}/timeline" as any, {
-        params: { path: { id } }
-      });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as JobEvent[];
+      const response = await fetch(`/api/proxy/jobs/${id}/timeline`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: !!id,
   });

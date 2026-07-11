@@ -51,11 +51,13 @@ export function useReviewStats(artisanId?: string) {
   return useQuery<ReviewStats>({
     queryKey: ["reviews", "stats", artisanId],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/reviews/stats/{artisanId}" as any, {
-        params: { path: { artisanId: artisanId! } }
-      });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as ReviewStats;
+      const response = await fetch(`/api/proxy/reviews/stats/${artisanId}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: Boolean(artisanId),
   });
