@@ -219,7 +219,7 @@ export function useAdminReconciliationReports(page = 1, limit = 20, options: { e
     queryKey: ["admin", "reconciliation", page, limit],
     queryFn: async () => {
       // fallback to proxyFetch since we don't know the exact openapi endpoint
-      const res = await fetch(`/api/proxy/admin/reconciliation?page=${page}&limit=${limit}`);
+      const res = await fetch(`/api/proxy/admin/reconciliation/reports?page=${page}&limit=${limit}`);
       if (!res.ok) throw new Error(res.statusText);
       return res.json() as unknown as ApiEnvelope<AuditLog[]>;
     },
@@ -245,7 +245,7 @@ export function useAdminSystemHealth(options: { enabled?: boolean; refetchInterv
   return useQuery<SystemHealth>({
     queryKey: ["admin", "monitoring", "health"],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/system/health" as any, {});
+      const { data, error, response } = await apiClient.GET("/admin/monitoring/health" as any, {});
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
       return data as unknown as SystemHealth;
     },
@@ -258,7 +258,7 @@ export function useAdminSystemLogs(page = 1, limit = 20, options: { enabled?: bo
   return useQuery<ApiEnvelope<SystemLog[]>>({
     queryKey: ["admin", "monitoring", "logs", page, limit],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/system/logs" as any, { params: { query: { page, limit } as any } });
+      const { data, error, response } = await apiClient.GET("/admin/monitoring/logs" as any, { params: { query: { page, limit } as any } });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
       return data as unknown as ApiEnvelope<SystemLog[]>;
     },
@@ -271,7 +271,7 @@ export function useClearSystemLogs() {
 
   return useMutation({
     mutationFn: async () => {
-      const { data, error, response } = await apiClient.DELETE("/admin/system/logs" as any, {});
+      const { data, error, response } = await apiClient.DELETE("/admin/monitoring/logs" as any, {});
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
       return data;
     },
