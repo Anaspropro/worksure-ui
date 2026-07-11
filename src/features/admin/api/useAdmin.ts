@@ -43,9 +43,13 @@ export function useAdminReports(reportType = "overview", options: { enabled?: bo
   return useQuery<AdminOverviewReport>({
     queryKey: ["admin", "reports", reportType],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/reports", { params: { query: { reportType } as any } });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as AdminOverviewReport;
+      const response = await fetch(`/api/proxy/admin/reports?reportType=${reportType}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: options.enabled,
   });
@@ -55,9 +59,13 @@ export function useAdminUserDetail(userId?: string, options: { enabled?: boolean
   return useQuery<{ data: AdminUserDetail }>({
     queryKey: ["admin", "users", userId],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/users/{id}" as any, { params: { path: { id: userId! } } });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return { data: data as unknown as AdminUserDetail };
+      const response = await fetch(`/api/proxy/admin/users/${userId}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: Boolean(userId) && (options.enabled ?? true),
   });
@@ -206,9 +214,14 @@ export function useAdminAuditLogs(params: { cursor?: string; limit?: number; ena
   return useQuery<ApiEnvelope<AuditLog[]>>({
     queryKey: ["admin", "audit", params.cursor, params.limit],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/audit" as any, { params: { query } });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as ApiEnvelope<AuditLog[]>;
+      const searchParams = new URLSearchParams(query as Record<string, string>).toString();
+      const response = await fetch(`/api/proxy/admin/audit?${searchParams}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: params.enabled,
   });
@@ -245,9 +258,13 @@ export function useAdminSystemHealth(options: { enabled?: boolean; refetchInterv
   return useQuery<SystemHealth>({
     queryKey: ["admin", "monitoring", "health"],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/monitoring/health" as any, {});
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as SystemHealth;
+      const response = await fetch("/api/proxy/admin/monitoring/health", { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: options.enabled,
     refetchInterval: options.refetchInterval,
@@ -258,9 +275,13 @@ export function useAdminSystemLogs(page = 1, limit = 20, options: { enabled?: bo
   return useQuery<ApiEnvelope<SystemLog[]>>({
     queryKey: ["admin", "monitoring", "logs", page, limit],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/monitoring/logs" as any, { params: { query: { page, limit } as any } });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as ApiEnvelope<SystemLog[]>;
+      const response = await fetch(`/api/proxy/admin/monitoring/logs?page=${page}&limit=${limit}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: options.enabled,
   });
@@ -294,9 +315,14 @@ export function useAdminTransactions(params: { type?: string; cursor?: string; l
   return useQuery<AdminCollection<WalletTransaction>>({
     queryKey: ["admin", "transactions", params.type, params.cursor, params.limit],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/transactions" as any, { params: { query } });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as AdminCollection<WalletTransaction>;
+      const searchParams = new URLSearchParams(query as Record<string, string>).toString();
+      const response = await fetch(`/api/proxy/admin/transactions?${searchParams}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: params.enabled,
   });

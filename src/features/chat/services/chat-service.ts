@@ -25,11 +25,13 @@ export async function getConversations(context?: string, contextReferenceId?: st
 }
 
 export async function getConversation(id: string): Promise<Conversation> {
-  const { data, error, response } = await apiClient.GET("/chat/conversations/{id}" as any, {
-    params: { path: { id } }
-  });
-  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return data as unknown as Conversation;
+  const response = await fetch(`/api/proxy/chat/conversations/${id}`, { cache: "no-store" });
+  if (!response.ok) {
+    let errorData;
+    try { errorData = await response.json(); } catch (e) {}
+    throw new ApiError(response.statusText, response.status, errorData);
+  }
+  return await response.json();
 }
 
 export async function getMessages({ conversationId, cursor, limit = 50 }: GetMessagesParams): Promise<PaginatedMessages> {
