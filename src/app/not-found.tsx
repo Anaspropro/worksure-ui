@@ -2,71 +2,75 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Home, SearchX } from "lucide-react";
+import { ArrowLeft, Home, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function NotFound() {
   return (
-    <main className="min-h-[100dvh] bg-background px-6 py-10">
-      <div className="mx-auto flex min-h-[calc(100vh-5rem)] max-w-4xl items-center justify-center">
+    <main className="relative min-h-[100dvh] flex items-center justify-center overflow-hidden bg-background px-6 py-10">
+      
+      {/* Background Mesh Glow spots (from LandingHero) */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          <Card className="w-full border-border bg-card shadow-xl">
-            <CardHeader className="space-y-5 text-center">
-              <motion.div
-                className="mx-auto flex h-16 w-16 items-center justify-center rounded-3xl bg-primary/10 text-primary"
-                animate={{ y: [0, -6, 0] }}
-                transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-              >
-                <SearchX className="size-8" />
-              </motion.div>
-              <div className="space-y-2">
-                <CardTitle className="text-4xl tracking-tight text-foreground">Page not found</CardTitle>
-                <CardDescription className="mx-auto max-w-xl text-base leading-7">
-                  The page you tried to open does not exist anymore, may have moved, or was never
-                  part of this workspace route map.
-                </CardDescription>
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="">
-                <motion.div
-                  className="rounded-2xl border border-border bg-surface p-4"
-                  initial={{ opacity: 0, x: 12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.4, duration: 0.4 }}
-                >
-                  <div className="flex items-center justify-center gap-3">
-                    <Home className="mt-0.5 size-5 text-primary" />
-                    <div>
-                      <p className="font-medium text-foreground">Start from home</p>
-                      <p className="mt-1 text-sm leading-6 text-text-secondary">
-                        If you followed an old or broken link, returning home is the quickest reset.
-                      </p>
-                    </div>
-                  </div>
-                </motion.div>
-              </div>
+          animate={{ scale: [1, 1.2, 1], x: [0, 50, 0], y: [0, -30, 0] }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -top-[10%] right-[5%] w-[45vw] h-[45vw] rounded-full bg-emerald-500/5 blur-3xl"
+        />
+        <motion.div
+          animate={{ scale: [1, 1.1, 1], x: [0, -40, 0], y: [0, 50, 0] }}
+          transition={{ duration: 12, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute top-[20%] -left-[10%] w-[40vw] h-[40vw] rounded-full bg-emerald-600/5 blur-3xl"
+        />
+      </div>
 
-              <motion.div
-                className="flex flex-wrap justify-center gap-3"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.4 }}
-              >
-                <Button asChild>
-                  <Link href="/">Go home</Link>
-                </Button>
-                <Button asChild variant="outline">
-                  <Link href="/auth/login">Open login</Link>
-                </Button>
-              </motion.div>
-            </CardContent>
-          </Card>
+      {/* Huge subtle 404 background text */}
+      <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+        <span className="text-[30vw] font-black text-foreground/5 tracking-tighter mix-blend-overlay">
+          404
+        </span>
+      </div>
+
+      <div className="relative z-10 mx-auto flex w-full max-w-2xl flex-col items-center justify-center text-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="mb-8 flex h-24 w-24 items-center justify-center rounded-full bg-surface shadow-xl ring-1 ring-border/50"
+        >
+          <SearchX className="size-10 text-primary" />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+        >
+          <h1 className="mb-4 text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
+            Page not found
+          </h1>
+          <p className="mx-auto max-w-lg text-lg text-muted-foreground mb-10 leading-relaxed">
+            The page you're looking for doesn't exist or has been moved. Let's get you back to the marketplace.
+          </p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
+        >
+          <Button asChild size="lg" className="w-full sm:w-auto rounded-full h-12 px-8 shadow-md">
+            <Link href="/">
+              <Home className="mr-2 size-4" />
+              Back to Home
+            </Link>
+          </Button>
+          <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-full h-12 px-8 bg-surface hover:bg-muted/50 border-border/50">
+            <button onClick={() => window.history.back()}>
+              <ArrowLeft className="mr-2 size-4" />
+              Go Back
+            </button>
+          </Button>
         </motion.div>
       </div>
     </main>
