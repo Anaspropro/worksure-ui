@@ -4,7 +4,8 @@ import { useJob } from "@/features/jobs/api/useJobs";
 import { JobHeader } from "../../components/JobHeader";
 import { JobTimeline } from "../../components/JobTimeline";
 import { NextRequiredAction } from "../../components/NextRequiredAction";
-import { ProposalCard, ProposalDetail, ProposalActions } from "../../proposals";
+import { ProposalComparisonList } from "@/features/proposals/components/ProposalComparisonList";
+import { ReviewWorkspace } from "@/features/proposals/workspaces";
 import { useProposals } from "@/features/jobs/api/useProposals";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Skeleton } from "@/shared/components/ui/skeleton";
@@ -51,23 +52,10 @@ export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
         </TabsList>
         
         <TabsContent value="proposals" className="space-y-4">
-          {isProposalsLoading ? (
-            <div className="space-y-4"><Skeleton className="h-32 w-full" /><Skeleton className="h-32 w-full" /></div>
-          ) : !proposals || proposals.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground bg-muted/20 rounded-lg border border-dashed">
-              No proposals received yet.
-            </div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {proposals.map(proposal => (
-                <ProposalCard 
-                  key={proposal.id} 
-                  proposal={proposal as any} 
-                  onClick={() => setSelectedProposalId(proposal.id)}
-                />
-              ))}
-            </div>
-          )}
+          <ProposalComparisonList 
+            jobId={jobId} 
+            onSelectProposal={setSelectedProposalId} 
+          />
         </TabsContent>
         
         <TabsContent value="details" className="bg-card rounded-lg border p-6">
@@ -89,13 +77,12 @@ export function ClientJobDetail({ jobId }: ClientJobDetailProps) {
             <SheetTitle>Review Proposal</SheetTitle>
           </SheetHeader>
           
-          {selectedProposal && (
-            <div className="space-y-8 pb-12">
-              <ProposalDetail proposal={selectedProposal as any} />
-              
-              <div className="border-t pt-6 mt-6">
-                <ProposalActions proposal={selectedProposal as any} />
-              </div>
+          {selectedProposalId && (
+            <div className="h-[80vh]">
+              <ReviewWorkspace 
+                proposalId={selectedProposalId} 
+                onClose={() => setSelectedProposalId(null)}
+              />
             </div>
           )}
         </SheetContent>

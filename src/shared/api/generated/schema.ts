@@ -1373,6 +1373,23 @@ export interface paths {
         patch: operations["ProposalsController_updateProposal"];
         trace?: never;
     };
+    "/proposals/job/{jobId}/compare": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Compare proposals for a job */
+        get: operations["ProposalsController_compareProposals"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/proposals/{id}/withdraw": {
         parameters: {
             query?: never;
@@ -1979,6 +1996,16 @@ export interface components {
             /** @description Additional job requirements */
             requirements?: string;
         };
+        ProposalAttachmentDto: {
+            /** @description File URL */
+            fileUrl: string;
+            /** @description File name */
+            fileName: string;
+            /** @description File type (MIME) */
+            fileType: string;
+            /** @description File size in bytes */
+            fileSize: number;
+        };
         CreateProposalDto: {
             /** @description Job ID */
             jobId: string;
@@ -1986,12 +2013,92 @@ export interface components {
             message: string;
             /** @description Proposed amount */
             amount: number;
+            /** @description Estimated duration */
+            estimatedDuration?: string;
+            /** @description Attachments */
+            attachments?: components["schemas"]["ProposalAttachmentDto"][];
+        };
+        ProposalJobDto: {
+            id: string;
+            title: string;
+            description?: string;
+            budget: number;
+            status: string;
+        };
+        ProposalClientDto: {
+            id: string;
+            name: string;
+            email: string;
+        };
+        ProposalArtisanProfileDto: {
+            rating?: number;
+            verified?: boolean;
+        };
+        ProposalArtisanDto: {
+            id: string;
+            name: string;
+            email: string;
+            artisanProfile?: components["schemas"]["ProposalArtisanProfileDto"];
+        };
+        ProposalResponseDto: {
+            /** @description Proposal ID */
+            id: string;
+            /** @description Job ID */
+            jobId: string;
+            /** @description Proposal message */
+            message: string;
+            /** @description Proposed amount */
+            amount: number;
+            /** @description Estimated duration */
+            estimatedDuration?: string;
+            /** @description Proposal status */
+            status: string;
+            /** @description Creation date */
+            createdAt: string;
+            /** @description Last update date */
+            updatedAt: string;
+            /** @description Job information */
+            job: components["schemas"]["ProposalJobDto"];
+            /** @description Client information */
+            client: components["schemas"]["ProposalClientDto"];
+            /** @description Artisan information */
+            artisan: components["schemas"]["ProposalArtisanDto"];
+            /** @description Attachments */
+            attachments?: components["schemas"]["ProposalAttachmentDto"][];
+        };
+        ProposalComparisonItemDto: {
+            /** @description Proposal ID */
+            id: string;
+            /** @description Artisan name */
+            artisanName: string;
+            /** @description Artisan avatar URL */
+            artisanAvatarUrl: string;
+            /** @description Artisan rating */
+            rating: number;
+            /** @description Artisan verification status */
+            verificationStatus: boolean;
+            /** @description Proposed bid amount */
+            bid: number;
+            /** @description Estimated duration */
+            duration: string;
+            /** @description Cover letter preview (first 100 chars) */
+            coverLetterPreview: string;
+            /** @description Number of attachments */
+            attachmentCount: number;
+            /** @description Artisan job completion rate */
+            completionRate: number;
+            /** @description Artisan response time metric */
+            responseTime: number;
+            /** @description Is this proposal recommended by the platform */
+            recommended: boolean;
         };
         UpdateProposalDto: {
             /** @description Proposal message */
             message?: string;
             /** @description Proposed amount */
             amount?: number;
+            /** @description Estimated duration */
+            estimatedDuration?: string;
         };
         ProposalActionDto: {
             /** @description Action notes (for rejection) */
@@ -4319,7 +4426,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: "PENDING" | "ACCEPTED" | "REJECTED" | "WITHDRAWN";
+                status?: "DRAFT" | "SUBMITTED" | "VIEWED" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "EXPIRED" | "CANCELLED";
                 /** @description Filter by job ID */
                 jobId?: string;
                 /** @description Filter by client ID */
@@ -4344,7 +4451,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProposalResponseDto"][];
+                };
             };
         };
     };
@@ -4401,7 +4510,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProposalResponseDto"];
+                };
             };
             /** @description Proposal not found. */
             404: {
@@ -4466,7 +4577,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProposalResponseDto"];
+                };
             };
             /** @description Access denied. */
             403: {
@@ -4476,6 +4589,36 @@ export interface operations {
                 content?: never;
             };
             /** @description Proposal not found. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    ProposalsController_compareProposals: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Job ID */
+                jobId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Proposals compared successfully. */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ProposalComparisonItemDto"][];
+                };
+            };
+            /** @description Job not found. */
             404: {
                 headers: {
                     [name: string]: unknown;
@@ -4534,7 +4677,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProposalResponseDto"];
+                };
             };
             /** @description Access denied. */
             403: {
@@ -4572,7 +4717,9 @@ export interface operations {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": components["schemas"]["ProposalResponseDto"];
+                };
             };
             /** @description Access denied. */
             403: {
