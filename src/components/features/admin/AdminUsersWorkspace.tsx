@@ -343,7 +343,7 @@ export default function AdminUsersWorkspace() {
                             <p className="text-sm font-medium">Transactions</p>
                           </div>
                           <p className="text-lg font-semibold text-foreground">
-                            {detailQuery.data.data.transactions.length} total
+                            {detailQuery.data.data.transactions?.length ?? 0} total
                           </p>
                         </div>
                         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
@@ -396,7 +396,7 @@ export default function AdminUsersWorkspace() {
                             <h4 className="font-semibold text-foreground text-sm">Recent Transactions</h4>
                           </div>
                           <div className="p-0">
-                            {detailQuery.data.data.transactions.length > 0 ? (
+                            {(detailQuery.data.data.transactions?.length ?? 0) > 0 ? (
                               <div className="divide-y divide-border">
                                 {detailQuery.data.data.transactions.slice(0, 5).map((tx) => (
                                   <div key={tx.id} className="flex items-center justify-between p-4 text-sm">
@@ -428,23 +428,23 @@ export default function AdminUsersWorkspace() {
                             <div className="grid grid-cols-2 gap-4">
                               <div className="space-y-1">
                                 <p className="text-xs text-muted-foreground">Client Jobs Posted</p>
-                                <p className="text-lg font-medium">{detailQuery.data.data.activity.clientJobs.length}</p>
+                                <p className="text-lg font-medium">{detailQuery.data.data.activity?.clientJobs?.length ?? 0}</p>
                               </div>
                               <div className="space-y-1">
                                 <p className="text-xs text-muted-foreground">Artisan Jobs Taken</p>
-                                <p className="text-lg font-medium">{detailQuery.data.data.activity.artisanJobs.length}</p>
+                                <p className="text-lg font-medium">{detailQuery.data.data.activity?.artisanJobs?.length ?? 0}</p>
                               </div>
                               <div className="space-y-1">
                                 <p className="text-xs text-muted-foreground">Client Contracts</p>
-                                <p className="text-lg font-medium">{detailQuery.data.data.activity.clientContracts.length}</p>
+                                <p className="text-lg font-medium">{detailQuery.data.data.activity?.clientContracts?.length ?? 0}</p>
                               </div>
                               <div className="space-y-1">
                                 <p className="text-xs text-muted-foreground">Artisan Contracts</p>
-                                <p className="text-lg font-medium">{detailQuery.data.data.activity.artisanContracts.length}</p>
+                                <p className="text-lg font-medium">{detailQuery.data.data.activity?.artisanContracts?.length ?? 0}</p>
                               </div>
                               <div className="space-y-1 col-span-2 mt-2 pt-2 border-t border-border">
                                 <p className="text-xs text-muted-foreground">Reviews Received</p>
-                                <p className="text-lg font-medium">{detailQuery.data.data.activity.receivedReviews.length}</p>
+                                <p className="text-lg font-medium">{detailQuery.data.data.activity?.receivedReviews?.length ?? 0}</p>
                               </div>
                             </div>
                           </div>

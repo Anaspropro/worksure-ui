@@ -47,7 +47,9 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
       normalizedKey === "connection" ||
       normalizedKey === "content-length" ||
       normalizedKey === "cookie" ||
-      normalizedKey === "authorization"
+      normalizedKey === "authorization" ||
+      normalizedKey === "if-none-match" ||
+      normalizedKey === "if-modified-since"
     ) {
       return;
     }
