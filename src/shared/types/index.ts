@@ -498,16 +498,20 @@ export interface SystemLog {
 export interface SystemHealth {
   status: string;
   timestamp: string;
-  uptime: number;
-  memory: {
-    rss: number;
-    heapTotal: number;
-    heapUsed: number;
-    external: number;
-    arrayBuffers: number;
+  services: {
+    database: {
+      status: string;
+    };
   };
-  database: {
-    status: string;
+  metrics: {
+    memory: {
+      rss: number;
+      heapTotal: number;
+      heapUsed: number;
+      external: number;
+      arrayBuffers: number;
+    };
+    uptime: number;
   };
 }
 

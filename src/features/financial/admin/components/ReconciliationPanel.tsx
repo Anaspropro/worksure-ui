@@ -80,14 +80,14 @@ export function ReconciliationPanel() {
               <div className="space-y-3">
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">Database status</span>
-                  <Badge variant={healthData.database.status === "connected" ? "default" : "destructive"}>
-                    {healthData.database.status}
+                  <Badge variant={healthData.services?.database?.status === "connected" ? "default" : "destructive"}>
+                    {healthData.services?.database?.status || "unknown"}
                   </Badge>
                 </div>
                 <div className="flex justify-between items-center text-sm">
                   <span className="text-muted-foreground">External Gateway</span>
-                  <Badge variant={healthData.uptime > 0 ? "default" : "secondary"}>
-                    {healthData.uptime > 0 ? 'connected' : 'unknown'}
+                  <Badge variant={(healthData.metrics?.uptime ?? 0) > 0 ? "default" : "secondary"}>
+                    {(healthData.metrics?.uptime ?? 0) > 0 ? 'connected' : 'unknown'}
                   </Badge>
                 </div>
               </div>
