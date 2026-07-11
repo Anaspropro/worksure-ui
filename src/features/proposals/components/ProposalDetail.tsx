@@ -15,10 +15,10 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4">
         <div className="flex items-center gap-4">
           <Avatar className="h-16 w-16">
-            <AvatarFallback className="text-xl">{getInitials(proposal.artisanName)}</AvatarFallback>
+            <AvatarFallback className="text-xl">{getInitials(proposal.artisan.name)}</AvatarFallback>
           </Avatar>
           <div>
-            <h2 className="text-xl font-semibold">{proposal.artisanName}</h2>
+            <h2 className="text-xl font-semibold">{proposal.artisan.name}</h2>
             <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
               <Calendar className="h-4 w-4" />
               Submitted {new Date(proposal.createdAt).toLocaleDateString()}
@@ -37,7 +37,7 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
             <div className="text-sm text-muted-foreground mb-1 flex items-center gap-1.5">
               <DollarSign className="h-4 w-4" /> Bid Amount
             </div>
-            <div className="text-xl font-semibold">${proposal.bidAmount.toLocaleString()}</div>
+            <div className="text-xl font-semibold">${proposal.amount.toLocaleString()}</div>
           </CardContent>
         </Card>
         <Card>
@@ -45,7 +45,7 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
             <div className="text-sm text-muted-foreground mb-1 flex items-center gap-1.5">
               <Clock className="h-4 w-4" /> Duration
             </div>
-            <div className="text-xl font-semibold">{proposal.estimatedDuration}</div>
+            <div className="text-xl font-semibold">{proposal.estimatedDuration || 'Not specified'}</div>
           </CardContent>
         </Card>
       </div>
@@ -53,7 +53,7 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
       <div>
         <h3 className="text-lg font-semibold mb-3">Cover Letter</h3>
         <div className="bg-muted/30 p-6 rounded-lg text-sm leading-relaxed whitespace-pre-wrap border">
-          {proposal.coverLetter}
+          {proposal.message}
         </div>
       </div>
       
@@ -62,9 +62,9 @@ export function ProposalDetail({ proposal }: ProposalDetailProps) {
           <h3 className="text-lg font-semibold mb-3">Attachments</h3>
           <div className="flex flex-col gap-2">
             {proposal.attachments.map(att => (
-              <div key={att.id} className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
+              <div key={att.fileUrl} className="flex items-center gap-2 text-sm text-blue-600 dark:text-blue-400 hover:underline cursor-pointer">
                 <Paperclip className="h-4 w-4" />
-                {att.name}
+                {att.fileName}
               </div>
             ))}
           </div>

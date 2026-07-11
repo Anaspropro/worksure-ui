@@ -8,11 +8,11 @@ import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Input } from "@/shared/components/ui/input";
-import { useState } from "react";
-import { useProposals, useCreateProposal } from "@/features/jobs/api/useProposals";
+import { useProposals } from "@/features/jobs/api/useProposals";
 import { toast } from "sonner";
-import { ArrowRight, Info, CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Info } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
+import { ProposalSubmissionForm } from "@/features/proposals/components/ProposalSubmissionForm";
 
 interface ArtisanJobDetailProps {
   jobId: string;
@@ -22,11 +22,6 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
   const { data: job, isLoading, error } = useJob(jobId);
   const { data: proposalsResponse } = useProposals({ jobId });
   const proposals = proposalsResponse?.proposals;
-  const createProposal = useCreateProposal();
-  
-  const [coverLetter, setCoverLetter] = useState("");
-  const [bidAmount, setBidAmount] = useState<number | "">("");
-  const [estimatedDuration, setEstimatedDuration] = useState("");
   
   const hasSubmitted = proposals?.some(p => p.artisan?.id === "artisan-current");
   const myProposal = proposals?.find(p => p.artisan?.id === "artisan-current");
@@ -38,20 +33,6 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
   if (error || !job) {
     return <div className="text-sm text-destructive">Failed to load job details.</div>;
   }
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      await createProposal.mutateAsync({
-        jobId,
-        amount: Number(bidAmount),
-        message: coverLetter,
-      });
-      toast.success("Proposal submitted successfully!");
-    } catch (err) {
-      toast.error("Failed to submit proposal");
-    }
-  };
 
   return (
     <div className="space-y-6 max-w-5xl mx-auto">
@@ -113,54 +94,10 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
                     </AlertDescription>
                   </Alert>
                 ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Bid Amount ($)</label>
-                      <Input 
-                        type="number" 
-                        min="5"
-                        required
-                        value={bidAmount}
-                        onChange={(e) => setBidAmount(Number(e.target.value) || "")}
-                        placeholder={job.budget.toString()}
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Estimated Duration</label>
-                      <Input 
-                        required
-                        value={estimatedDuration}
-                        onChange={(e) => setEstimatedDuration(e.target.value)}
-                        placeholder="e.g. 2 weeks"
-                      />
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Cover Letter</label>
-                      <Textarea 
-                        required
-                        minLength={50}
-                        className="min-h-[150px] resize-none"
-                        value={coverLetter}
-                        onChange={(e) => setCoverLetter(e.target.value)}
-                        placeholder="Explain why you are the best fit for this job..."
-                      />
-                      <p className="text-xs text-muted-foreground text-right">
-                        {coverLetter.length} / 2000
-                      </p>
-                    </div>
-
-                    <Button 
-                      type="submit" 
-                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-                      disabled={createProposal.isPending || coverLetter.length < 50}
-                    >
-                      {createProposal.isPending ? "Submitting..." : (
-                        <>Submit Proposal <ArrowRight className="ml-2 h-4 w-4" /></>
-                      )}
-                    </Button>
-                  </form>
+                  <ProposalSubmissionForm 
+                    jobId={job.id} 
+                    minBudget={job.budget || 5} 
+                  />
                 )}
               </CardContent>
             </Card>
