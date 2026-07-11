@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from 'react';
 import { useProposal, useProposalAction } from '../api/useProposals';
 import { Skeleton } from '@/shared/components/ui/skeleton';
