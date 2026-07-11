@@ -29,14 +29,14 @@ export default function AdminDashboardWorkspace() {
   const reportsQuery = useAdminReports("overview");
   const report = reportsQuery.data;
 
-  const usersCount = report?.totals.users ?? 0;
-  const pendingArtisansCount = report?.totals.pendingArtisansCount ?? 0;
-  const openDisputesCount = report?.totals.openDisputes ?? 0;
-  const pendingPayoutsCount = report?.totals.pendingPayoutsCount ?? 0;
+  const usersCount = report?.totals?.users ?? 0;
+  const pendingArtisansCount = report?.totals?.pendingArtisansCount ?? 0;
+  const openDisputesCount = report?.totals?.openDisputes ?? 0;
+  const pendingPayoutsCount = report?.totals?.pendingPayoutsCount ?? 0;
   
-  const totalSystemValue = report?.totals.totalSystemValue ?? 0;
-  const lockedInEscrow = report?.totals.lockedInEscrow ?? 0;
-  const platformFees = report?.totals.platformFees ?? 0;
+  const totalSystemValue = report?.totals?.totalSystemValue ?? 0;
+  const lockedInEscrow = report?.totals?.lockedInEscrow ?? 0;
+  const platformFees = report?.totals?.platformFees ?? 0;
 
   return (
     <motion.main 
