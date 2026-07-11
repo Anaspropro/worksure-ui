@@ -11,17 +11,18 @@ export function useAdminPayoutRequests(params: { cursor?: string; limit?: number
   return useQuery<AdminCollection<WalletTransaction>>({
     queryKey: [...financialQueryKeys.adminPayouts(), params.cursor, params.limit],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/admin/transactions", {
-        params: {
-          query: {
-            type: "PAYOUT",
-            cursor: params.cursor,
-            limit: params.limit,
-          } as any
-        }
-      });
-      if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as AdminCollection<WalletTransaction>;
+      const queryParams = new URLSearchParams();
+      queryParams.append("type", "PAYOUT");
+      if (params.cursor) queryParams.append("cursor", params.cursor);
+      if (params.limit) queryParams.append("limit", params.limit.toString());
+      
+      const response = await fetch(`/api/proxy/admin/transactions?${queryParams.toString()}`, { cache: "no-store" });
+      if (!response.ok) {
+        let errorData;
+        try { errorData = await response.json(); } catch (e) {}
+        throw new ApiError(response.statusText, response.status, errorData);
+      }
+      return await response.json();
     },
     enabled: params.enabled,
   });
@@ -49,7 +50,7 @@ export function useReconciliationReports(page = 1, limit = 20, options: { enable
   return useQuery<ApiEnvelope<AuditLog[]>>({
     queryKey: [...financialQueryKeys.adminReconciliation(), page, limit],
     queryFn: async () => {
-      const res = await fetch(`/api/proxy/admin/reconciliation?page=${page}&limit=${limit}`);
+      const res = await fetch(`/api/proxy/admin/reconciliation/reports?page=${page}&limit=${limit}`);
       if (!res.ok) throw new Error(res.statusText);
       return res.json() as unknown as ApiEnvelope<AuditLog[]>;
     },

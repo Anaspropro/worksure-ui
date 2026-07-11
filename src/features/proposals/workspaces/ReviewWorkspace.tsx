@@ -7,6 +7,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { CheckCircle2, ChevronRight, CheckCircle, Clock, DollarSign, Calendar, Paperclip, AlertTriangle } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/shared/components/ui/avatar';
+import { toast } from 'sonner';
 
 interface ReviewWorkspaceProps {
   proposalId: string;
@@ -29,9 +30,13 @@ export function ReviewWorkspace({ proposalId, onClose, onAccepted }: ReviewWorks
       { action: 'ACCEPT' },
       { 
         onSuccess: () => {
+          toast.success('Proposal accepted successfully!');
           onAccepted?.();
           onClose();
-        } 
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || 'Failed to accept proposal. Please try again.');
+        }
       }
     );
   };
@@ -41,8 +46,12 @@ export function ReviewWorkspace({ proposalId, onClose, onAccepted }: ReviewWorks
       { action: 'REJECT' },
       { 
         onSuccess: () => {
+          toast.success('Proposal rejected.');
           onClose();
-        } 
+        },
+        onError: (error: any) => {
+          toast.error(error?.message || 'Failed to reject proposal. Please try again.');
+        }
       }
     );
   };
