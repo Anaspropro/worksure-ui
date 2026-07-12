@@ -16,7 +16,8 @@ export const financeApi = {
       try { errorData = await response.json(); } catch (e) {}
       throw new ApiError(response.statusText, response.status, errorData);
     }
-    return await response.json() as WalletBalance;
+    const result = await response.json();
+    return (result.data || result) as WalletBalance;
   },
   getSummary: async () => {
     const response = await fetch("/api/proxy/wallet/summary", { cache: "no-store" });
@@ -25,7 +26,8 @@ export const financeApi = {
       try { errorData = await response.json(); } catch (e) {}
       throw new ApiError(response.statusText, response.status, errorData);
     }
-    return await response.json() as WalletSummary;
+    const result = await response.json();
+    return (result.data || result) as WalletSummary;
   },
   getTransactions: async (params: { limit?: number; offset?: number } = {}) => {
     const response = await fetch(`/api/proxy/wallet/transactions?limit=${params.limit || 50}&offset=${params.offset || 0}`, { cache: "no-store" });
@@ -34,7 +36,8 @@ export const financeApi = {
       try { errorData = await response.json(); } catch (e) {}
       throw new ApiError(response.statusText, response.status, errorData);
     }
-    return await response.json() as WalletTransactionsResponse;
+    const result = await response.json();
+    return (result.data || result) as WalletTransactionsResponse;
   },
   createWallet: async () => {
     const response = await fetch("/api/proxy/wallet/create", { method: "POST", cache: "no-store" });
@@ -43,7 +46,8 @@ export const financeApi = {
       try { errorData = await response.json(); } catch (e) {}
       throw new ApiError(response.statusText, response.status, errorData);
     }
-    return await response.json() as WalletCreateResponse;
+    const result = await response.json();
+    return (result.data || result) as WalletCreateResponse;
   },
   depositInit: async (input: { amount: number; callbackUrl?: string }) => {
     const response = await fetch("/api/proxy/wallet/deposit/init", {

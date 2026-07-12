@@ -29,7 +29,7 @@ export function ClientJobsWorkspace() {
           <h2 className="text-2xl font-semibold tracking-tight">My Job Postings</h2>
           <p className="text-sm text-muted-foreground mt-1">Manage your job postings and review proposals.</p>
         </div>
-        <Button onClick={() => router.push("/client/jobs/create")}>
+        <Button onClick={() => router.push("/jobs/create")}>
           <Plus className="mr-2 h-4 w-4" /> Post a Job
         </Button>
       </div>
@@ -44,7 +44,7 @@ export function ClientJobsWorkspace() {
             <p className="text-sm text-muted-foreground max-w-sm mb-6">
               Create your first job posting to start receiving proposals from talented artisans.
             </p>
-            <Button onClick={() => router.push("/client/jobs/create")}>
+            <Button onClick={() => router.push("/jobs/create")}>
               Post Your First Job
             </Button>
           </CardContent>
