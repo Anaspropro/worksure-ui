@@ -49,7 +49,9 @@ export function useAdminReports(reportType = "overview", options: { enabled?: bo
         try { errorData = await response.json(); } catch (e) {}
         throw new ApiError(response.statusText, response.status, errorData);
       }
-      return await response.json();
+      // Backend returns { data: { reportType, totals }, exportFormats }
+      const result = await response.json();
+      return (result?.data ?? result) as AdminOverviewReport;
     },
     enabled: options.enabled,
   });
@@ -221,7 +223,8 @@ export function useAdminAuditLogs(params: { cursor?: string; limit?: number; ena
         try { errorData = await response.json(); } catch (e) {}
         throw new ApiError(response.statusText, response.status, errorData);
       }
-      return await response.json();
+      // Backend returns { data: [...], meta: { ... } } — matches ApiEnvelope shape
+      return await response.json() as ApiEnvelope<AuditLog[]>;
     },
     enabled: params.enabled,
   });
@@ -322,7 +325,8 @@ export function useAdminTransactions(params: { type?: string; cursor?: string; l
         try { errorData = await response.json(); } catch (e) {}
         throw new ApiError(response.statusText, response.status, errorData);
       }
-      return await response.json();
+      // Backend returns { data: [...], meta: { total, nextCursor, ... } } — matches AdminCollection shape directly
+      return await response.json() as AdminCollection<WalletTransaction>;
     },
     enabled: params.enabled,
   });
