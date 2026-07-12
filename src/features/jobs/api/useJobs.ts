@@ -86,7 +86,9 @@ export function useJob(jobId?: string, options: { enabled?: boolean } = {}) {
         try { errorData = await response.json(); } catch (e) {}
         throw new ApiError(response.statusText, response.status, errorData);
       }
-      return await response.json();
+      // Backend returns { data: job }
+      const result = await response.json();
+      return (result?.data ?? result) as Job;
     },
     enabled: Boolean(jobId) && (options.enabled ?? true),
   });
@@ -102,7 +104,9 @@ export function useJobTimeline(id: string) {
         try { errorData = await response.json(); } catch (e) {}
         throw new ApiError(response.statusText, response.status, errorData);
       }
-      return await response.json();
+      // Backend returns { data: timeline[] }
+      const result = await response.json();
+      return (result?.data ?? result) as JobEvent[];
     },
     enabled: !!id,
   });

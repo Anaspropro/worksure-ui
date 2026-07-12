@@ -31,7 +31,9 @@ export async function getConversation(id: string): Promise<Conversation> {
     try { errorData = await response.json(); } catch (e) {}
     throw new ApiError(response.statusText, response.status, errorData);
   }
-  return await response.json();
+  // Backend returns { data: conversation }
+  const result = await response.json();
+  return (result?.data ?? result) as Conversation;
 }
 
 export async function getMessages({ conversationId, cursor, limit = 50 }: GetMessagesParams): Promise<PaginatedMessages> {
