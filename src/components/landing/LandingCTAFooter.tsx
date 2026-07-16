@@ -63,7 +63,6 @@ export function LandingFooter() {
         { label: "How it Works", href: "#how-it-works" },
         { label: "Post a Job", href: "/auth/register" },
         { label: "Browse Jobs", href: "/jobs" },
-        { label: "Pricing", href: "#" },
       ],
     },
     {
@@ -89,7 +88,7 @@ export function LandingFooter() {
   return (
     <footer className="bg-card border-t border-border text-foreground pt-16 pb-8">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-5 lg:gap-10 grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div>
             <div className="flex items-center gap-2 mb-4">
@@ -101,7 +100,7 @@ export function LandingFooter() {
               </span>
             </div>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              The secure escrow marketplace that connects clients with verified
+              The secure escrow marketplace that connects cls-2 lients with verified
               artisans. Trust built in.
             </p>
           </div>

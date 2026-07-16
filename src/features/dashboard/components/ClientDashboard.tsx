@@ -103,7 +103,7 @@ export default function ClientDashboard({ user }: { user: User }) {
           </CardHeader>
           <CardContent>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <Link href="/wallet" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
+              <Link href="/dashboard/client/finances" className="group flex items-start gap-3 rounded-xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-sm transition-all">
                 <span className="flex-shrink-0 size-8 rounded-full bg-primary/10 text-primary text-sm font-bold flex items-center justify-center">1</span>
                 <div>
                   <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">Set up wallet</p>
