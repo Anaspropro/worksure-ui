@@ -95,7 +95,7 @@ export default function LandingHero() {
 
             {/* CTAs */}
             <motion.div
-              className="flex flex-wrap items-center gap-4" 
+              className="flex items-center gap-2 lg:gap-4" 
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
