@@ -1,7 +1,9 @@
-"use client";
+import { AuditWorkspace } from "@/features/contracts/admin/components/AuditWorkspace";
 
-import AdminAuditWorkspace from "@/components/features/admin/AdminAuditWorkspace";
-
-export default function AdminAuditPage() {
-  return <AdminAuditWorkspace />;
+export default function AuditPage() {
+  return (
+    <div className="p-6 max-w-7xl mx-auto">
+      <AuditWorkspace />
+    </div>
+  );
 }

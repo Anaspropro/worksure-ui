@@ -67,7 +67,7 @@ export default function AdminDisputesWorkspace() {
 
   const selectedDispute = filteredDisputes?.find(d => d.id === selectedDisputeId);
 
-  const handleResolve = async (decision: "REFUND_CLIENT" | "PAY_ARTISAN") => {
+  const handleResolve = async (decision: "CLIENT_WINS" | "ARTISAN_WINS" | "SPLIT_DECISION") => {
     if (!selectedDisputeId) return;
 
     const toastId = toast.loading("Resolving dispute...");
@@ -253,14 +253,14 @@ export default function AdminDisputesWorkspace() {
                                 variant="destructive" 
                                 className="w-full"
                                 disabled={resolveMutation.isPending}
-                                onClick={() => handleResolve("REFUND_CLIENT")}
+                                onClick={() => handleResolve("CLIENT_WINS")}
                               >
                                 Refund Client
                               </Button>
                               <Button 
                                 className="w-full bg-success hover:bg-success/90"
                                 disabled={resolveMutation.isPending}
-                                onClick={() => handleResolve("PAY_ARTISAN")}
+                                onClick={() => handleResolve("ARTISAN_WINS")}
                               >
                                 Pay Artisan
                               </Button>

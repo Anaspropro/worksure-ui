@@ -684,6 +684,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/taxonomy/suggestions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all category suggestions */
+        get: operations["AdminController_getCategorySuggestions"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/taxonomy/suggestions/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Approve a category suggestion */
+        patch: operations["AdminController_approveCategorySuggestion"];
+        trace?: never;
+    };
+    "/admin/taxonomy/suggestions/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Reject a category suggestion */
+        patch: operations["AdminController_rejectCategorySuggestion"];
+        trace?: never;
+    };
     "/payments/fund": {
         parameters: {
             query?: never;
@@ -1230,6 +1281,125 @@ export interface paths {
         patch: operations["DisputesController_updateDispute"];
         trace?: never;
     };
+    "/verification/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current verification status (Marketplace & Financial) */
+        get: operations["VerificationController_getStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/verification/marketplace/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit for marketplace review */
+        post: operations["VerificationController_submitMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/verification/financial/initiate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Initiate financial verification with provider */
+        post: operations["VerificationController_initiateFinancial"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/verification/paystack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Paystack identity verification webhook */
+        post: operations["VerificationWebhookController_handlePaystackWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get pending marketplace verifications */
+        get: operations["AdminVerificationController_getPending"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/{userId}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve artisan marketplace verification */
+        post: operations["AdminVerificationController_approveMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/{userId}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject artisan marketplace verification */
+        post: operations["AdminVerificationController_rejectMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/artisan/profile": {
         parameters: {
             query?: never;
@@ -1597,57 +1767,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/kyc/verify-identity": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Verify user identity via Paystack BVN match */
-        post: operations["KycController_verifyIdentity"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/kyc/upload": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Upload a KYC document via direct Cloudinary URL */
-        post: operations["KycController_uploadDocument"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/kyc/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current KYC status */
-        get: operations["KycController_getStatus"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/admin/audit": {
         parameters: {
             query?: never;
@@ -1781,6 +1900,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/taxonomy/suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Suggest a new category */
+        post: operations["TaxonomyController_suggestCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1873,6 +2009,9 @@ export interface components {
             /** @example Fraudulent activity detected during review. */
             reason?: string;
         };
+        RejectSuggestionDto: {
+            reason?: string;
+        };
         PaymentFundContractDto: {
             /** @description Contract ID to fund */
             contractId: string;
@@ -1946,16 +2085,33 @@ export interface components {
             /** @description Evidence messages */
             evidenceMessages?: string[];
         };
-        Object: Record<string, never>;
         UpdateDisputeDto: {
             /** @description Dispute status */
-            status?: Record<string, never>;
+            status?: string;
             /** @description Resolution decision */
-            resolutionDecision?: Record<string, never>;
+            resolutionDecision?: string;
             /** @description Resolution notes */
             resolutionNotes?: string;
             /** @description Resolver ID */
             resolvedBy?: string;
+        };
+        VerificationStatusResponseDto: {
+            /** @enum {string} */
+            marketplaceStatus: "NOT_SUBMITTED" | "PENDING_REVIEW" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMISSION_REQUIRED" | "SUSPENDED";
+            /** Format: date-time */
+            marketplaceApprovedAt: string;
+            marketplaceRejectedReason: string;
+            /** @enum {string} */
+            financialStatus: "NOT_STARTED" | "PENDING" | "PROCESSING" | "VERIFIED" | "FAILED" | "EXPIRED" | "RETRY_REQUIRED";
+            /** Format: date-time */
+            financialVerifiedAt: string;
+            financialFailureReason: string;
+            /** @description Derived payout eligibility */
+            isPayoutEligible: boolean;
+        };
+        FinancialVerificationInitiateResponseDto: {
+            url: string;
+            reference: string;
         };
         CreateArtisanProfileDto: Record<string, never>;
         UpdateArtisanProfileDto: Record<string, never>;
@@ -1993,7 +2149,7 @@ export interface components {
             /** @description Job deadline */
             deadline?: string;
             /** @description Job status */
-            status?: Record<string, never>;
+            status?: string;
             /** @description Additional job requirements */
             requirements?: string;
         };
@@ -2164,6 +2320,22 @@ export interface components {
             slug: string;
             categoryId: string;
             isTrending: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SuggestCategoryDto: {
+            name: string;
+            description?: string;
+        };
+        CategorySuggestionResponseDto: {
+            id: string;
+            name: string;
+            description?: string;
+            status: string;
+            suggestedByUserId: string;
+            rejectionReason?: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -2926,6 +3098,7 @@ export interface operations {
         parameters: {
             query: {
                 search: string;
+                role: string;
                 cursor: string;
                 limit: string;
             };
@@ -3185,10 +3358,10 @@ export interface operations {
     AdminController_generateReports: {
         parameters: {
             query?: {
+                /** @description Report type to generate */
+                reportType?: string;
                 /** @description Optional YYYY-MM month selector */
                 month?: string;
-                /** @description Report type to generate */
-                reportType?: unknown;
             };
             header?: never;
             path?: never;
@@ -3255,6 +3428,72 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_getCategorySuggestions: {
+        parameters: {
+            query: {
+                /** @description Filter by PENDING, APPROVED, REJECTED */
+                status?: string;
+                cursor: string;
+                limit: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_approveCategorySuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Suggestion identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_rejectCategorySuggestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Suggestion identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectSuggestionDto"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -3517,7 +3756,9 @@ export interface operations {
     };
     ContractsController_getUserContracts: {
         parameters: {
-            query?: never;
+            query: {
+                status: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3910,7 +4151,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: components["schemas"]["Object"];
+                status?: "OPEN" | "RESOLVED";
                 /** @description Filter by contract ID */
                 contractId?: string;
                 /** @description Filter by job ID */
@@ -4098,6 +4339,135 @@ export interface operations {
             };
         };
     };
+    VerificationController_getStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationStatusResponseDto"];
+                };
+            };
+        };
+    };
+    VerificationController_submitMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    VerificationController_initiateFinancial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinancialVerificationInitiateResponseDto"];
+                };
+            };
+        };
+    };
+    VerificationWebhookController_handlePaystackWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-paystack-signature": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVerificationController_getPending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVerificationController_approveMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVerificationController_rejectMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     ArtisanController_createArtisanProfile: {
         parameters: {
             query?: never;
@@ -4233,7 +4603,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: components["schemas"]["Object"];
+                status?: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "FORCE_CLOSED";
                 /** @description Filter by client ID */
                 clientId?: string;
                 /** @description Filter by artisan ID */
@@ -4429,7 +4799,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: components["schemas"]["Object"];
+                status?: "DRAFT" | "SUBMITTED" | "VIEWED" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "EXPIRED" | "CANCELLED";
                 /** @description Filter by job ID */
                 jobId?: string;
                 /** @description Filter by client ID */
@@ -5075,57 +5445,6 @@ export interface operations {
             };
         };
     };
-    KycController_verifyIdentity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    KycController_uploadDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    KycController_getStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     AuditController_getAuditLogs: {
         parameters: {
             query: {
@@ -5284,6 +5603,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SkillResponseDto"];
+                };
+            };
+        };
+    };
+    TaxonomyController_suggestCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuggestCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategorySuggestionResponseDto"];
                 };
             };
         };

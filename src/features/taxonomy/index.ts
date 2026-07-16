@@ -3,6 +3,7 @@ export { CategoryBadge } from "./components/CategoryBadge";
 export { SkillBadge } from "./components/SkillBadge";
 export { CategorySelector } from "./components/CategorySelector";
 export { SkillAutocomplete } from "./components/SkillAutocomplete";
+export { SuggestCategoryDialog } from "./components/SuggestCategoryDialog";
 
 // Hooks
 export * from "./hooks/useTaxonomy";
