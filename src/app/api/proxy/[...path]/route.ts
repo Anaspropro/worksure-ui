@@ -88,6 +88,9 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     headers: responseHeaders,
   });
 
+  const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.nextUrl.protocol === "https:";
+  const isSecureCookie = process.env.NODE_ENV === "production" && isHttps;
+
   const shouldPersistSession =
     upstreamResponse.ok &&
     path[0] === "auth" &&
@@ -105,14 +108,14 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     if (accessToken) {
       response.cookies.set(TOKEN_KEY, accessToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: isSecureCookie,
         sameSite: "lax",
         path: "/",
         maxAge: SESSION_MAX_AGE,
       });
       response.cookies.set(SESSION_HINT_KEY, "1", {
         httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
+        secure: isSecureCookie,
         sameSite: "lax",
         path: "/",
         maxAge: SESSION_MAX_AGE,
@@ -120,7 +123,7 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
       if (userRole) {
         response.cookies.set("user_role", userRole, {
           httpOnly: false,
-          secure: process.env.NODE_ENV === "production",
+          secure: isSecureCookie,
           sameSite: "lax",
           path: "/",
           maxAge: SESSION_MAX_AGE,
@@ -132,21 +135,21 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
   if (shouldClearSession) {
     response.cookies.set(TOKEN_KEY, "", {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureCookie,
       sameSite: "lax",
       path: "/",
       maxAge: 0,
     });
     response.cookies.set(SESSION_HINT_KEY, "", {
       httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureCookie,
       sameSite: "lax",
       path: "/",
       maxAge: 0,
     });
     response.cookies.set("user_role", "", {
       httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
+      secure: isSecureCookie,
       sameSite: "lax",
       path: "/",
       maxAge: 0,
