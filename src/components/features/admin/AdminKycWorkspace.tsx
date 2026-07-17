@@ -109,7 +109,7 @@ export default function AdminKycWorkspace() {
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Pending Review</p>
-                <p className="text-2xl font-bold">{(usersData?.data || []).filter(a => !a.artisanVerified).length}</p>
+                <p className="text-2xl font-bold">{(Array.isArray(usersData?.data) ? usersData.data : []).filter(a => !a.artisanVerified).length}</p>
               </div>
             </div>
           </div>

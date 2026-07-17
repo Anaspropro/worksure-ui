@@ -27,7 +27,7 @@ export function VerificationWorkspace() {
   }
 
   // Filter unverified artisans for this view
-  const unverifiedArtisans = (usersData?.data || []).filter((user: any) => !user.artisanVerified);
+  const unverifiedArtisans = (Array.isArray(usersData?.data) ? usersData.data : []).filter((user: any) => !user.artisanVerified);
   const meta = usersData?.meta;
 
   const handleVerify = (userId: string) => {
