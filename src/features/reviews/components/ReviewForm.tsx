@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/shared/components/ui/dialog";
@@ -9,12 +11,13 @@ import { createReviewSchema, CreateReviewInput } from "../schemas";
 
 interface ReviewFormProps {
   contractId: string;
+  targetId: string;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
 }
 
-export function ReviewForm({ contractId, open, onOpenChange, onSuccess }: ReviewFormProps) {
+export function ReviewForm({ contractId, targetId, open, onOpenChange, onSuccess }: ReviewFormProps) {
   const { mutate: createReview, isPending } = useCreateReview();
 
   const {
@@ -28,6 +31,7 @@ export function ReviewForm({ contractId, open, onOpenChange, onSuccess }: Review
     resolver: zodResolver(createReviewSchema),
     defaultValues: {
       contractId,
+      targetId,
       rating: 5,
       workQuality: 5,
       communication: 5,
@@ -37,10 +41,36 @@ export function ReviewForm({ contractId, open, onOpenChange, onSuccess }: Review
     },
   });
 
+  // Load draft
+  useEffect(() => {
+    if (open) {
+      const draft = localStorage.getItem(`review-draft-${contractId}`);
+      if (draft) {
+        try {
+          const parsed = JSON.parse(draft);
+          reset({ ...parsed, contractId, targetId }); // Ensure IDs are kept
+        } catch (e) {
+          // ignore parse errors
+        }
+      }
+    }
+  }, [open, contractId, targetId, reset]);
+
+  // Save draft
+  useEffect(() => {
+    if (open) {
+      const subscription = watch((value) => {
+        localStorage.setItem(`review-draft-${contractId}`, JSON.stringify(value));
+      });
+      return () => subscription.unsubscribe();
+    }
+  }, [open, watch, contractId]);
+
   const onSubmit = (data: CreateReviewInput) => {
     createReview(data, {
       onSuccess: () => {
         onOpenChange(false);
+        localStorage.removeItem(`review-draft-${contractId}`);
         reset();
         onSuccess?.();
       },

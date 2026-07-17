@@ -12,7 +12,7 @@ export default function AdminTaxonomyPage() {
   const { data: response, isLoading } = useQuery({
     queryKey: ["category-suggestions"],
     queryFn: async () => {
-      const { data, error } = await apiClient.GET("/admin/taxonomy/suggestions", {});
+      const { data, error } = await apiClient.GET("/admin/taxonomy/suggestions" as any, { params: { query: { status: "pending", cursor: "", limit: "50" } } });
       if (error) throw error;
       return data;
     }
@@ -20,7 +20,7 @@ export default function AdminTaxonomyPage() {
 
   const approveMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await apiClient.PATCH("/admin/taxonomy/suggestions/{id}/approve", {
+      const { error } = await apiClient.PATCH("/admin/taxonomy/suggestions/{id}/approve" as any, {
         params: { path: { id } }
       });
       if (error) throw error;
@@ -34,9 +34,8 @@ export default function AdminTaxonomyPage() {
 
   const rejectMutation = useMutation({
     mutationFn: async (id: string) => {
-      const { error } = await apiClient.PATCH("/admin/taxonomy/suggestions/{id}/reject", {
-        params: { path: { id } },
-        body: { reason: "Not relevant" } // Example reason
+      const { error } = await apiClient.DELETE("/admin/taxonomy/suggestions/{id}" as any, {
+        params: { path: { id } }
       });
       if (error) throw error;
     },
@@ -64,7 +63,7 @@ export default function AdminTaxonomyPage() {
             </tr>
           </thead>
           <tbody>
-            {response?.data?.map((suggestion: any) => (
+            {(response as any)?.data?.map((suggestion: any) => (
               <tr key={suggestion.id} className="border-b border-border hover:bg-muted/30">
                 <td className="px-6 py-4 font-medium">{suggestion.name}</td>
                 <td className="px-6 py-4">{suggestion.description || "-"}</td>
@@ -84,7 +83,7 @@ export default function AdminTaxonomyPage() {
                 </td>
               </tr>
             ))}
-            {!response?.data?.length && (
+            {!(response as any)?.data?.length && (
               <tr>
                 <td colSpan={5} className="text-center h-24 text-muted-foreground">
                   No suggestions found.

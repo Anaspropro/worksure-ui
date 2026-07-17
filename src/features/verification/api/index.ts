@@ -2,7 +2,7 @@ import { apiClient } from '@/shared/api/client';
 import type { components } from '@/shared/api/generated/schema';
 
 export type VerificationStatusResponseDto = components['schemas']['VerificationStatusResponseDto'];
-export type MarketplaceVerificationSubmitDto = components['schemas']['MarketplaceVerificationSubmitDto'];
+export type MarketplaceVerificationSubmitDto = any;
 export type FinancialVerificationInitiateResponseDto = components['schemas']['FinancialVerificationInitiateResponseDto'];
 
 export const verificationApi = {

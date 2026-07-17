@@ -93,7 +93,7 @@ export function AnalyticsDashboard() {
                     <TableCell colSpan={4} className="text-center h-24">No data available.</TableCell>
                   </TableRow>
                 ) : (
-                  artisansReport.data.map((artisan, index) => (
+                  artisansReport.data.map((artisan: any, index: any) => (
                     <TableRow key={artisan.artisanId}>
                       <TableCell className="font-medium flex items-center gap-2">
                         {index < 3 && <Star className={`size-4 ${index === 0 ? "text-yellow-500" : index === 1 ? "text-gray-400" : "text-amber-600"}`} />}

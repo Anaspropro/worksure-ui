@@ -27,7 +27,7 @@ export function VerificationWorkspace() {
   }
 
   // Filter unverified artisans for this view
-  const unverifiedArtisans = (usersData?.data || []).filter(user => !user.artisanVerified);
+  const unverifiedArtisans = (usersData?.data || []).filter((user: any) => !user.artisanVerified);
   const meta = usersData?.meta;
 
   const handleVerify = (userId: string) => {
@@ -78,7 +78,7 @@ export function VerificationWorkspace() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  unverifiedArtisans.map((user) => (
+                  unverifiedArtisans.map((user: any) => (
                     <TableRow key={user.id}>
                       <TableCell>
                         <div className="font-medium">{user.name}</div>
@@ -123,7 +123,7 @@ export function VerificationWorkspace() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Load More Artisans
             </Button>

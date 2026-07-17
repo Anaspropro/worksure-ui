@@ -58,7 +58,13 @@ export const reviewKeys = {
   all: ["reviews"] as const,
   list: () => [...reviewKeys.all, "list"] as const,
   listForUser: (userId: string) => [...reviewKeys.list(), userId] as const,
+  eligible: () => [...reviewKeys.all, "eligible"] as const,
   stats: (artisanId: string) => [...reviewKeys.all, "stats", artisanId] as const,
+};
+
+export const reputationKeys = {
+  all: ["reputation"] as const,
+  profile: (userId: string) => [...reputationKeys.all, "profile", userId] as const,
 };
 
 export const profileKeys = {
@@ -79,6 +85,7 @@ export const adminKeys = {
   reports: (type: string) => [...adminKeys.all, "reports", type] as const,
   contracts: (filter: Record<string, any>) => [...adminKeys.all, "contracts", filter] as const,
   jobs: (filter: Record<string, any>) => [...adminKeys.all, "jobs", filter] as const,
+  reviews: (filter: Record<string, any>) => [...adminKeys.all, "reviews", filter] as const,
 };
 
 export const queryKeys = {
@@ -89,6 +96,7 @@ export const queryKeys = {
   chat: chatKeys,
   notifications: notificationKeys,
   reviews: reviewKeys,
+  reputation: reputationKeys,
   profile: profileKeys,
   kyc: kycKeys,
   admin: adminKeys,

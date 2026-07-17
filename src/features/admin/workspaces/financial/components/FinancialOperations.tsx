@@ -115,7 +115,7 @@ export function FinancialOperations() {
                     <TableCell colSpan={5} className="text-center h-24">No transactions found.</TableCell>
                   </TableRow>
                 ) : (
-                  transactions.map((tx) => (
+                  transactions.map((tx: any) => (
                     <TableRow key={tx.id}>
                       <TableCell className="whitespace-nowrap">
                         {format(new Date(tx.createdAt), "MMM d, yyyy HH:mm")}
@@ -157,7 +157,7 @@ export function FinancialOperations() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Next Page
             </Button>

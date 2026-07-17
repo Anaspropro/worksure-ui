@@ -59,7 +59,7 @@ export function DisputesWorkspace() {
             <CardTitle className="text-sm font-medium">Active Disputes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-destructive">{meta?.active || 0}</div>
+            <div className="text-2xl font-bold text-destructive">{(meta as any)?.active || 0}</div>
           </CardContent>
         </Card>
         <Card>
@@ -67,7 +67,7 @@ export function DisputesWorkspace() {
             <CardTitle className="text-sm font-medium">Resolved Disputes</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{meta?.resolved || 0}</div>
+            <div className="text-2xl font-bold">{(meta as any)?.resolved || 0}</div>
           </CardContent>
         </Card>
       </div>
@@ -94,7 +94,7 @@ export function DisputesWorkspace() {
                     <TableCell colSpan={5} className="text-center h-24">No disputes found.</TableCell>
                   </TableRow>
                 ) : (
-                  disputes.map((dispute) => (
+                  disputes.map((dispute: any) => (
                     <TableRow key={dispute.id}>
                       <TableCell>
                         <div className="font-medium flex items-center gap-2">
@@ -169,7 +169,7 @@ export function DisputesWorkspace() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Next Page
             </Button>

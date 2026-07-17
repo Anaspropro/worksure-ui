@@ -36,7 +36,7 @@ export const AdminVerificationReviewDashboard = () => {
       const { data, error } = await apiClient.POST('/admin/verification/marketplace/{userId}/reject', {
         params: { path: { userId } },
         body: { reason }
-      });
+      } as any);
       if (error) throw error;
       return data;
     },
@@ -57,14 +57,14 @@ export const AdminVerificationReviewDashboard = () => {
       </div>
 
       <div className="grid gap-4">
-        {pending?.length === 0 ? (
+        {(pending as unknown as any[])?.length === 0 ? (
           <Card>
             <CardContent className="pt-6 text-center text-muted-foreground">
               No pending verifications to review.
             </CardContent>
           </Card>
         ) : (
-          pending?.map((item: any) => (
+          (pending as unknown as any[])?.map((item: any) => (
             <Card key={item.id}>
               <CardContent className="pt-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                 <div>

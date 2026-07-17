@@ -114,7 +114,7 @@ export function JobsWorkspace() {
                     <TableCell colSpan={5} className="text-center h-24">No jobs found.</TableCell>
                   </TableRow>
                 ) : (
-                  jobs.map((job) => (
+                  jobs.map((job: any) => (
                     <TableRow key={job.id}>
                       <TableCell>
                         <div className="font-medium flex items-center gap-2">
@@ -169,7 +169,7 @@ export function JobsWorkspace() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Next Page
             </Button>

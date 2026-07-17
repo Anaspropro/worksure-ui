@@ -1,7 +1,7 @@
 import React from 'react';
 import { usePreferences, useUpdatePreference } from '../api/queries';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
+import { Switch } from '@/shared/components/ui/switch';
+import { Label } from '@/shared/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 
 const NOTIFICATION_CATEGORIES = [
@@ -54,7 +54,7 @@ export const NotificationSettings = () => {
                   </div>
                   <Switch 
                     checked={isEnabled('IN_APP', category.id)} 
-                    onCheckedChange={(checked) => handleToggle('IN_APP', category.id, checked)}
+                    onCheckedChange={(checked: any) => handleToggle('IN_APP', category.id, checked)}
                     disabled={updatePreference.isPending}
                   />
                 </div>
@@ -66,7 +66,7 @@ export const NotificationSettings = () => {
                   </div>
                   <Switch 
                     checked={isEnabled('EMAIL', category.id)} 
-                    onCheckedChange={(checked) => handleToggle('EMAIL', category.id, checked)}
+                    onCheckedChange={(checked: any) => handleToggle('EMAIL', category.id, checked)}
                     disabled={updatePreference.isPending}
                   />
                 </div>

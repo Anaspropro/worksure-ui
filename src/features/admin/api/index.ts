@@ -1,7 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
-import { apiClient } from "@/lib/api/client";
-import type { 
-  AdminOverviewReport, 
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import apiClient from "@/shared/api/client";
+import type {
+  AdminOverviewReport,
   AdminContractStats,
   AdminCollection,
   AdminUserRecord,
@@ -30,8 +30,11 @@ export function useAdminOverview() {
   return useQuery({
     queryKey: adminKeys.overviewReport(),
     queryFn: async () => {
-      const response = await apiClient.get<{ data: AdminOverviewReport }>("/admin/reports?reportType=overview");
-      return response.data.data;
+      const { data, error } = await apiClient.GET("/admin/reports", {
+        params: { query: { reportType: 'overview' } }
+      });
+      if (error) throw error;
+      return (data as any)?.data as AdminOverviewReport;
     },
   });
 }
@@ -40,10 +43,11 @@ export function useAdminReport<T = any>(type: string, month?: string) {
   return useQuery({
     queryKey: adminKeys.report(type, month),
     queryFn: async () => {
-      const response = await apiClient.get<{ data: T }>(`/admin/reports`, { 
-        params: { reportType: type, month } 
+      const { data, error } = await apiClient.GET("/admin/reports", {
+        params: { query: { reportType: type, month } }
       });
-      return response.data.data;
+      if (error) throw error;
+      return (data as any)?.data as unknown as T;
     },
   });
 }
@@ -52,8 +56,9 @@ export function useAdminContractStats() {
   return useQuery({
     queryKey: adminKeys.contractStats(),
     queryFn: async () => {
-      const response = await apiClient.get<AdminContractStats>("/admin/contracts/stats");
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/contracts/stats");
+      if (error) throw error;
+      return data as unknown as AdminContractStats;
     },
   });
 }
@@ -62,8 +67,11 @@ export function useAdminUsers(params?: { search?: string, role?: string, cursor?
   return useQuery({
     queryKey: [...adminKeys.users(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<AdminUserRecord>>("/admin/users", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/users", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<AdminUserRecord>;
     },
   });
 }
@@ -72,8 +80,11 @@ export function useAdminJobs(params?: { search?: string, status?: string, cursor
   return useQuery({
     queryKey: [...adminKeys.jobs(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<any>>("/admin/jobs", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/jobs", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<any>;
     },
   });
 }
@@ -82,8 +93,11 @@ export function useAdminContracts(params?: { search?: string, status?: string, c
   return useQuery({
     queryKey: [...adminKeys.contracts(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<any>>("/admin/contracts", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/contracts", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<any>;
     },
   });
 }
@@ -92,8 +106,11 @@ export function useAdminDisputes(params?: { cursor?: string, limit?: number }) {
   return useQuery({
     queryKey: [...adminKeys.disputes(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<AdminDisputeRecord>>("/admin/disputes", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/disputes", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<AdminDisputeRecord>;
     },
   });
 }
@@ -102,8 +119,11 @@ export function useAdminTransactions(params?: { type?: string, cursor?: string, 
   return useQuery({
     queryKey: [...adminKeys.transactions(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<WalletTransaction>>("/admin/transactions", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/transactions", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<WalletTransaction>;
     },
   });
 }
@@ -112,8 +132,11 @@ export function useAdminAuditLogs(params?: { cursor?: string, limit?: number }) 
   return useQuery({
     queryKey: [...adminKeys.auditLogs(), params],
     queryFn: async () => {
-      const response = await apiClient.get<AdminCollection<AuditLog>>("/admin/audit-logs", { params });
-      return response.data;
+      const { data, error } = await apiClient.GET("/admin/audit-logs", { 
+        params: { query: { ...params, limit: params?.limit?.toString() } as any } 
+      });
+      if (error) throw error;
+      return data as unknown as AdminCollection<AuditLog>;
     },
   });
 }
@@ -122,15 +145,14 @@ export function useSystemConfig() {
   return useQuery({
     queryKey: adminKeys.config(),
     queryFn: async () => {
-      const response = await apiClient.get<{ data: Array<{ key: string, value: any, description: string | null }> }>("/admin/config");
-      return response.data.data;
+      const { data, error } = await apiClient.GET("/admin/config" as any, {});
+      if (error) throw error;
+      return (data as any)?.data as unknown as Array<{ key: string, value: any, description: string | null }>;
     },
   });
 }
 
 // Mutations
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-
 export function useAdminUserMutations() {
   const queryClient = useQueryClient();
 
@@ -141,32 +163,44 @@ export function useAdminUserMutations() {
 
   const banUser = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await apiClient.patch(`/admin/users/${userId}/ban`);
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/users/{id}/ban", {
+        params: { path: { id: userId } }
+      });
+      if (error) throw error;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
 
   const unbanUser = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await apiClient.patch(`/admin/users/${userId}/unban`);
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/users/{id}/unban", {
+        params: { path: { id: userId } }
+      });
+      if (error) throw error;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
 
   const verifyArtisan = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await apiClient.patch(`/admin/users/${userId}/verify`);
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/users/{id}/verify", {
+        params: { path: { id: userId } }
+      });
+      if (error) throw error;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
 
   const rejectArtisanVerification = useMutation({
     mutationFn: async (userId: string) => {
-      const response = await apiClient.patch(`/admin/users/${userId}/reject-verification`);
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/users/{id}/reject-verification", {
+        params: { path: { id: userId } }
+      });
+      if (error) throw error;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
@@ -179,8 +213,12 @@ export function useAdminJobMutations() {
 
   const forceCloseJob = useMutation({
     mutationFn: async ({ jobId, reason }: { jobId: string; reason?: string }) => {
-      const response = await apiClient.patch(`/admin/jobs/${jobId}/force-close`, { reason });
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/jobs/{id}/force-close", {
+        params: { path: { id: jobId } },
+        body: { reason }
+      } as any);
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.reports() });
@@ -195,8 +233,12 @@ export function useAdminDisputeMutations() {
 
   const resolveDispute = useMutation({
     mutationFn: async ({ disputeId, decision, notes }: { disputeId: string; decision: string; notes?: string }) => {
-      const response = await apiClient.patch(`/admin/disputes/${disputeId}/resolve`, { decision, notes });
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/disputes/{id}/resolve", {
+        params: { path: { id: disputeId } },
+        body: { decision, notes }
+      } as any);
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.disputes() });
@@ -213,8 +255,12 @@ export function useAdminConfigMutations() {
 
   const updateConfig = useMutation({
     mutationFn: async ({ key, value, description }: { key: string; value: any; description?: string }) => {
-      const response = await apiClient.patch(`/admin/config/${key}`, { value, description });
-      return response.data;
+      const { data, error } = await apiClient.PATCH("/admin/config/{key}" as any, {
+        params: { path: { key } },
+        body: { value, description }
+      } as any);
+      if (error) throw error;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.config() });
@@ -223,3 +269,4 @@ export function useAdminConfigMutations() {
 
   return { updateConfig };
 }
+export * from './useAdminReviews';

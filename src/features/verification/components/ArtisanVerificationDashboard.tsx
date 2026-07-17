@@ -44,7 +44,7 @@ export const ArtisanVerificationDashboard = () => {
             <p className="text-sm text-muted-foreground mb-4">
               Our team reviews your profile to ensure trust and quality on the WorkSure platform.
             </p>
-            {status?.marketplaceStatus === 'UNVERIFIED' && (
+            {status?.marketplaceStatus === 'NOT_SUBMITTED' && (
               <Button onClick={() => submitMarketplace.mutate()} disabled={submitMarketplace.isPending}>
                 Submit Profile for Review
               </Button>

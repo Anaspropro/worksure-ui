@@ -100,7 +100,7 @@ export function SettingsWorkspace() {
               </div>
               <Switch 
                 checked={getConfig('MAINTENANCE_MODE', false)}
-                onCheckedChange={(checked) => handleSave('MAINTENANCE_MODE', checked, 'System-wide maintenance mode')}
+                onCheckedChange={(checked: any) => handleSave('MAINTENANCE_MODE', checked, 'System-wide maintenance mode')}
                 disabled={updateConfig.isPending}
               />
             </div>
@@ -112,7 +112,7 @@ export function SettingsWorkspace() {
               </div>
               <Switch 
                 checked={getConfig('ALLOW_NEW_ARTISANS', true)}
-                onCheckedChange={(checked) => handleSave('ALLOW_NEW_ARTISANS', checked, 'Toggle new artisan registrations')}
+                onCheckedChange={(checked: any) => handleSave('ALLOW_NEW_ARTISANS', checked, 'Toggle new artisan registrations')}
                 disabled={updateConfig.isPending}
               />
             </div>

@@ -134,7 +134,7 @@ export function ContractsWorkspace() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Next Page
             </Button>

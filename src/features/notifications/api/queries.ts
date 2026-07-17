@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
-import { api } from '@/lib/api';
+import apiClient from '@/shared/api/client';
 
 export const notificationKeys = {
   all: ['notifications'] as const,
@@ -11,32 +11,44 @@ export const notificationKeys = {
 
 // API Fetchers
 const fetchNotifications = async ({ pageParam = 1 }) => {
-  const { data } = await api.get(`/notifications?page=${pageParam}&limit=20`);
-  return data; // Expected { data: Notification[], pagination: {...} }
+  const { data, error } = await apiClient.GET('/notifications', {
+    params: { query: { page: pageParam.toString(), limit: '20' } as any }
+  });
+  if (error) throw error;
+  return data as any; // Expected { data: Notification[], pagination: {...} }
 };
 
 const fetchUnreadCount = async () => {
-  const { data } = await api.get('/notifications/unread-count');
-  return data.unreadCount;
+  const { data, error } = await apiClient.GET('/notifications/unread-count' as any, {});
+  if (error) throw error;
+  return (data as any)?.unreadCount;
 };
 
 const fetchPreferences = async () => {
-  const { data } = await api.get('/notifications/preferences');
-  return data;
+  const { data, error } = await apiClient.GET('/notifications/preferences' as any, {});
+  if (error) throw error;
+  return data as any;
 };
 
 const markAsRead = async (notificationIds: string[]) => {
-  const { data } = await api.patch('/notifications/mark', { notificationIds });
+  const { data, error } = await apiClient.PATCH('/notifications/mark', {
+    body: { notificationIds }
+  } as any);
+  if (error) throw error;
   return data;
 };
 
 const markAllAsRead = async () => {
-  const { data } = await api.patch('/notifications/read-all');
+  const { data, error } = await apiClient.PATCH('/notifications/read-all');
+  if (error) throw error;
   return data;
 };
 
 const updatePreference = async (payload: { channel: string; category: string; enabled: boolean }) => {
-  const { data } = await api.patch('/notifications/preferences', payload);
+  const { data, error } = await apiClient.PATCH('/notifications/preferences' as any, {
+    body: payload
+  } as any);
+  if (error) throw error;
   return data;
 };
 
@@ -46,8 +58,8 @@ export const useNotifications = () => {
     queryKey: notificationKeys.lists(),
     queryFn: fetchNotifications,
     initialPageParam: 1,
-    getNextPageParam: (lastPage) => 
-      lastPage.pagination.hasNext ? lastPage.pagination.page + 1 : undefined,
+    getNextPageParam: (lastPage: any) =>
+      lastPage?.pagination?.hasNext ? lastPage.pagination.page + 1 : undefined,
   });
 };
 

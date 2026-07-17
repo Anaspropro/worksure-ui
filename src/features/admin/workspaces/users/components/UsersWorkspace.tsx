@@ -96,7 +96,7 @@ export function UsersWorkspace() {
                     <TableCell colSpan={5} className="text-center h-24">No users found.</TableCell>
                   </TableRow>
                 ) : (
-                  users.map((user) => (
+                  users.map((user: any) => (
                     <TableRow key={user.id}>
                       <TableCell>
                         <div className="font-medium">{user.name}</div>
@@ -152,7 +152,7 @@ export function UsersWorkspace() {
             <Button
               variant="outline"
               disabled={!meta?.nextCursor}
-              onClick={() => setCursor(meta?.nextCursor)}
+              onClick={() => setCursor((meta as any)?.nextCursor)}
             >
               Next Page
             </Button>
