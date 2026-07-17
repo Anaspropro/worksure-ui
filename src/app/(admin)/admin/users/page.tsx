@@ -1,7 +1,9 @@
-"use client";
+import { UsersWorkspace } from "@/features/admin/workspaces/users/components/UsersWorkspace";
 
-import AdminUsersWorkspace from "@/components/features/admin/AdminUsersWorkspace";
-
-export default function AdminUsersPage() {
-  return <AdminUsersWorkspace />;
+export default function UsersPage() {
+  return (
+    <div className="p-6 max-w-7xl mx-auto">
+      <UsersWorkspace />
+    </div>
+  );
 }

@@ -87,6 +87,7 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
+  adminRoles?: string[];
   status?: string;
   avatarUrl?: string | null;
   artisanVerified?: boolean;

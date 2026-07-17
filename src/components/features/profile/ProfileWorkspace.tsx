@@ -13,7 +13,7 @@ import {
   useSaveArtisanProfile,
   useUpdateProfile,
 } from "@/features/profile/api/useProfile";
-import { useReviewStats } from "@/features/reviews/api/useReviews";
+import { useReviewStats } from "@/features/reviews/api";
 import { useKycStatus } from "@/features/kyc/api/useKyc";
 import { ShieldCheck, Info, User as UserIcon, Briefcase, Star, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";

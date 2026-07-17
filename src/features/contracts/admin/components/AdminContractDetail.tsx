@@ -12,7 +12,7 @@ import { ContractProgress } from "../../components/ContractProgress";
 import { ContractTimeline } from "../../components/ContractTimeline";
 import { EscrowSummary } from "../../components/EscrowSummary";
 import { ParticipantCard } from "../../components/ParticipantCard";
-import { ActivityFeed } from "../../components/ActivityFeed";
+import { AuditTimeline } from "@/features/audit/components/AuditTimeline";
 import { AdminDisputePanel } from "./AdminDisputePanel";
 import { AdminOverrideActions } from "./AdminOverrideActions";
 
@@ -157,7 +157,15 @@ export function AdminContractDetail({
         )}
 
         {activeTab === "activity" && (
-          <ActivityFeed contractId={contract.id} />
+          <Card className="border-border bg-card shadow-sm">
+            <CardHeader>
+              <CardTitle className="text-base">System Audit Trail</CardTitle>
+              <CardDescription>Immutable record of all system events associated with this contract</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AuditTimeline targetType="CONTRACT" targetId={contract.id} />
+            </CardContent>
+          </Card>
         )}
       </div>
     </div>

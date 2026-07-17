@@ -11,7 +11,7 @@ export function useVerifyIdentity() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (data: { bvn: string; bankCode: string; accountNumber: string }) => {
-      const { error, response } = await apiClient.POST("/kyc/verify-identity", {
+      const { error, response } = await apiClient.POST(("/kyc/verify-identity" as any), {
         body: data as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
@@ -34,7 +34,7 @@ export function useUploadKycDocument() {
         throw new Error("Failed to upload KYC document");
       }
 
-      const { error, response } = await apiClient.POST("/kyc/upload", {
+      const { error, response } = await apiClient.POST(("/kyc/upload" as any), {
         body: {
           documentType,
           documentUrl: cloudinaryUpload.secure_url,
@@ -52,7 +52,7 @@ export function useKycStatus() {
   return useQuery({
     queryKey: ["kyc-status"],
     queryFn: async () => {
-      const { data, error, response } = await apiClient.GET("/kyc/status");
+      const { data, error, response } = await apiClient.GET(("/kyc/status" as any), {});
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
       return data as unknown as { 
         kycStatus: string; 

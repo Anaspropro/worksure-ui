@@ -8,7 +8,7 @@ import { Button } from "@/shared/components/ui/button";
 import { Input } from "@/shared/components/ui/input";
 import { Textarea } from "@/shared/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/shared/components/ui/card";
-import { CategorySelector, SkillAutocomplete } from "@/features/taxonomy";
+import { CategorySelector, SkillAutocomplete, SuggestCategoryDialog } from "@/features/taxonomy";
 import { toast } from "sonner";
 import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -111,6 +111,9 @@ export function CreateJobWizard() {
                     value={formData.categoryId}
                     onChange={(id) => setFormData({ ...formData, categoryId: id, skillIds: [] })}
                   />
+                  <div className="mt-2">
+                    <SuggestCategoryDialog />
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Required Skills</label>

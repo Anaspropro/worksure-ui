@@ -1,5 +1,5 @@
-import ReviewsWorkspace from "@/components/features/reviews/ReviewsWorkspace";
+import { ReviewManagementWorkspace } from "@/features/reviews";
 
 export default function ReviewsPage() {
-  return <ReviewsWorkspace />;
+  return <ReviewManagementWorkspace />;
 }

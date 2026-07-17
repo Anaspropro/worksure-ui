@@ -12,8 +12,9 @@ export function useCreateDispute() {
 
   return useMutation({
     mutationFn: async (data: CreateDisputeInput): Promise<Dispute> => {
-      const { data: responseData, error, response } = await apiClient.POST("/disputes", {
-        body: data as unknown as components["schemas"]["CreateDisputeDto"]
+      const { data: responseData, error, response } = await apiClient.POST("/disputes/contract/{contractId}", {
+        params: { path: { contractId: data.contractId } },
+        body: data as unknown as components["schemas"]["OpenDisputeDto"]
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
       return responseData as unknown as Dispute;

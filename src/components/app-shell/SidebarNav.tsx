@@ -6,14 +6,14 @@ import { getDashboardLinks } from "@/components/app-shell/navigation";
 import type { User } from "@/types";
 
 export default function SidebarNav({
-  role,
+  user,
   onItemClick,
 }: {
-  role: User["role"];
+  user: User;
   onItemClick?: () => void;
 }) {
   const pathname = usePathname();
-  const navItems = [...(getDashboardLinks(role) ?? [])];
+  const navItems = [...(getDashboardLinks(user) ?? [])];
 
   return (
     <nav className="space-y-2 flex flex-col">

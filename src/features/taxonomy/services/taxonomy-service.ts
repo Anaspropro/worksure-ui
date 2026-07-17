@@ -43,3 +43,14 @@ export async function getSkill(id: string): Promise<Skill | null> {
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
   return data ?? null;
 }
+
+export type SuggestCategoryDto = components["schemas"]["SuggestCategoryDto"];
+export type CategorySuggestionResponseDto = components["schemas"]["CategorySuggestionResponseDto"];
+
+export async function suggestCategory(data: SuggestCategoryDto): Promise<CategorySuggestionResponseDto> {
+  const { data: responseData, error, response } = await apiClient.POST("/taxonomy/suggest", {
+    body: data
+  });
+  if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
+  return responseData as CategorySuggestionResponseDto;
+}

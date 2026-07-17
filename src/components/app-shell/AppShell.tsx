@@ -49,7 +49,7 @@ export default function AppShell({
         </div>
 
         <div className="flex-1 overflow-y-auto px-4 py-2">
-          <SidebarNav role={user.role} />
+          <SidebarNav user={user} />
         </div>
 
         <div className="p-4 border-t border-sidebar-border mt-auto space-y-3">
@@ -128,7 +128,7 @@ export default function AppShell({
               </div>
 
               <div className="flex-1 overflow-y-auto px-4 pb-4">
-                <SidebarNav role={user.role} onItemClick={() => setMobileMenuOpen(false)} />
+                <SidebarNav user={user} onItemClick={() => setMobileMenuOpen(false)} />
               </div>
 
               <div className="p-4 border-t border-sidebar-border mt-auto">

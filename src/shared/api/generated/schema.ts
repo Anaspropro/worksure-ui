@@ -47,24 +47,6 @@ export interface paths {
         /** List notifications with filtering */
         get: operations["NotificationsController_listNotifications"];
         put?: never;
-        /** Create a new notification (Admin only) */
-        post: operations["NotificationsController_createNotification"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/notifications/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current user notifications */
-        get: operations["NotificationsController_getMyNotifications"];
-        put?: never;
         post?: never;
         delete?: never;
         options?: never;
@@ -72,22 +54,21 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/notifications/{id}": {
+    "/notifications/unread-count": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get notification by ID */
-        get: operations["NotificationsController_getNotification"];
+        /** Get unread notification count */
+        get: operations["NotificationsController_getUnreadCount"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Update notification */
-        patch: operations["NotificationsController_updateNotification"];
+        patch?: never;
         trace?: never;
     };
     "/notifications/mark": {
@@ -103,7 +84,7 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Mark multiple notifications as read/archived */
+        /** Mark multiple notifications as read */
         patch: operations["NotificationsController_markNotifications"];
         trace?: never;
     };
@@ -124,38 +105,22 @@ export interface paths {
         patch: operations["NotificationsController_markAllAsRead"];
         trace?: never;
     };
-    "/notifications/stats/me": {
+    "/notifications/preferences": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get notification statistics */
-        get: operations["NotificationsController_getNotificationStats"];
+        /** Get user notification preferences */
+        get: operations["NotificationsController_getPreferences"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/notifications/{id}/delete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Delete notification */
-        patch: operations["NotificationsController_deleteNotification"];
+        /** Update notification preference */
+        patch: operations["NotificationsController_updatePreference"];
         trace?: never;
     };
     "/auth/register": {
@@ -667,6 +632,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/admin/reviews": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all reviews */
+        get: operations["AdminController_getAllReviews"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/reviews/{id}/moderate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Moderate a review */
+        patch: operations["AdminController_moderateReview"];
+        trace?: never;
+    };
     "/admin/contracts/stats": {
         parameters: {
             query?: never;
@@ -682,6 +681,40 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/admin/config": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** List all system configurations */
+        get: operations["AdminController_getSystemConfig"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/config/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Update a system configuration */
+        patch: operations["AdminController_updateSystemConfig"];
         trace?: never;
     };
     "/payments/fund": {
@@ -1177,15 +1210,14 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/disputes": {
+    "/disputes/contract/{contractId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List disputes with filtering */
-        get: operations["DisputesController_listDisputes"];
+        get?: never;
         put?: never;
         /** Create a new dispute */
         post: operations["DisputesController_createDispute"];
@@ -1195,6 +1227,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/disputes/{id}/evidence": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit evidence for a dispute */
+        post: operations["DisputesController_submitEvidence"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/disputes/{id}/state": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Change dispute state (Admin only) */
+        patch: operations["DisputesController_changeState"];
+        trace?: never;
+    };
+    "/disputes/{id}/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** Resolve a dispute (Admin only) */
+        patch: operations["DisputesController_resolveDispute"];
+        trace?: never;
+    };
     "/disputes/me": {
         parameters: {
             query?: never;
@@ -1202,7 +1285,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get current user disputes */
+        /** List current user disputes */
         get: operations["DisputesController_getMyDisputes"];
         put?: never;
         post?: never;
@@ -1219,15 +1302,133 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Get dispute by ID */
+        /** Get dispute details by ID */
         get: operations["DisputesController_getDispute"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** Update dispute (Admin only) */
-        patch: operations["DisputesController_updateDispute"];
+        patch?: never;
+        trace?: never;
+    };
+    "/verification/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get current verification status (Marketplace & Financial) */
+        get: operations["VerificationController_getStatus"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/verification/marketplace/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit for marketplace review */
+        post: operations["VerificationController_submitMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/verification/financial/initiate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Initiate financial verification with provider */
+        post: operations["VerificationController_initiateFinancial"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/webhooks/verification/paystack": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Paystack identity verification webhook */
+        post: operations["VerificationWebhookController_handlePaystackWebhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get pending marketplace verifications */
+        get: operations["AdminVerificationController_getPending"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/{userId}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve artisan marketplace verification */
+        post: operations["AdminVerificationController_approveMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/verification/marketplace/{userId}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Reject artisan marketplace verification */
+        post: operations["AdminVerificationController_rejectMarketplace"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/artisan/profile": {
@@ -1441,6 +1642,91 @@ export interface paths {
         patch: operations["ProposalsController_rejectProposal"];
         trace?: never;
     };
+    "/deliverables/contract/{contractId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get the active deliverable for a contract */
+        get: operations["DeliverablesController_getDeliverableForContract"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deliverables/contract/{contractId}/submit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Submit a new version of the deliverable (Artisan only) */
+        post: operations["DeliverablesController_submitVersion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deliverables/{id}/view": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /** Mark deliverable as viewed by client */
+        put: operations["DeliverablesController_markAsViewed"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deliverables/{id}/request-revision": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Request a revision (Client only) */
+        post: operations["DeliverablesController_requestRevision"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/deliverables/{id}/approve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Approve a deliverable (Client only) */
+        post: operations["DeliverablesController_approveDeliverable"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/chat/conversations": {
         parameters: {
             query?: never;
@@ -1527,33 +1813,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reviews": {
+    "/reviews/eligible": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** List reviews with filtering */
-        get: operations["ReviewsController_listReviews"];
-        put?: never;
-        /** Create a new review */
-        post: operations["ReviewsController_createReview"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/reviews/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current user reviews */
-        get: operations["ReviewsController_getMyReviews"];
+        /** Get contracts eligible for review */
+        get: operations["ReviewsController_getEligibleReviews"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1562,33 +1830,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/reviews/{id}": {
+    "/reviews/reputation/{userId}": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Get review by ID */
-        get: operations["ReviewsController_getReview"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** Update review */
-        patch: operations["ReviewsController_updateReview"];
-        trace?: never;
-    };
-    "/reviews/stats/{artisanId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get review statistics for an artisan */
-        get: operations["ReviewsController_getReviewStats"];
+        /** Get reputation profile for a user */
+        get: operations["ReviewsController_getReputationProfile"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1597,7 +1847,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/kyc/verify-identity": {
+    "/reviews/{contractId}/submit": {
         parameters: {
             query?: never;
             header?: never;
@@ -1606,42 +1856,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** Verify user identity via Paystack BVN match */
-        post: operations["KycController_verifyIdentity"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/kyc/upload": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Upload a KYC document via direct Cloudinary URL */
-        post: operations["KycController_uploadDocument"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/kyc/status": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get current KYC status */
-        get: operations["KycController_getStatus"];
-        put?: never;
-        post?: never;
+        /** Submit a review for a contract */
+        post: operations["ReviewsController_submitReview"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1658,6 +1874,38 @@ export interface paths {
         get: operations["AuditController_getAuditLogs"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/audit/timeline/{targetType}/{targetId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AuditController_getTimeline"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/admin/audit/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AuditController_exportAuditLogs"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1781,47 +2029,29 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/taxonomy/suggest": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Suggest a new category */
+        post: operations["TaxonomyController_suggestCategory"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        CreateNotificationDto: {
-            /** @description User ID */
-            userId: string;
-            /** @description Notification type */
-            type: string;
-            /** @description Notification title */
-            title: string;
-            /** @description Notification message */
-            message: string;
-            /** @description Related entity ID */
-            entityId?: string;
-            /** @description Related entity type */
-            entityType?: string;
-            /** @description Action URL */
-            actionUrl?: string;
-            /** @description Notification priority */
-            priority?: string;
-            /** @description Additional metadata */
-            metadata?: Record<string, never>;
-        };
-        UpdateNotificationDto: {
-            /** @description Mark as read */
-            isRead?: boolean;
-            /** @description Mark as archived */
-            isArchived?: boolean;
-            /** @description Action URL */
-            actionUrl?: string;
-            /** @description Additional metadata */
-            metadata?: Record<string, never>;
-        };
         MarkNotificationsDto: {
-            /** @description Notification IDs */
             notificationIds: string[];
-            /** @description Mark as read */
-            markAsRead: boolean;
-            /** @description Mark as archived */
-            markAsArchived: boolean;
         };
         RegisterDto: {
             /** @example Jane Doe */
@@ -1862,15 +2092,24 @@ export interface components {
         };
         ResolveDisputeDto: {
             /**
-             * @example REFUND_CLIENT
+             * @example CLIENT_WINS
              * @enum {string}
              */
-            decision: "REFUND_CLIENT" | "PAY_ARTISAN";
+            decision: "CLIENT_WINS" | "ARTISAN_WINS" | "SPLIT_DECISION" | "CANCELLED";
             /** @example Evidence supports a full refund. */
             notes?: string;
         };
         ForceCloseJobDto: {
             /** @example Fraudulent activity detected during review. */
+            reason?: string;
+        };
+        ModerateReviewDto: {
+            /**
+             * @description Moderation action to apply
+             * @enum {string}
+             */
+            action: "FLAG" | "LOCK" | "RESTORE";
+            /** @description Optional reason for the moderation action */
             reason?: string;
         };
         PaymentFundContractDto: {
@@ -1930,32 +2169,42 @@ export interface components {
         AddFundsDto: Record<string, never>;
         WithdrawFundsDto: Record<string, never>;
         FreezeFundsDto: Record<string, never>;
-        CreateDisputeDto: {
-            /** @description Contract ID (if contract-related) */
-            contractId: string;
-            /** @description Job ID (if job-related) */
-            jobId: string;
-            /** @description Dispute amount */
-            amount: number;
-            /** @description Dispute description */
+        OpenDisputeDto: {
+            /** @description The reason for opening the dispute */
+            reason: string;
+            /** @description Detailed description of the issue */
             description: string;
-            /** @description Evidence images URLs */
-            evidenceImages?: string[];
-            /** @description Evidence videos URLs */
-            evidenceVideos?: string[];
-            /** @description Evidence messages */
-            evidenceMessages?: string[];
+            /** @description The amount in dispute */
+            amountDisputed: number;
         };
-        Object: Record<string, never>;
-        UpdateDisputeDto: {
-            /** @description Dispute status */
-            status?: Record<string, never>;
-            /** @description Resolution decision */
-            resolutionDecision?: Record<string, never>;
-            /** @description Resolution notes */
-            resolutionNotes?: string;
-            /** @description Resolver ID */
-            resolvedBy?: string;
+        SubmitEvidenceDto: {
+            /**
+             * @description Type of the evidence
+             * @enum {string}
+             */
+            type: "IMAGE" | "VIDEO" | "PDF" | "MESSAGE_REFERENCE" | "DELIVERABLE_REFERENCE" | "OTHER";
+            /** @description URL of the evidence if it is a file or image */
+            url?: string;
+            /** @description Additional metadata */
+            metadata?: Record<string, never>;
+        };
+        VerificationStatusResponseDto: {
+            /** @enum {string} */
+            marketplaceStatus: "NOT_SUBMITTED" | "PENDING_REVIEW" | "UNDER_REVIEW" | "APPROVED" | "REJECTED" | "RESUBMISSION_REQUIRED" | "SUSPENDED";
+            /** Format: date-time */
+            marketplaceApprovedAt: string;
+            marketplaceRejectedReason: string;
+            /** @enum {string} */
+            financialStatus: "NOT_STARTED" | "PENDING" | "PROCESSING" | "VERIFIED" | "FAILED" | "EXPIRED" | "RETRY_REQUIRED";
+            /** Format: date-time */
+            financialVerifiedAt: string;
+            financialFailureReason: string;
+            /** @description Derived payout eligibility */
+            isPayoutEligible: boolean;
+        };
+        FinancialVerificationInitiateResponseDto: {
+            url: string;
+            reference: string;
         };
         CreateArtisanProfileDto: Record<string, never>;
         UpdateArtisanProfileDto: Record<string, never>;
@@ -1993,7 +2242,7 @@ export interface components {
             /** @description Job deadline */
             deadline?: string;
             /** @description Job status */
-            status?: Record<string, never>;
+            status?: string;
             /** @description Additional job requirements */
             requirements?: string;
         };
@@ -2110,43 +2359,22 @@ export interface components {
             /** @description Action notes (for rejection) */
             notes: string;
         };
-        CreateReviewDto: {
-            /** @description Contract ID */
-            contractId: string;
-            /** @description Rating (1-5) */
-            rating: number;
-            /** @description Review comment */
-            comment: string;
-            /** @description Review categories */
-            categories?: string[];
-            /** @description Work quality rating (1-5) */
-            workQuality?: number;
-            /** @description Communication rating (1-5) */
-            communication?: number;
-            /** @description Timeliness rating (1-5) */
-            timeliness?: number;
-            /** @description Professionalism rating (1-5) */
-            professionalism?: number;
-            /** @description Supporting evidence URLs */
-            evidence?: string[];
+        AttachmentDto: {
+            /** @enum {string} */
+            type: "FILE" | "LINK";
+            url: string;
+            name: string;
+            sizeBytes?: number;
+            mimeType?: string;
         };
-        UpdateReviewDto: {
-            /** @description Rating (1-5) */
-            rating?: number;
-            /** @description Review comment */
-            comment?: string;
-            /** @description Review categories */
-            categories?: string[];
-            /** @description Work quality rating (1-5) */
-            workQuality?: number;
-            /** @description Communication rating (1-5) */
-            communication?: number;
-            /** @description Timeliness rating (1-5) */
-            timeliness?: number;
-            /** @description Professionalism rating (1-5) */
-            professionalism?: number;
-            /** @description Supporting evidence URLs */
-            evidence?: string[];
+        SubmitDeliverableVersionDto: {
+            artisanNotes?: string;
+            attachments: components["schemas"]["AttachmentDto"][];
+        };
+        RequestRevisionDto: {
+            comment: string;
+            requiredChanges: string;
+            dueDate?: string;
         };
         CategoryResponseDto: {
             id: string;
@@ -2164,6 +2392,22 @@ export interface components {
             slug: string;
             categoryId: string;
             isTrending: boolean;
+            /** Format: date-time */
+            createdAt: string;
+            /** Format: date-time */
+            updatedAt: string;
+        };
+        SuggestCategoryDto: {
+            name: string;
+            description?: string;
+        };
+        CategorySuggestionResponseDto: {
+            id: string;
+            name: string;
+            description?: string;
+            status: string;
+            suggestedByUserId: string;
+            rejectionReason?: string;
             /** Format: date-time */
             createdAt: string;
             /** Format: date-time */
@@ -2215,27 +2459,9 @@ export interface operations {
     };
     NotificationsController_listNotifications: {
         parameters: {
-            query?: {
-                /** @description Filter by type */
-                type?: string;
-                /** @description Filter by priority */
-                priority?: string;
-                /** @description Filter by read status */
-                isRead?: string;
-                /** @description Filter by archived status */
-                isArchived?: string;
-                /** @description Filter by entity ID */
-                entityId?: string;
-                /** @description Filter by entity type */
-                entityType?: string;
-                /** @description Filter by date from */
-                dateFrom?: string;
-                /** @description Filter by date to */
-                dateTo?: string;
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 20, max: 100) */
-                limit?: number;
+            query: {
+                page: string;
+                limit: string;
             };
             header?: never;
             path?: never;
@@ -2252,43 +2478,7 @@ export interface operations {
             };
         };
     };
-    NotificationsController_createNotification: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateNotificationDto"];
-            };
-        };
-        responses: {
-            /** @description Notification created successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid notification data. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Admin access required. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    NotificationsController_getMyNotifications: {
+    NotificationsController_getUnreadCount: {
         parameters: {
             query?: never;
             header?: never;
@@ -2297,51 +2487,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User notifications retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    NotificationsController_getNotification: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Notification retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    NotificationsController_updateNotification: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateNotificationDto"];
-            };
-        };
-        responses: {
-            /** @description Notification updated successfully. */
+            /** @description Unread count retrieved successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2363,7 +2509,7 @@ export interface operations {
             };
         };
         responses: {
-            /** @description Notifications updated successfully. */
+            /** @description Notifications marked as read. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2390,7 +2536,7 @@ export interface operations {
             };
         };
     };
-    NotificationsController_getNotificationStats: {
+    NotificationsController_getPreferences: {
         parameters: {
             query?: never;
             header?: never;
@@ -2399,7 +2545,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description Notification statistics retrieved successfully. */
+            /** @description Preferences retrieved successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2408,18 +2554,16 @@ export interface operations {
             };
         };
     };
-    NotificationsController_deleteNotification: {
+    NotificationsController_updatePreference: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: string;
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Notification deleted successfully. */
+            /** @description Preference updated successfully. */
             200: {
                 headers: {
                     [name: string]: unknown;
@@ -2926,6 +3070,7 @@ export interface operations {
         parameters: {
             query: {
                 search: string;
+                role: string;
                 cursor: string;
                 limit: string;
             };
@@ -3185,10 +3330,10 @@ export interface operations {
     AdminController_generateReports: {
         parameters: {
             query?: {
+                /** @description Report type to generate */
+                reportType?: string;
                 /** @description Optional YYYY-MM month selector */
                 month?: string;
-                /** @description Report type to generate */
-                reportType?: unknown;
             };
             header?: never;
             path?: never;
@@ -3247,11 +3392,95 @@ export interface operations {
             };
         };
     };
+    AdminController_getAllReviews: {
+        parameters: {
+            query: {
+                search: string;
+                /** @description Review status filter */
+                status?: string;
+                cursor: string;
+                limit: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_moderateReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Review identifier */
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ModerateReviewDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminController_getContractStats: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_getSystemConfig: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminController_updateSystemConfig: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Configuration key */
+                key: string;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -3517,7 +3746,9 @@ export interface operations {
     };
     ContractsController_getUserContracts: {
         parameters: {
-            query?: never;
+            query: {
+                status: string;
+            };
             header?: never;
             path?: never;
             cookie?: never;
@@ -3906,60 +4137,18 @@ export interface operations {
             };
         };
     };
-    DisputesController_listDisputes: {
-        parameters: {
-            query?: {
-                /** @description Filter by status */
-                status?: components["schemas"]["Object"];
-                /** @description Filter by contract ID */
-                contractId?: string;
-                /** @description Filter by job ID */
-                jobId?: string;
-                /** @description Filter by client ID */
-                clientId?: string;
-                /** @description Filter by artisan ID */
-                artisanId?: string;
-                /** @description Filter by date from */
-                dateFrom?: string;
-                /** @description Filter by date to */
-                dateTo?: string;
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 10, max: 100) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Disputes retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
     DisputesController_createDispute: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                contractId: string;
+            };
             cookie?: never;
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["CreateDisputeDto"];
+                "application/json": components["schemas"]["OpenDisputeDto"];
             };
         };
         responses: {
@@ -3984,8 +4173,69 @@ export interface operations {
                 };
                 content?: never;
             };
-            /** @description Contract or job not found. */
+            /** @description Contract not found. */
             404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DisputesController_submitEvidence: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitEvidenceDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DisputesController_changeState: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DisputesController_resolveDispute: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4002,15 +4252,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User disputes retrieved successfully. */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4023,29 +4265,13 @@ export interface operations {
             query?: never;
             header?: never;
             path: {
-                /** @description Dispute ID */
                 id: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Dispute retrieved successfully. */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Dispute not found. */
-            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4053,44 +4279,128 @@ export interface operations {
             };
         };
     };
-    DisputesController_updateDispute: {
+    VerificationController_getStatus: {
         parameters: {
             query?: never;
             header?: never;
-            path: {
-                id: string;
-            };
+            path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateDisputeDto"];
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VerificationStatusResponseDto"];
+                };
             };
         };
+    };
+    VerificationController_submitMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
-            /** @description Dispute updated successfully. */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    VerificationController_initiateFinancial: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FinancialVerificationInitiateResponseDto"];
+                };
+            };
+        };
+    };
+    VerificationWebhookController_handlePaystackWebhook: {
+        parameters: {
+            query?: never;
+            header: {
+                "x-paystack-signature": string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminVerificationController_getPending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
             200: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Invalid update data. */
-            400: {
+        };
+    };
+    AdminVerificationController_approveMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
                 content?: never;
             };
-            /** @description Admin access required. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
+        };
+    };
+    AdminVerificationController_rejectMarketplace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
             };
-            /** @description Dispute not found. */
-            404: {
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4233,7 +4543,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: components["schemas"]["Object"];
+                status?: "OPEN" | "IN_PROGRESS" | "COMPLETED" | "FORCE_CLOSED";
                 /** @description Filter by client ID */
                 clientId?: string;
                 /** @description Filter by artisan ID */
@@ -4429,7 +4739,7 @@ export interface operations {
         parameters: {
             query?: {
                 /** @description Filter by status */
-                status?: components["schemas"]["Object"];
+                status?: "DRAFT" | "SUBMITTED" | "VIEWED" | "SHORTLISTED" | "ACCEPTED" | "REJECTED" | "WITHDRAWN" | "EXPIRED" | "CANCELLED";
                 /** @description Filter by job ID */
                 jobId?: string;
                 /** @description Filter by client ID */
@@ -4740,6 +5050,109 @@ export interface operations {
             };
         };
     };
+    DeliverablesController_getDeliverableForContract: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                contractId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DeliverablesController_submitVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                contractId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SubmitDeliverableVersionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DeliverablesController_markAsViewed: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DeliverablesController_requestRevision: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RequestRevisionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    DeliverablesController_approveDeliverable: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     ChatController_getConversations: {
         parameters: {
             query?: never;
@@ -4850,98 +5263,7 @@ export interface operations {
             };
         };
     };
-    ReviewsController_listReviews: {
-        parameters: {
-            query?: {
-                /** @description Filter by contract ID */
-                contractId?: string;
-                /** @description Filter by client ID */
-                clientId?: string;
-                /** @description Filter by artisan ID */
-                artisanId?: string;
-                /** @description Filter by minimum rating */
-                minRating?: number;
-                /** @description Filter by maximum rating */
-                maxRating?: number;
-                /** @description Filter by categories */
-                categories?: string[];
-                /** @description Filter by date from */
-                dateFrom?: string;
-                /** @description Filter by date to */
-                dateTo?: string;
-                /** @description Filter by public status */
-                isPublic?: string;
-                /** @description Page number (default: 1) */
-                page?: number;
-                /** @description Items per page (default: 10, max: 100) */
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Reviews retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ReviewsController_createReview: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CreateReviewDto"];
-            };
-        };
-        responses: {
-            /** @description Review created successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid review data or contract not completed. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied or not eligible to review. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Contract not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ReviewsController_getMyReviews: {
+    ReviewsController_getEligibleReviews: {
         parameters: {
             query?: never;
             header?: never;
@@ -4950,15 +5272,7 @@ export interface operations {
         };
         requestBody?: never;
         responses: {
-            /** @description User reviews retrieved successfully. */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Authentication required. */
-            403: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -4966,34 +5280,18 @@ export interface operations {
             };
         };
     };
-    ReviewsController_getReview: {
+    ReviewsController_getReputationProfile: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Review ID */
-                id: string;
+                userId: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            /** @description Review retrieved successfully. */
             200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Review not found. */
-            404: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5001,124 +5299,18 @@ export interface operations {
             };
         };
     };
-    ReviewsController_updateReview: {
+    ReviewsController_submitReview: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Review ID */
-                id: string;
+                contractId: string;
             };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["UpdateReviewDto"];
-            };
-        };
-        responses: {
-            /** @description Review updated successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Invalid update data. */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Access denied. */
-            403: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Review not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    ReviewsController_getReviewStats: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Artisan ID */
-                artisanId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Review statistics retrieved successfully. */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Artisan not found. */
-            404: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    KycController_verifyIdentity: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
         responses: {
             201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    KycController_uploadDocument: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    KycController_getStatus: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5131,8 +5323,8 @@ export interface operations {
             query: {
                 page: string;
                 limit: string;
-                entityType: string;
-                performedBy: string;
+                targetType: string;
+                actorId: string;
             };
             header?: never;
             path?: never;
@@ -5141,6 +5333,43 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuditController_getTimeline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                targetType: string;
+                targetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AuditController_exportAuditLogs: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -5284,6 +5513,29 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SkillResponseDto"];
+                };
+            };
+        };
+    };
+    TaxonomyController_suggestCategory: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SuggestCategoryDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategorySuggestionResponseDto"];
                 };
             };
         };

@@ -254,6 +254,7 @@ export function ArtisanContractDetail({
       {/* Review Modal */}
       <ReviewForm
         contractId={contract.id}
+        targetId={contract.clientId}
         open={isReviewFormOpen}
         onOpenChange={setIsReviewFormOpen}
       />

@@ -356,6 +356,7 @@ export function ClientContractDetail({
       {/* Review Modal */}
       <ReviewForm
         contractId={contract.id}
+        targetId={contract.artisanId}
         open={isReviewFormOpen}
         onOpenChange={setIsReviewFormOpen}
       />

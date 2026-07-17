@@ -14,6 +14,9 @@ export interface Review {
   isPublic: boolean;
   createdAt: string;
   updatedAt?: string;
+  visibleAt?: string;
+  breakdown?: any;
+  author?: any;
   contract?: {
     id: string;
     amount: number;

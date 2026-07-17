@@ -143,7 +143,7 @@ export function useResolveAdminDispute() {
       notes,
     }: {
       disputeId: string;
-      decision: "REFUND_CLIENT" | "PAY_ARTISAN";
+      decision: "CLIENT_WINS" | "ARTISAN_WINS" | "SPLIT_DECISION";
       notes?: string;
     }) => {
       const { data, error, response } = await apiClient.PATCH("/admin/disputes/{id}/resolve" as any, {
