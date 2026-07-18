@@ -53,7 +53,7 @@ export function MarketplaceWorkspace() {
         ) : (
           <div className="grid gap-4">
             {jobsList.map((job: any) => (
-              <Card key={job.id} className="hover:border-primary/50 transition-colors cursor-pointer group" onClick={() => router.push(`/artisan/jobs/${job.id}`)}>
+              <Card key={job.id} className="hover:border-primary/50 transition-colors cursor-pointer group" onClick={() => router.push(`/jobs/${job.id}`)}>
                 <CardContent className="p-6">
                   <div className="flex flex-col gap-4">
                     <div className="flex justify-between items-start">

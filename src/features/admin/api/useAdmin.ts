@@ -43,7 +43,7 @@ export function useAdminReports(reportType = "overview", options: { enabled?: bo
   return useQuery<AdminOverviewReport>({
     queryKey: ["admin", "reports", reportType],
     queryFn: async () => {
-      const response = await fetch(`/api/proxy/admin/reports?reportType=${reportType}`, { cache: "no-store" });
+      const response = await fetch(`/api/proxy/admin/reports?reportType=${reportType}&force=true`, { cache: "no-store" });
       if (!response.ok) {
         let errorData;
         try { errorData = await response.json(); } catch (e) {}
