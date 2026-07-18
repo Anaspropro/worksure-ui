@@ -23,7 +23,7 @@ export function UsersWorkspace() {
     ...(search ? { search } : {})
   });
   
-  const { banUser, unbanUser } = useAdminUserMutations();
+  const { banUser, unbanUser, verifyArtisan } = useAdminUserMutations();
 
   if (isLoading) {
     return <DashboardLoadingState />;
@@ -46,6 +46,16 @@ export function UsersWorkspace() {
       unbanUser.mutate(userId, {
         onSuccess: () => toast.success("User access restored"),
         onError: (err: any) => toast.error(err.message || "Failed to restore user")
+      });
+    }
+  };
+
+  const handleVerify = (userId: string) => {
+    if (confirm("Are you sure you want to verify this artisan?")) {
+      toast.info("Verifying artisan...");
+      verifyArtisan.mutate(userId, {
+        onSuccess: () => toast.success("Artisan verified successfully!"),
+        onError: (err: any) => toast.error(err.message || "Failed to verify artisan")
       });
     }
   };
@@ -140,6 +150,10 @@ export function UsersWorkspace() {
                                     <p className="text-sm">{user.email}</p>
                                   </div>
                                   <div>
+                                    <h4 className="text-sm font-medium text-muted-foreground">Phone</h4>
+                                    <p className="text-sm">{user.phone || "N/A"}</p>
+                                  </div>
+                                  <div>
                                     <h4 className="text-sm font-medium text-muted-foreground">Role</h4>
                                     <Badge variant="outline">{user.role}</Badge>
                                   </div>
@@ -167,6 +181,18 @@ export function UsersWorkspace() {
                                           <span className="text-xs text-muted-foreground block">Rating</span>
                                           <span className="text-sm">{user.artisanProfile.rating} / 5</span>
                                         </div>
+                                        {user.artisanProfile.skills && user.artisanProfile.skills.length > 0 && (
+                                          <div className="col-span-2">
+                                            <span className="text-xs text-muted-foreground block mb-1">Skills</span>
+                                            <div className="flex flex-wrap gap-1">
+                                              {user.artisanProfile.skills.map((skill: string) => (
+                                                <Badge key={skill} variant="secondary" className="text-[10px]">
+                                                  {skill}
+                                                </Badge>
+                                              ))}
+                                            </div>
+                                          </div>
+                                        )}
                                       </div>
                                     </div>
                                   )}
@@ -180,37 +206,48 @@ export function UsersWorkspace() {
                                         </div>
                                         <div>
                                           <span className="text-xs text-muted-foreground block">Total Spent</span>
-                                          <span className="text-sm">{user.clientProfile.totalSpent}</span>
+                                          <span className="text-sm">${user.clientProfile.totalSpent || 0}</span>
                                         </div>
                                       </div>
                                     </div>
                                   )}
                                 </div>
+                                
+                                <div className="flex gap-3 justify-end mt-4 pt-4 border-t">
+                                  {user.role === 'ARTISAN' && !user.artisanVerified && (
+                                    <Button 
+                                      variant="default" 
+                                      className="bg-emerald-600 hover:bg-emerald-700"
+                                      onClick={() => handleVerify(user.id)}
+                                      disabled={verifyArtisan.isPending}
+                                    >
+                                      Verify Artisan
+                                    </Button>
+                                  )}
+                                  
+                                  {user.status === "BANNED" ? (
+                                    <Button 
+                                      variant="outline" 
+                                      onClick={() => handleUnban(user.id)}
+                                      disabled={unbanUser.isPending}
+                                    >
+                                      <ShieldCheck className="h-4 w-4 mr-2" />
+                                      Unban
+                                    </Button>
+                                  ) : (
+                                    <Button 
+                                      variant="destructive" 
+                                      onClick={() => handleBan(user.id)}
+                                      disabled={banUser.isPending}
+                                    >
+                                      <ShieldAlert className="h-4 w-4 mr-2" />
+                                      Ban
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
                             </DialogContent>
                           </Dialog>
-                          
-                          {user.status === "BANNED" ? (
-                            <Button 
-                              variant="outline" 
-                              size="sm"
-                              onClick={() => handleUnban(user.id)}
-                              disabled={unbanUser.isPending}
-                            >
-                              <ShieldCheck className="h-4 w-4 mr-2" />
-                              Unban
-                            </Button>
-                          ) : (
-                            <Button 
-                              variant="destructive" 
-                              size="sm"
-                              onClick={() => handleBan(user.id)}
-                              disabled={banUser.isPending}
-                            >
-                              <ShieldAlert className="h-4 w-4 mr-2" />
-                              Ban
-                            </Button>
-                          )}
                         </div>
                       </TableCell>
                     </TableRow>
