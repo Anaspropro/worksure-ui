@@ -80,7 +80,7 @@ export function useVerifyArtisan() {
     mutationFn: async (userId: string) => {
       const { data, error, response } = await apiClient.PATCH("/admin/users/{id}/verify" as any, { params: { path: { id: userId } } });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
@@ -95,7 +95,7 @@ export function useRejectArtisanVerification() {
     mutationFn: async (userId: string) => {
       const { data, error, response } = await apiClient.PATCH("/admin/users/{id}/reject-verification" as any, { params: { path: { id: userId } } });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
@@ -110,7 +110,7 @@ export function useBanUser() {
     mutationFn: async (userId: string) => {
       const { data, error, response } = await apiClient.PATCH("/admin/users/{id}/ban" as any, { params: { path: { id: userId } } });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
@@ -125,7 +125,7 @@ export function useUnbanUser() {
     mutationFn: async (userId: string) => {
       const { data, error, response } = await apiClient.PATCH("/admin/users/{id}/unban" as any, { params: { path: { id: userId } } });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
@@ -151,7 +151,7 @@ export function useResolveAdminDispute() {
         body: { decision, notes } as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "disputes"] });
@@ -184,7 +184,7 @@ export function useAdminContractStats(options: { enabled?: boolean } = {}) {
     queryFn: async () => {
       const { data, error, response } = await apiClient.GET("/admin/contracts/stats");
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as AdminContractStats;
+      return (data as any)?.data as unknown as AdminContractStats;
     },
     enabled: options.enabled,
   });
@@ -297,7 +297,7 @@ export function useClearSystemLogs() {
     mutationFn: async () => {
       const { data, error, response } = await apiClient.DELETE("/admin/monitoring/logs" as any, {});
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "monitoring", "logs"] });
@@ -341,7 +341,7 @@ export function useAdminProcessPayout() {
         body: { transactionId } as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data;
+      return (data as any)?.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "transactions"] });

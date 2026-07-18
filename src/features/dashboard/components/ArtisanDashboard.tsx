@@ -45,6 +45,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
     (c) => c.status === "ACTIVE" && c.clientConfirmedCompletion && c.artisanConfirmedCompletion && !c.escrowReleased,
   );
 
+  const pendingEarnings = pendingPayments.reduce((sum, c) => sum + c.amount, 0);
   const totalEarnings = completedContracts.reduce((sum, c) => sum + c.amount, 0);
 
   const filteredContracts = contracts.filter((c) =>
@@ -143,7 +144,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
         />
         <StatCard
           label="Pending Earnings"
-          value={pendingPayments.length}
+          value={formatCurrency(pendingEarnings)}
           sub="Action needed"
           icon={Clock}
           iconBg="bg-warning/10"
