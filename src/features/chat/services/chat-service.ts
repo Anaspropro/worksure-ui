@@ -21,7 +21,7 @@ export async function getConversations(context?: string, contextReferenceId?: st
     }
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as Conversation[];
+  return data as unknown as Conversation[];
 }
 
 export async function getConversation(id: string): Promise<Conversation> {
@@ -44,12 +44,7 @@ export async function getMessages({ conversationId, cursor, limit = 50 }: GetMes
     }
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  const result = data as any;
-  return {
-    messages: result?.data ?? [],
-    nextCursor: result?.pagination?.nextCursor,
-    hasMore: result?.pagination?.hasMore ?? false,
-  };
+  return data as unknown as PaginatedMessages;
 }
 
 export async function sendMessage(conversationId: string, content: string, type: string, tempId: string): Promise<Message> {
@@ -58,7 +53,7 @@ export async function sendMessage(conversationId: string, content: string, type:
     body: { content, type, tempId } as any
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as Message;
+  return data as unknown as Message;
 }
 
 export async function markAsRead(conversationId: string, messageId: string): Promise<void> {

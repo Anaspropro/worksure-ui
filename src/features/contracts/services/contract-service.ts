@@ -78,7 +78,7 @@ export async function getContractById(id: string): Promise<Contract> {
     params: { path: { id } }
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as Contract;
+  return data as unknown as Contract;
 }
 
 /**
@@ -218,7 +218,7 @@ export async function createContract(proposalId: string): Promise<Contract> {
     body: { proposalId } as any
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as Contract;
+  return (data as any)?.data as Contract;
 }
 
 export async function fundContract(input: FundContractInput): Promise<FundContractResult> {
@@ -227,7 +227,7 @@ export async function fundContract(input: FundContractInput): Promise<FundContra
     body: input as any
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as FundContractResult;
+  return (data as any)?.data as FundContractResult;
 }
 
 export async function verifyPayment(reference: string): Promise<unknown> {
@@ -235,7 +235,7 @@ export async function verifyPayment(reference: string): Promise<unknown> {
     body: { reference } as any
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return data;
+  return (data as any)?.data;
 }
 
 export async function confirmCompletion(input: ConfirmCompletionInput): Promise<Contract> {
@@ -244,7 +244,7 @@ export async function confirmCompletion(input: ConfirmCompletionInput): Promise<
     body: { notes: input.notes } as any
   });
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.contract as unknown as Contract;
+  return (data as any)?.contract as Contract;
 }
 
 export async function releaseEscrow(contractId: string): Promise<{ message: string }> {
@@ -284,7 +284,7 @@ export async function getAdminContracts(params: AdminContractsFilter = {}): Prom
 export async function getAdminContractStats(): Promise<AdminContractStats> {
   const { data, error, response } = await apiClient.GET("/admin/contracts/stats");
   if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-  return (data as any)?.data as unknown as AdminContractStats;
+  return data as unknown as AdminContractStats;
 }
 
 export async function resolveDispute(

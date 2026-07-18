@@ -58,7 +58,7 @@ export function useAdminContractStats() {
     queryFn: async () => {
       const { data, error } = await apiClient.GET("/admin/contracts/stats");
       if (error) throw error;
-      return (data as any)?.data as unknown as AdminContractStats;
+      return data as unknown as AdminContractStats;
     },
   });
 }
@@ -167,7 +167,7 @@ export function useAdminUserMutations() {
         params: { path: { id: userId } }
       });
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
@@ -178,7 +178,7 @@ export function useAdminUserMutations() {
         params: { path: { id: userId } }
       });
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
@@ -189,7 +189,7 @@ export function useAdminUserMutations() {
         params: { path: { id: userId } }
       });
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
@@ -200,7 +200,7 @@ export function useAdminUserMutations() {
         params: { path: { id: userId } }
       });
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: invalidateUserQueries,
   });
@@ -218,7 +218,7 @@ export function useAdminJobMutations() {
         body: { reason }
       } as any);
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.reports() });
@@ -238,7 +238,7 @@ export function useAdminDisputeMutations() {
         body: { decision, notes }
       } as any);
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.disputes() });
@@ -260,7 +260,7 @@ export function useAdminConfigMutations() {
         body: { value, description }
       } as any);
       if (error) throw error;
-      return (data as any)?.data;
+      return data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: adminKeys.config() });
