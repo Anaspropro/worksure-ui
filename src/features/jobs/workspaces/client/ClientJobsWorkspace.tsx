@@ -1,6 +1,7 @@
 "use client";
 
 import { useJobs } from "@/features/jobs/api/useJobs";
+import { useUser } from "@/features/auth";
 import { JobStatusBadge } from "../../components/JobStatusBadge";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/shared/components/ui/card";
@@ -10,7 +11,11 @@ import { Skeleton } from "@/shared/components/ui/skeleton";
 
 export function ClientJobsWorkspace() {
   const router = useRouter();
-  const { data: jobsResponse, isLoading, error } = useJobs({ clientId: "current" });
+  const { data: user } = useUser();
+  const { data: jobsResponse, isLoading, error } = useJobs(
+    { clientId: user?.id },
+    { enabled: !!user?.id }
+  );
 
   if (isLoading) {
     return <div className="space-y-4"><Skeleton className="h-32 w-full" /><Skeleton className="h-32 w-full" /></div>;

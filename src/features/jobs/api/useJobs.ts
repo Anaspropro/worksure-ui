@@ -121,7 +121,7 @@ export function useCreateJob() {
         body: payload as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return data as unknown as Job;
+      return (data as any)?.data as Job;
     },
     onSuccess() {
       qc.invalidateQueries({ queryKey: ["jobs"] });
