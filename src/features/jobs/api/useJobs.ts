@@ -139,7 +139,7 @@ export function useUpdateJob() {
         body: input as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return (data as any)?.data as unknown as Job;
+      return (data as any)?.data as Job;
     },
     onSuccess: (data, variables) => {
       qc.setQueryData(["jobs", "detail", variables.jobId], data);
@@ -153,12 +153,12 @@ export function useUpdateJobStatus() {
   
   return useMutation<Job, Error, { id: string; status: JobStatus }>({
     mutationFn: async ({ id, status }) => {
-      const { data, error, response } = await apiClient.PATCH("/jobs/{id}/status" as any, {
+      const { data, error, response } = await apiClient.PATCH("/jobs/{id}" as any, {
         params: { path: { id } },
         body: { status } as any
       });
       if (error) throw new ApiError((response as Response).statusText, (response as Response).status, error);
-      return (data as any)?.data as unknown as Job;
+      return (data as any)?.data as Job;
     },
     onSuccess: (data) => {
       qc.setQueryData(["jobs", "detail", data.id], data);
