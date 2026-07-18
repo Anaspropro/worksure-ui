@@ -38,8 +38,18 @@ export function CreateJobWizard() {
 
   const handleSubmit = async () => {
     try {
-      // In a real app, validate with zod before submission
-      const newJob = await createJob.mutateAsync(formData as any);
+      // Map frontend payload to match backend CreateJobDto
+      const payload = {
+        title: formData.title,
+        description: formData.description,
+        budget: formData.budget,
+        category: formData.categoryId, // Backend expects 'category'
+        requiredSkills: formData.skillIds, // Backend expects 'requiredSkills'
+        location: formData.isRemote ? "Remote" : formData.location, // Backend expects 'location'
+        requirements: formData.expectedDuration ? `Expected Duration: ${formData.expectedDuration}` : undefined // Map extra fields to requirements
+      };
+
+      const newJob = await createJob.mutateAsync(payload as any);
       toast.success("Job posted successfully!");
       router.push(`/client/jobs/${newJob.id}`);
     } catch (error) {
