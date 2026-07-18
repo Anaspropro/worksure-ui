@@ -14,11 +14,12 @@ export function NotificationDropdown({ role }: { role: string }) {
   // The backend inherently restricts Client and Artisan notifications to their individual userId.
   // Admins, however, receive a global feed. We filter the Admin's dropdown to only show 
   // universal/system-level notifications meant for all admins.
+  const notificationsArr = Array.isArray(allNotifications) ? allNotifications : [];
   const notifications = role === "ADMIN" 
-    ? (allNotifications || []).filter(n => 
+    ? notificationsArr.filter(n => 
         ["system_update", "dispute_created", "dispute_resolved", "payment_verified"].includes(n.type)
       )
-    : (allNotifications || []);
+    : notificationsArr;
 
   const unreadCount = notifications.filter(n => !n.isRead).length;
   const hasUnread = unreadCount > 0;

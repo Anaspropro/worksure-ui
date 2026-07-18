@@ -54,7 +54,7 @@ export default function AdminDisputesWorkspace() {
   const resolveMutation = useResolveAdminDispute();
 
   const filteredDisputes = useMemo(() => {
-    return disputes?.data.filter(d => {
+    return (Array.isArray(disputes?.data) ? disputes.data : []).filter(d => {
       const typedDispute = d as { contractId?: string; clientName?: string; artisanName?: string };
       return (
         d.id.toLowerCase().includes(searchTerm.toLowerCase()) ||

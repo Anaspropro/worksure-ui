@@ -214,11 +214,11 @@ export default function WorkspaceDashboard({
   const { data: proposalsResponse } = useProposals({ userId: user.id, role: roleView });
   const { data: contractsResponse } = useContracts();
 
-  const jobs = jobsResponse?.jobs ?? [];
-  const contracts = contractsResponse?.data ?? [];
+  const jobs = Array.isArray(jobsResponse?.jobs) ? jobsResponse.jobs : [];
+  const contracts = Array.isArray(contractsResponse?.data) ? contractsResponse.data : [];
   
   const contractedJobIds = new Set(contracts.map((c) => c.job.id));
-  const proposals = (proposalsResponse?.proposals ?? []).filter(
+  const proposals = (Array.isArray(proposalsResponse?.proposals) ? proposalsResponse.proposals : []).filter(
     (p) => !contractedJobIds.has(p.job.id)
   );
 

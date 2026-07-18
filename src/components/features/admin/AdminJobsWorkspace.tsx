@@ -62,7 +62,7 @@ export default function AdminJobsWorkspace() {
     limit: itemsPerPage,
     search: debouncedSearch || undefined,
   });
-  const jobs = jobsResponse?.data || [];
+  const jobs = Array.isArray(jobsResponse?.data) ? jobsResponse.data : [];
 
   return (
     <div className="space-y-8 py-4">

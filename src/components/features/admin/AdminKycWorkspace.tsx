@@ -56,7 +56,7 @@ export default function AdminKycWorkspace() {
   const banUserMutation = useBanUser();
 
   const filteredArtisans = useMemo(() => {
-    const artisans = usersData?.data || [];
+    const artisans = Array.isArray(usersData?.data) ? usersData.data : [];
     return artisans.filter(a => {
       if (filter === "ALL") return true;
       if (filter === "PENDING") return !a.artisanVerified;

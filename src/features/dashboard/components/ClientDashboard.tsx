@@ -26,11 +26,11 @@ export default function ClientDashboard({ user }: { user: User }) {
   const { data: proposalsResponse } = useProposals({ userId: user.id, role: "CLIENT" });
   const { data: contractsResponse } = useContracts();
 
-  const jobs = (jobsResponse?.jobs ?? []).filter((j) => j.client?.id === user.id);
-  const contracts = (contractsResponse?.data ?? []).filter((c) => c.clientId === user.id);
+  const jobs = (Array.isArray(jobsResponse?.jobs) ? jobsResponse.jobs : []).filter((j) => j.client?.id === user.id);
+  const contracts = (Array.isArray(contractsResponse?.data) ? contractsResponse.data : []).filter((c) => c.clientId === user.id);
   
   const contractedJobIds = new Set(contracts.map((c) => c.job.id));
-  const proposals = (proposalsResponse?.proposals ?? []).filter(
+  const proposals = (Array.isArray(proposalsResponse?.proposals) ? proposalsResponse.proposals : []).filter(
     (p) => !contractedJobIds.has(p.job.id)
   );
 
