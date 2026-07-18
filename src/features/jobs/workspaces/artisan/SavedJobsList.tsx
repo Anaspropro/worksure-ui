@@ -39,7 +39,7 @@ export function SavedJobsList() {
             <p className="text-sm text-muted-foreground max-w-sm mb-6">
               You haven't saved any jobs yet. Browse the marketplace and bookmark jobs you're interested in.
             </p>
-            <Button onClick={() => router.push("/artisan/jobs")}>
+            <Button onClick={() => router.push("/jobs")}>
               Browse Marketplace
             </Button>
           </CardContent>
@@ -53,7 +53,7 @@ export function SavedJobsList() {
                   <h3 className="font-semibold text-lg">{job.title}</h3>
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-1">{job.description}</p>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => router.push(`/artisan/jobs/${job.id}`)}>
+                <Button variant="ghost" size="sm" onClick={() => router.push(`/jobs/${job.id}`)}>
                   View Details <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </CardContent>

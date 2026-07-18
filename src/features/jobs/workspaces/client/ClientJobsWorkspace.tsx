@@ -57,7 +57,7 @@ export function ClientJobsWorkspace() {
       ) : (
         <div className="grid gap-4">
           {jobs.map((job: any) => (
-            <Card key={job.id} className="hover:border-primary/50 transition-colors cursor-pointer" onClick={() => router.push(`/client/jobs/${job.id}`)}>
+            <Card key={job.id} className="hover:border-primary/50 transition-colors cursor-pointer" onClick={() => router.push(`/jobs/${job.id}`)}>
               <CardContent className="p-6">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                   <div className="space-y-2">
