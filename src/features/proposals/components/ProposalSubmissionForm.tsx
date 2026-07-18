@@ -146,7 +146,7 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         )}
       </div>
 
-      <div className="flex gap-4 pt-4">
+      <div className="flex flex-col sm:flex-row gap-4 pt-4">
         <Button 
           type="button" 
           variant="outline"
@@ -159,7 +159,7 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         <Button 
           type="submit" 
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-          disabled={createProposal.isPending || (formData.message || "").length < 10}
+          disabled={createProposal.isPending}
         >
           {createProposal.isPending ? "Submitting..." : (
             <>Submit Proposal <ArrowRight className="ml-2 h-4 w-4" /></>

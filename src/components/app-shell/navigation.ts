@@ -12,6 +12,7 @@ import {
   Scale,
   Activity,
   BarChart,
+  Send,
 } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import type { User } from "@/types";
@@ -46,6 +47,7 @@ export function getDashboardLinks(user: User) {
         { href: "/dashboard/artisan", label: "Dashboard", icon: LayoutDashboard },
         { href: "/verification", label: "Verification", icon: FileUser },
         { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
+        { href: "/dashboard/artisan/proposals", label: "Proposals", icon: Send },
         { href: "/contracts", label: "Contracts", icon: FileText },
         { href: "/dashboard/artisan/earnings", label: "Earnings", icon: CreditCard },
         { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
