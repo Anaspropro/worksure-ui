@@ -48,8 +48,20 @@ export default function AppShell({
           </Link>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-4 py-2">
+        <div className="flex-1 overflow-y-auto px-4 py-2 flex flex-col">
           <SidebarNav user={user} />
+          
+          <div className="mt-8 mb-4">
+            <div className="bg-[#0B8A4C] text-white rounded-xl p-4 shadow-lg flex flex-col gap-2">
+              <h4 className="font-semibold text-sm">Upgrade Pro! 🚀</h4>
+              <p className="text-xs text-white/80 leading-relaxed mb-1">
+                Higher productivity with better organization
+              </p>
+              <Button size="sm" variant="secondary" className="w-full bg-white text-[#0B8A4C] hover:bg-white/90 h-8 font-semibold">
+                Upgrade
+              </Button>
+            </div>
+          </div>
         </div>
 
         <div className="p-4 border-t border-sidebar-border mt-auto space-y-3">

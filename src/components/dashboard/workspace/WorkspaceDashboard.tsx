@@ -71,21 +71,32 @@ function StatCard({
   return (
     <div
     >
-      <Card className="group relative overflow-hidden border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300">
-        <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        <CardContent className="relative p-5 flex items-start justify-between gap-4 z-10">
-          <div className="space-y-1">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-            <p className="text-3xl font-bold text-foreground">{value}</p>
-            {sub && (
-              <p className="text-xs text-primary/80 font-medium cursor-pointer hover:text-primary transition-colors flex items-center gap-1">
-                {sub} <ChevronRight className="size-3" />
-              </p>
-            )}
+      <Card className="group relative overflow-hidden border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl">
+        <CardContent className="p-5 flex flex-col gap-4">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3">
+              <div className={`rounded-xl ${iconBg} p-2 flex-shrink-0`}>
+                <Icon className={`size-4 ${iconColor}`} />
+              </div>
+              <p className="text-sm font-semibold text-foreground">{label}</p>
+            </div>
+            <button className="text-muted-foreground hover:bg-muted p-1 rounded-md transition-colors">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+            </button>
           </div>
-          <div className={`rounded-2xl ${iconBg} p-3 flex-shrink-0 ring-1 ring-black/5 dark:ring-white/5`}>
-            <Icon className={`size-5 ${iconColor}`} />
+          
+          <div>
+            <p className="text-3xl font-bold tracking-tight text-foreground">{value}</p>
           </div>
+
+          {sub && (
+            <div className="flex items-center gap-2 mt-1">
+              <span className="inline-flex items-center rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+                +3.2% 
+              </span>
+              <span className="text-xs text-muted-foreground">{sub}</span>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
@@ -263,40 +274,39 @@ export default function WorkspaceDashboard({
   return (
     <div className="space-y-6">
       {/* ── Header row ── */}
-      <div
-        className="relative overflow-hidden rounded-xl border border-white/10 bg-[var(--brand-hero-via)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]"
-      >
-
-        <div className="relative flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 text-secondary-foreground">
-          <div className="min-w-0 pr-4">
-            <h1 className="text-3xl font-bold truncate text-white">Dashboard</h1>
-            <p className="mt-0.5 text-lg truncate text-white/90">Welcome back, {firstName} 👋</p>
+      <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 pb-2">
+        <div className="min-w-0 pr-4">
+          <h1 className="text-2xl font-bold truncate text-foreground tracking-tight">Welcome back {firstName}</h1>
+          <p className="mt-1 text-sm truncate text-muted-foreground">Monitor and control your workspace operations today for maximum efficiency.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-surface-muted rounded-lg border border-border/50 text-xs font-medium text-muted-foreground">
+            <Clock className="size-3.5" />
+            <span>{new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
           </div>
-          <div className="flex items-center gap-3">
-            {roleView === "CLIENT" && (
-              <Button
-                asChild
-                size="sm"
-                className="gap-1.5 bg-primary text-primary-foreground hover:bg-primary/90 shadow-xl shadow-black/20 font-semibold"
-              >
-                <Link href="/jobs/create">
-                  <Plus className="size-4" /> Post a Job
-                </Link>
-              </Button>
-            )}
-            {roleView === "ARTISAN" && (
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="bg-primary text-white shadow-lg"
-              >
-                <Link href="/jobs">
-                  <Search className="size-4 mr-1.5" /> Browse Jobs
-                </Link>
-              </Button>
-            )}
-          </div>
+          {roleView === "CLIENT" && (
+            <Button
+              asChild
+              size="sm"
+              className="gap-1.5 bg-foreground text-background hover:bg-foreground/90 font-medium rounded-lg px-4"
+            >
+              <Link href="/jobs/create">
+                <Plus className="size-4" /> Post a Job
+              </Link>
+            </Button>
+          )}
+          {roleView === "ARTISAN" && (
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="gap-1.5 font-medium rounded-lg px-4"
+            >
+              <Link href="/jobs">
+                <Search className="size-4" /> Browse Jobs
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 
@@ -393,12 +403,12 @@ export default function WorkspaceDashboard({
 
       {/* ── Stat cards ── */}
       <div
-        className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+        className="grid gap-5 grid-cols-1 md:grid-cols-3"
       >
         <StatCard
           label="Active Contracts"
           value={activeContracts.length}
-          sub="View all"
+          sub="View details"
           icon={FileText}
           iconBg="bg-primary/10"
           iconColor="text-primary"
@@ -407,7 +417,7 @@ export default function WorkspaceDashboard({
         <StatCard
           label="Pending Payments"
           value={pendingPayments.length}
-          sub="View all"
+          sub="Action needed"
           icon={Clock}
           iconBg="bg-warning/10"
           iconColor="text-warning"
@@ -416,20 +426,11 @@ export default function WorkspaceDashboard({
         <StatCard
           label="Total Spent"
           value={formatAmount(totalSpent)}
-          sub="View all"
+          sub="From last month"
           icon={Wallet}
-          iconBg="bg-violet-500/10"
-          iconColor="text-violet-500"
-          index={2}
-        />
-        <StatCard
-          label="Completed"
-          value={completedContracts.length}
-          sub="View all"
-          icon={CheckCircle2}
           iconBg="bg-success/10"
           iconColor="text-success"
-          index={3}
+          index={2}
         />
       </div>
 
@@ -441,7 +442,7 @@ export default function WorkspaceDashboard({
         {/* Active Contracts */}
         <div
         >
-          <Card className="border-border bg-card h-full">
+          <Card className="rounded-2xl shadow-sm border-border bg-card h-full">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <CardTitle className="text-base">Active Contracts</CardTitle>
               <Button asChild variant="ghost" size="sm" className="text-primary h-8 px-2 gap-1">
@@ -514,7 +515,7 @@ export default function WorkspaceDashboard({
         <div className="space-y-6">
           {/* Recent Activity */}
           <div>
-            <Card className="border-border bg-card">
+            <Card className="rounded-2xl shadow-sm border-border bg-card">
               <CardHeader className="pb-4">
                 <CardTitle className="text-base">Recent Activity</CardTitle>
               </CardHeader>
@@ -608,7 +609,7 @@ export default function WorkspaceDashboard({
       {visibleJobs.length > 0 && (
         <div
         >
-          <Card className="border-border bg-card">
+          <Card className="rounded-2xl shadow-sm border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <div className="flex items-center gap-3">
                 <CardTitle className="text-base">
@@ -635,7 +636,7 @@ export default function WorkspaceDashboard({
       {proposals && proposals.length > 0 && (
         <div
         >
-          <Card className="border-border bg-card">
+          <Card className="rounded-2xl shadow-sm border-border bg-card">
             <CardHeader className="flex flex-row items-center justify-between pb-4">
               <div className="flex items-center gap-3">
                 <CardTitle className="text-base">Proposals</CardTitle>
