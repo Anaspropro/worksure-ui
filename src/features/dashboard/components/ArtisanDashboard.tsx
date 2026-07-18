@@ -56,30 +56,33 @@ export default function ArtisanDashboard({ user }: { user: User }) {
   return (
     <div className="space-y-6">
       {/* Header Row */}
-      <div className="relative overflow-hidden rounded-xl border border-white/10 bg-[var(--brand-hero-via)] px-6 py-2 text-white shadow-[0_30px_80px_-55px_rgba(15,23,42,0.75)]">
-        <div className="relative flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 text-secondary-foreground">
-          <div className="min-w-0 pr-4">
-            <h1 className="text-3xl font-bold truncate text-white">Artisan Dashboard</h1>
-            <p className="mt-0.5 text-lg truncate text-white/90">Welcome back, {firstName} 👋</p>
+      {/* Header Row */}
+      <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4 pb-2">
+        <div className="min-w-0 pr-4">
+          <h1 className="text-2xl font-bold truncate text-foreground tracking-tight">Welcome back {firstName}</h1>
+          <p className="mt-1 text-sm truncate text-muted-foreground">Monitor and control your earnings today for financial health.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-surface-muted rounded-lg border border-border/50 text-xs font-medium text-muted-foreground">
+            <Clock className="size-3.5" />
+            <span>{new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })}</span>
           </div>
-          <div className="flex items-center gap-3">
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="bg-primary text-white shadow-lg"
-            >
-              <Link href="/jobs">
-                <Search className="size-4 mr-1.5" /> Browse Jobs
-              </Link>
-            </Button>
-          </div>
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="gap-1.5 font-medium rounded-lg px-4"
+          >
+            <Link href="/jobs">
+              <Search className="size-4" /> Browse Jobs
+            </Link>
+          </Button>
         </div>
       </div>
 
       {/* Onboarding Checklist */}
       {(!contracts || contracts.length === 0) && (
-        <Card className="border-primary/20 bg-primary/5">
+        <Card className="border-primary/20 bg-primary/5 rounded-2xl shadow-sm">
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
               <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -129,11 +132,11 @@ export default function ArtisanDashboard({ user }: { user: User }) {
       )}
 
       {/* Stat Cards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-5 grid-cols-1 md:grid-cols-3">
         <StatCard
           label="Active Contracts"
           value={activeContracts.length}
-          sub="View all"
+          sub="View details"
           icon={FileText}
           iconBg="bg-primary/10"
           iconColor="text-primary"
@@ -141,7 +144,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
         <StatCard
           label="Pending Earnings"
           value={pendingPayments.length}
-          sub="View all"
+          sub="Action needed"
           icon={Clock}
           iconBg="bg-warning/10"
           iconColor="text-warning"
@@ -149,16 +152,8 @@ export default function ArtisanDashboard({ user }: { user: User }) {
         <StatCard
           label="Total Earnings"
           value={formatCurrency(totalEarnings)}
-          sub="View all"
+          sub="From last month"
           icon={Wallet}
-          iconBg="bg-violet-500/10"
-          iconColor="text-violet-500"
-        />
-        <StatCard
-          label="Completed Jobs"
-          value={completedContracts.length}
-          sub="View all"
-          icon={CheckCircle2}
           iconBg="bg-success/10"
           iconColor="text-success"
         />
@@ -167,7 +162,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
       {/* Main Content Layout */}
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
         {/* Active Contracts */}
-        <Card className="border-border bg-card h-full">
+        <Card className="rounded-2xl shadow-sm border-border bg-card h-full">
           <CardHeader className="flex flex-row items-center justify-between pb-4">
             <CardTitle className="text-base">Active Contracts</CardTitle>
             <Button asChild variant="ghost" size="sm" className="text-primary h-8 px-2 gap-1">
@@ -221,7 +216,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
 
         {/* Right Sidebar: Recent Activity + CTA */}
         <div className="space-y-6">
-          <Card className="border-border bg-card">
+          <Card className="rounded-2xl shadow-sm border-border bg-card">
             <CardHeader className="pb-4">
               <CardTitle className="text-base">Recent Activity</CardTitle>
             </CardHeader>
@@ -290,7 +285,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
 
       {/* Available Jobs list */}
       {jobs.length > 0 && (
-        <Card className="border-border bg-card">
+        <Card className="rounded-2xl shadow-sm border-border bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-4">
             <div className="flex items-center gap-3">
               <CardTitle className="text-base">Open Jobs</CardTitle>
@@ -312,7 +307,7 @@ export default function ArtisanDashboard({ user }: { user: User }) {
 
       {/* Submitted Proposals */}
       {proposals && proposals.length > 0 && (
-        <Card className="border-border bg-card">
+        <Card className="rounded-2xl shadow-sm border-border bg-card">
           <CardHeader className="flex flex-row items-center justify-between pb-4">
             <div className="flex items-center gap-3">
               <CardTitle className="text-base">Your Active Proposals</CardTitle>

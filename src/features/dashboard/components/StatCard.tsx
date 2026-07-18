@@ -20,21 +20,32 @@ export function StatCard({
   iconColor: string;
 }) {
   return (
-    <Card className="group relative overflow-hidden border-border bg-card hover:border-primary/40 hover:shadow-lg transition-all duration-300">
-      <div className="absolute inset-0 bg-primary/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      <CardContent className="relative p-5 flex items-start justify-between gap-4 z-10">
-        <div className="space-y-1">
-          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{label}</p>
-          <p className="text-3xl font-bold text-foreground">{value}</p>
-          {sub && (
-            <p className="text-xs text-primary/80 font-medium cursor-pointer hover:text-primary transition-colors flex items-center gap-1">
-              {sub} <ChevronRight className="size-3" />
-            </p>
-          )}
+    <Card className="group relative overflow-hidden border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 rounded-2xl">
+      <CardContent className="p-5 flex flex-col gap-4">
+        <div className="flex items-center justify-between w-full">
+          <div className="flex items-center gap-3">
+            <div className={`rounded-xl ${iconBg} p-2 flex-shrink-0`}>
+              <Icon className={`size-4 ${iconColor}`} />
+            </div>
+            <p className="text-sm font-semibold text-foreground">{label}</p>
+          </div>
+          <button className="text-muted-foreground hover:bg-muted p-1 rounded-md transition-colors">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+          </button>
         </div>
-        <div className={`rounded-2xl ${iconBg} p-3 flex-shrink-0 ring-1 ring-black/5 dark:ring-white/5`}>
-          <Icon className={`size-5 ${iconColor}`} />
+        
+        <div>
+          <p className="text-3xl font-bold tracking-tight text-foreground">{value}</p>
         </div>
+
+        {sub && (
+          <div className="flex items-center gap-2 mt-1">
+            <span className="inline-flex items-center rounded-full bg-success/10 px-2 py-0.5 text-[10px] font-semibold text-success">
+              +3.2% 
+            </span>
+            <span className="text-xs text-muted-foreground">{sub}</span>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

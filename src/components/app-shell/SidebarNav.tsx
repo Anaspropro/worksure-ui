@@ -26,7 +26,7 @@ export default function SidebarNav({
               onClick={onItemClick}
               className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors ${
                 active
-                  ? "text-primary bg-primary/10 border border-primary/20"
+                  ? "text-primary bg-primary/10"
                   : "text-sidebar-foreground hover:text-foreground hover:bg-sidebar-accent"
               }`}
             >
