@@ -48,7 +48,7 @@ export function ArtisanProposalDashboard() {
     );
   }
 
-  const proposals = response || [];
+  const proposals = (response as any)?.proposals || (Array.isArray(response) ? response : []);
 
   const activeProposals = proposals.filter((p: any) => ['SUBMITTED', 'VIEWED'].includes(p.status));
   const draftProposals = proposals.filter((p: any) => p.status === 'DRAFT');
