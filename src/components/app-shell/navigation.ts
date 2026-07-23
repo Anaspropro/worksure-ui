@@ -39,6 +39,7 @@ export function getDashboardLinks(user: User) {
         { href: "/dashboard/client", label: "Dashboard", icon: LayoutDashboard },
         { href: "/jobs", label: "Jobs", icon: BriefcaseBusiness },
         { href: "/contracts", label: "Contracts", icon: FileText },
+        { href: "/dashboard/client/proposals", label: "Proposals", icon: Send },
         { href: "/dashboard/client/finances", label: "Finances", icon: CreditCard },
         { href: "/notifications", label: "Messages", icon: MessageSquare, badge: true },
         { href: "/profile", label: "Settings", icon: Settings },

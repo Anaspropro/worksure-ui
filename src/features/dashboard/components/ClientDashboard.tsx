@@ -326,67 +326,24 @@ export default function ClientDashboard({ user }: { user: User }) {
         </Card>
       )}
 
-      {/* Proposals list */}
+      {/* Proposals CTA */}
       {proposals && proposals.length > 0 && (
-        <Card className="rounded-2xl shadow-sm border-border bg-card">
-          <CardHeader className="flex flex-row items-center justify-between pb-4">
-            <div className="flex items-center gap-3">
-              <CardTitle className="text-base">Proposals Received</CardTitle>
-              <Badge variant="secondary" className="rounded-full">{proposals.length}</Badge>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            {proposals.slice(0, 2).map((proposal) => (
-              <div
-                key={proposal.id}
-                className="group flex items-center gap-4 rounded-xl border border-border bg-surface p-4 hover:border-primary/30 transition-all"
-              >
-                <div className="size-10 rounded-xl bg-warning/10 flex items-center justify-center flex-shrink-0">
-                  <AlertCircle className="size-5 text-warning" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-sm text-foreground truncate">{proposal.job.title}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{proposal.message.slice(0, 80)}…</p>
-                </div>
-                <div className="text-right flex-shrink-0 space-y-1.5">
-                  <p className="text-sm font-bold">{formatCurrency(proposal.amount)}</p>
-                  <StatusBadge status={proposal.status} />
-                  {proposal.status === "PENDING" && (
-                    <div className="flex gap-1.5 justify-end mt-1.5">
-                      <Button
-                        size="sm"
-                        className="h-7 text-xs"
-                        onClick={() =>
-                          acceptProposalMutation.mutate(proposal.id, {
-                            onSuccess: () => toast.success("Proposal accepted."),
-                            onError: (e) => toast.error(e.message),
-                          })
-                        }
-                        disabled={isBusy}
-                      >
-                        Accept
-                      </Button>
-                    </div>
-                  )}
-                  {proposal.status === "ACCEPTED" && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="h-7 text-xs mt-1.5"
-                      onClick={() =>
-                        createContractMutation.mutate(proposal.id, {
-                          onSuccess: () => toast.success("Contract created."),
-                          onError: (e) => toast.error(e.message),
-                        })
-                      }
-                      disabled={isBusy}
-                    >
-                      Create contract
-                    </Button>
-                  )}
-                </div>
+        <Card className="rounded-2xl shadow-sm border-border bg-card bg-gradient-to-r from-primary/5 to-transparent">
+          <CardContent className="flex flex-col sm:flex-row items-center justify-between p-6 gap-4">
+            <div className="flex items-center gap-4">
+              <div className="size-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <AlertCircle className="size-6 text-primary" />
               </div>
-            ))}
+              <div>
+                <h3 className="font-semibold text-lg">You have {proposals.length} active proposals</h3>
+                <p className="text-sm text-muted-foreground">Review and accept proposals for your posted jobs</p>
+              </div>
+            </div>
+            <Button asChild size="lg" className="w-full sm:w-auto">
+              <Link href="/dashboard/client/proposals">
+                Review Proposals <ArrowRight className="size-4 ml-2" />
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       )}

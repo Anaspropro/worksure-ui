@@ -5,6 +5,7 @@ import type {
   AdminContractStats,
   AdminCollection,
   AdminUserRecord,
+  AdminUserDetail,
   AdminDisputeRecord,
   AuditLog,
   WalletTransaction
@@ -73,6 +74,20 @@ export function useAdminUsers(params?: { search?: string, role?: string, cursor?
       if (error) throw error;
       return data as unknown as AdminCollection<AdminUserRecord>;
     },
+  });
+}
+
+export function useAdminUserDetail(id?: string) {
+  return useQuery({
+    queryKey: adminKeys.user(id!),
+    queryFn: async () => {
+      const { data, error } = await apiClient.GET("/admin/users/{id}" as any, {
+        params: { path: { id: id! } }
+      });
+      if (error) throw error;
+      return ((data as any)?.data ?? data) as unknown as AdminUserDetail;
+    },
+    enabled: Boolean(id),
   });
 }
 
