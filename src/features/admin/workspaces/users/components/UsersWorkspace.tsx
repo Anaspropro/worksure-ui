@@ -205,6 +205,381 @@ export function UsersWorkspace() {
           </div>
         </CardContent>
       </Card>
+
+      {/* DETAILED USER REVIEW MODAL */}
+      <Dialog open={Boolean(selectedUserId)} onOpenChange={(open) => !open && setSelectedUserId(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 rounded-2xl border border-border shadow-2xl bg-card overflow-hidden flex flex-col">
+          {activeUser && (
+            <>
+              {/* Header Hero Banner */}
+              <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-6 relative">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative z-10">
+                  <div className="flex items-center gap-4">
+                    <div className="h-16 w-16 rounded-full bg-gradient-to-tr from-primary to-indigo-500 text-white text-xl font-bold flex items-center justify-center border-2 border-white/20 shadow-lg flex-shrink-0">
+                      {activeUser.name ? activeUser.name.slice(0, 2).toUpperCase() : "US"}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h2 className="text-2xl font-bold tracking-tight text-white">{activeUser.name}</h2>
+                        <Badge variant="outline" className="bg-white/10 text-white border-white/20 font-mono text-xs">
+                          {activeUser.role}
+                        </Badge>
+                      </div>
+                      
+                      <div className="flex flex-wrap items-center gap-4 text-xs text-slate-300 mt-1.5">
+                        <span className="flex items-center gap-1">
+                          <Mail className="h-3.5 w-3.5 text-indigo-400" />
+                          {activeUser.email}
+                        </span>
+                        {activeUser.phone && (
+                          <span className="flex items-center gap-1">
+                            <Phone className="h-3.5 w-3.5 text-emerald-400" />
+                            {activeUser.phone}
+                          </span>
+                        )}
+                        <button 
+                          onClick={() => copyToClipboard(activeUser.id, "User ID")}
+                          className="flex items-center gap-1 font-mono text-[11px] hover:text-white bg-white/10 hover:bg-white/20 px-2 py-0.5 rounded transition-all"
+                          title="Click to copy ID"
+                        >
+                          <Copy className="h-3 w-3" />
+                          ID: {activeUser.id.slice(0, 8)}...
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 self-start sm:self-auto">
+                    {activeUser.status === "BANNED" ? (
+                      <Badge variant="destructive" className="px-3 py-1 text-xs">Banned</Badge>
+                    ) : (
+                      <Badge className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 text-xs flex items-center gap-1.5">
+                        <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                        Active
+                      </Badge>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <div className="border-b bg-muted/20 px-6 flex gap-6 text-sm font-medium">
+                <button
+                  onClick={() => setActiveTab("overview")}
+                  className={`py-3 border-b-2 transition-all flex items-center gap-2 ${
+                    activeTab === "overview"
+                      ? "border-primary text-primary font-semibold"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <UserIcon className="h-4 w-4" /> Overview & Profile
+                </button>
+                <button
+                  onClick={() => setActiveTab("activity")}
+                  className={`py-3 border-b-2 transition-all flex items-center gap-2 ${
+                    activeTab === "activity"
+                      ? "border-primary text-primary font-semibold"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Activity className="h-4 w-4" /> Jobs & Contracts
+                </button>
+                <button
+                  onClick={() => setActiveTab("transactions")}
+                  className={`py-3 border-b-2 transition-all flex items-center gap-2 ${
+                    activeTab === "transactions"
+                      ? "border-primary text-primary font-semibold"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  <Wallet className="h-4 w-4" /> Wallet & Financials
+                </button>
+              </div>
+
+              {/* Modal Body Content */}
+              <div className="p-6 space-y-6 flex-1 overflow-y-auto">
+                {detailLoading && !userDetail ? (
+                  <div className="py-12 text-center text-muted-foreground">
+                    Loading detailed user profile...
+                  </div>
+                ) : (
+                  <>
+                    {/* OVERVIEW TAB */}
+                    {activeTab === "overview" && (
+                      <div className="space-y-6">
+                        {/* Key Metrics Row */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                          <Card className="bg-card p-4 border border-border">
+                            <div className="flex justify-between items-start text-muted-foreground mb-1">
+                              <span className="text-xs font-medium">Wallet Balance</span>
+                              <Wallet className="h-4 w-4 text-primary" />
+                            </div>
+                            <div className="text-lg font-bold text-foreground">
+                              {formatCurrency(activeUser.wallet?.balance ?? 0)}
+                            </div>
+                            {activeUser.wallet?.frozen ? (
+                              <p className="text-[11px] text-amber-600 mt-0.5">
+                                {formatCurrency(activeUser.wallet.frozen)} frozen
+                              </p>
+                            ) : null}
+                          </Card>
+
+                          <Card className="bg-card p-4 border border-border">
+                            <div className="flex justify-between items-start text-muted-foreground mb-1">
+                              <span className="text-xs font-medium">Verification</span>
+                              <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                            </div>
+                            <div className="text-sm font-bold text-foreground">
+                              {activeUser.artisanVerified ? (
+                                <Badge className="bg-emerald-600">Verified Artisan</Badge>
+                              ) : (
+                                <Badge variant="outline" className="text-muted-foreground">Standard User</Badge>
+                              )}
+                            </div>
+                          </Card>
+
+                          <Card className="bg-card p-4 border border-border">
+                            <div className="flex justify-between items-start text-muted-foreground mb-1">
+                              <span className="text-xs font-medium">Joined Date</span>
+                              <Calendar className="h-4 w-4 text-indigo-500" />
+                            </div>
+                            <div className="text-sm font-semibold text-foreground">
+                              {activeUser.createdAt ? format(new Date(activeUser.createdAt), "MMM d, yyyy") : "N/A"}
+                            </div>
+                          </Card>
+
+                          <Card className="bg-card p-4 border border-border">
+                            <div className="flex justify-between items-start text-muted-foreground mb-1">
+                              <span className="text-xs font-medium">Last Active</span>
+                              <Clock className="h-4 w-4 text-blue-500" />
+                            </div>
+                            <div className="text-sm font-semibold text-foreground">
+                              {activeUser.lastLoginAt ? format(new Date(activeUser.lastLoginAt), "MMM d, HH:mm") : "Never"}
+                            </div>
+                          </Card>
+                        </div>
+
+                        {/* Artisan Profile Section */}
+                        {activeUser.artisanProfile && (
+                          <Card className="border border-border p-5 space-y-4">
+                            <div className="flex items-center justify-between border-b pb-3">
+                              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                <Briefcase className="h-4 w-4 text-primary" />
+                                Artisan Profile & Credentials
+                              </h3>
+                              <div className="flex items-center gap-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 px-2.5 py-1 rounded-full text-xs font-semibold">
+                                <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                                {activeUser.artisanProfile.rating ?? 0} / 5 ({activeUser.artisanProfile.reviewCount ?? 0} reviews)
+                              </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                              <div>
+                                <span className="text-xs text-muted-foreground block font-medium">Profession</span>
+                                <span className="font-semibold text-foreground">{activeUser.artisanProfile.profession || "General Artisan"}</span>
+                              </div>
+                              <div>
+                                <span className="text-xs text-muted-foreground block font-medium">Experience Level</span>
+                                <span className="font-semibold text-foreground">{activeUser.artisanProfile.experience || "Not specified"}</span>
+                              </div>
+                              
+                              {activeUser.artisanProfile.bio && (
+                                <div className="col-span-2">
+                                  <span className="text-xs text-muted-foreground block font-medium mb-1">Biography</span>
+                                  <p className="text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg leading-relaxed">
+                                    &quot;{activeUser.artisanProfile.bio}&quot;
+                                  </p>
+                                </div>
+                              )}
+
+                              {activeUser.artisanProfile.skills && activeUser.artisanProfile.skills.length > 0 && (
+                                <div className="col-span-2">
+                                  <span className="text-xs text-muted-foreground block font-medium mb-2">Skills & Specializations</span>
+                                  <div className="flex flex-wrap gap-1.5">
+                                    {activeUser.artisanProfile.skills.map((skill: string) => (
+                                      <Badge key={skill} variant="secondary" className="px-2.5 py-0.5 text-xs bg-primary/10 text-primary border border-primary/20">
+                                        {skill}
+                                      </Badge>
+                                    ))}
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          </Card>
+                        )}
+
+                        {/* Client Profile Section */}
+                        {(activeUser.clientProfile || activeUser.role === 'CLIENT') && (
+                          <Card className="border border-border p-5 space-y-4">
+                            <div className="flex items-center justify-between border-b pb-3">
+                              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                                <Building2 className="h-4 w-4 text-indigo-500" />
+                                Client Activity Profile
+                              </h3>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                              <div className="bg-muted/30 p-3 rounded-lg border border-border">
+                                <span className="text-xs text-muted-foreground block font-medium">Total Jobs Posted</span>
+                                <span className="text-lg font-bold text-foreground">{activeUser.clientProfile?.totalJobs ?? activeUser.activity?.clientJobs?.length ?? 0}</span>
+                              </div>
+                              <div className="bg-muted/30 p-3 rounded-lg border border-border">
+                                <span className="text-xs text-muted-foreground block font-medium">Total Spent</span>
+                                <span className="text-lg font-bold text-emerald-600">{formatCurrency(activeUser.clientProfile?.totalSpent ?? 0)}</span>
+                              </div>
+                            </div>
+                          </Card>
+                        )}
+                      </div>
+                    )}
+
+                    {/* ACTIVITY & JOBS TAB */}
+                    {activeTab === "activity" && (
+                      <div className="space-y-6">
+                        {/* Jobs List */}
+                        <div className="space-y-3">
+                          <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                            <Briefcase className="h-4 w-4 text-primary" />
+                            Jobs History
+                          </h3>
+                          {(!activeUser.activity?.clientJobs?.length && !activeUser.activity?.artisanJobs?.length) ? (
+                            <div className="text-xs text-center py-6 text-muted-foreground border border-dashed rounded-lg">
+                              No recorded job activity for this user.
+                            </div>
+                          ) : (
+                            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                              {[...(activeUser.activity?.clientJobs || []), ...(activeUser.activity?.artisanJobs || [])].map((job: any) => (
+                                <div key={job.id} className="flex justify-between items-center p-3 rounded-lg border bg-muted/20 text-xs">
+                                  <div>
+                                    <div className="font-semibold text-foreground">{job.title}</div>
+                                    <div className="text-muted-foreground text-[11px]">ID: {job.id}</div>
+                                  </div>
+                                  <Badge variant="outline">{job.status}</Badge>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Contracts List */}
+                        <div className="space-y-3">
+                          <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                            <FileText className="h-4 w-4 text-indigo-500" />
+                            Contracts History
+                          </h3>
+                          {(!activeUser.activity?.clientContracts?.length && !activeUser.activity?.artisanContracts?.length) ? (
+                            <div className="text-xs text-center py-6 text-muted-foreground border border-dashed rounded-lg">
+                              No active or historic contracts found.
+                            </div>
+                          ) : (
+                            <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
+                              {[...(activeUser.activity?.clientContracts || []), ...(activeUser.activity?.artisanContracts || [])].map((contract: any) => (
+                                <div key={contract.id} className="flex justify-between items-center p-3 rounded-lg border bg-muted/20 text-xs">
+                                  <div>
+                                    <div className="font-semibold text-foreground">{formatCurrency(contract.amount)}</div>
+                                    <div className="text-muted-foreground text-[11px]">Contract #{contract.id.slice(0, 8)}</div>
+                                  </div>
+                                  <Badge variant="secondary">{contract.status}</Badge>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* TRANSACTIONS TAB */}
+                    {activeTab === "transactions" && (
+                      <div className="space-y-4">
+                        <h3 className="font-semibold text-sm text-foreground flex items-center gap-2">
+                          <Wallet className="h-4 w-4 text-primary" />
+                          Recent Wallet Ledger Transactions
+                        </h3>
+                        {!activeUser.transactions?.length ? (
+                          <div className="text-xs text-center py-8 text-muted-foreground border border-dashed rounded-lg">
+                            No ledger transactions recorded yet.
+                          </div>
+                        ) : (
+                          <div className="rounded-lg border overflow-hidden">
+                            <Table>
+                              <TableHeader>
+                                <TableRow className="bg-muted/40 text-xs">
+                                  <TableHead>Type</TableHead>
+                                  <TableHead>Amount</TableHead>
+                                  <TableHead>Status</TableHead>
+                                  <TableHead>Date</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {activeUser.transactions.map((tx: any) => (
+                                  <TableRow key={tx.id} className="text-xs">
+                                    <TableCell className="font-semibold">{tx.type}</TableCell>
+                                    <TableCell className="font-bold text-foreground">{formatCurrency(tx.amount)}</TableCell>
+                                    <TableCell>
+                                      <Badge variant="outline" className="text-[10px]">{tx.status}</Badge>
+                                    </TableCell>
+                                    <TableCell className="text-muted-foreground">
+                                      {tx.createdAt ? format(new Date(tx.createdAt), "MMM d, HH:mm") : "N/A"}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {/* Action Footer Bar */}
+              <div className="p-4 bg-muted/30 border-t flex flex-col sm:flex-row gap-3 justify-between items-center">
+                <Button variant="ghost" size="sm" onClick={() => setSelectedUserId(null)}>
+                  Close
+                </Button>
+
+                <div className="flex gap-2 w-full sm:w-auto justify-end">
+                  {activeUser.role === 'ARTISAN' && !activeUser.artisanVerified && (
+                    <Button 
+                      variant="default" 
+                      size="sm"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                      onClick={() => handleVerify(activeUser.id)}
+                      disabled={verifyArtisan.isPending}
+                    >
+                      <CheckCircle2 className="h-4 w-4 mr-1.5" />
+                      Verify Artisan
+                    </Button>
+                  )}
+
+                  {activeUser.status === "BANNED" ? (
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleUnban(activeUser.id)}
+                      disabled={unbanUser.isPending}
+                    >
+                      <ShieldCheck className="h-4 w-4 mr-1.5 text-emerald-600" />
+                      Restore Access (Unban)
+                    </Button>
+                  ) : (
+                    <Button 
+                      variant="destructive" 
+                      size="sm"
+                      onClick={() => handleBan(activeUser.id)}
+                      disabled={banUser.isPending}
+                    >
+                      <ShieldAlert className="h-4 w-4 mr-1.5" />
+                      Ban Account
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
