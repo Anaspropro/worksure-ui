@@ -5,6 +5,7 @@ import type {
   AdminContractStats,
   AdminCollection,
   AdminUserRecord,
+  AdminUserDetail,
   AdminDisputeRecord,
   AuditLog,
   WalletTransaction
