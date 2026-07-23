@@ -82,6 +82,12 @@ export interface PaginatedResponse<T> {
   pagination: ApiPagination;
 }
 
+export interface ClientProfile {
+  companyName?: string | null;
+  totalJobs?: number;
+  totalSpent?: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -97,6 +103,7 @@ export interface User {
   updatedAt?: string;
   lastLoginAt?: string | null;
   artisanProfile?: ArtisanProfile | null;
+  clientProfile?: ClientProfile | null;
   payoutBankCode?: string | null;
   payoutAccountNumber?: string | null;
 }

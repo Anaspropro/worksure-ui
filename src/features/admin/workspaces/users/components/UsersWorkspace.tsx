@@ -196,7 +196,22 @@ export function UsersWorkspace() {
                                       </div>
                                     </div>
                                   )}
-                                  </div>
+                                  {(user.clientProfile || user.role === 'CLIENT') && (
+                                    <div className="col-span-2 mt-4">
+                                      <h4 className="text-sm font-semibold mb-2">Client Profile</h4>
+                                      <div className="grid grid-cols-2 gap-4 bg-muted/30 p-4 rounded-md">
+                                        <div>
+                                          <span className="text-xs text-muted-foreground block">Total Jobs Posted</span>
+                                          <span className="text-sm">{user.clientProfile?.totalJobs ?? 0}</span>
+                                        </div>
+                                        <div>
+                                          <span className="text-xs text-muted-foreground block">Total Spent</span>
+                                          <span className="text-sm">${user.clientProfile?.totalSpent ?? 0}</span>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
                                 
                                 <div className="flex gap-3 justify-end mt-4 pt-4 border-t">
                                   {user.role === 'ARTISAN' && !user.artisanVerified && (
