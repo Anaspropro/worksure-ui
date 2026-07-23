@@ -76,6 +76,20 @@ export function useAdminUsers(params?: { search?: string, role?: string, cursor?
   });
 }
 
+export function useAdminUserDetail(id?: string) {
+  return useQuery({
+    queryKey: adminKeys.user(id!),
+    queryFn: async () => {
+      const { data, error } = await apiClient.GET("/admin/users/{id}" as any, {
+        params: { path: { id: id! } }
+      });
+      if (error) throw error;
+      return ((data as any)?.data ?? data) as unknown as AdminUserDetail;
+    },
+    enabled: Boolean(id),
+  });
+}
+
 export function useAdminJobs(params?: { search?: string, status?: string, cursor?: string, limit?: number }) {
   return useQuery({
     queryKey: [...adminKeys.jobs(), params],

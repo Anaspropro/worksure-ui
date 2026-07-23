@@ -350,12 +350,14 @@ export interface AdminUserDetail {
   id: string;
   name: string;
   email: string;
+  phone?: string | null;
   role: UserRole;
   status: string;
   artisanVerified: boolean;
   createdAt: string;
   updatedAt: string;
   lastLoginAt?: string | null;
+  clientProfile?: ClientProfile | null;
   wallet?: {
     balance: number;
     frozen: number;
