@@ -6,11 +6,9 @@ import { NextRequiredAction } from "../../components/NextRequiredAction";
 import { Skeleton } from "@/shared/components/ui/skeleton";
 import { Button } from "@/shared/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/shared/components/ui/card";
-import { Textarea } from "@/shared/components/ui/textarea";
-import { Input } from "@/shared/components/ui/input";
 import { useProposals } from "@/features/jobs/api/useProposals";
-import { toast } from "sonner";
-import { CheckCircle2, Info } from "lucide-react";
+import { useUser } from "@/features/auth";
+import { CheckCircle2, Info, FileEdit } from "lucide-react";
 import { Alert, AlertDescription } from "@/shared/components/ui/alert";
 import { ProposalSubmissionForm } from "@/features/proposals/components/ProposalSubmissionForm";
 
@@ -20,11 +18,18 @@ interface ArtisanJobDetailProps {
 
 export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
   const { data: job, isLoading, error } = useJob(jobId);
+  const { data: user } = useUser();
   const { data: proposalsResponse } = useProposals({ jobId });
   const proposals = proposalsResponse?.proposals;
   
-  const hasSubmitted = proposals?.some(p => p.artisan?.id === "artisan-current");
-  const myProposal = proposals?.find(p => p.artisan?.id === "artisan-current");
+  const myProposal = proposals?.find(
+    (p: any) => user ? (p.artisan?.id === user.id || p.artisanId === user.id) : false
+  );
+  const isSubmitted = Boolean(
+    myProposal &&
+    myProposal.status !== "DRAFT" &&
+    myProposal.status !== "WITHDRAWN"
+  );
 
   if (isLoading) {
     return <div className="space-y-4"><Skeleton className="h-48 w-full" /><Skeleton className="h-64 w-full" /></div>;
@@ -55,7 +60,7 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
         </div>
 
         <div className="space-y-6">
-          {hasSubmitted && myProposal ? (
+          {isSubmitted && myProposal ? (
             <Card className="bg-emerald-50/50 border-emerald-200 dark:bg-emerald-500/5 dark:border-emerald-500/20">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2 text-emerald-800 dark:text-emerald-400">
@@ -70,20 +75,30 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
                 <div className="bg-background rounded-md p-3 border text-sm space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Your Bid:</span>
-                    <span className="font-medium">${(myProposal as any).bidAmount?.toLocaleString()}</span>
+                    <span className="font-medium">${((myProposal as any).amount || (myProposal as any).bidAmount)?.toLocaleString()}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Status:</span>
                     <span className="font-medium">{myProposal.status}</span>
                   </div>
                 </div>
-                <Button variant="outline" className="w-full">View My Proposal</Button>
+                <Button variant="outline" className="w-full" onClick={() => window.location.href = "/dashboard/artisan/proposals"}>
+                  View My Proposals
+                </Button>
               </CardContent>
             </Card>
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Submit a Proposal</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  {myProposal?.status === "DRAFT" ? (
+                    <>
+                      <FileEdit className="h-5 w-5 text-amber-500" /> Edit Draft Proposal
+                    </>
+                  ) : (
+                    "Submit a Proposal"
+                  )}
+                </CardTitle>
               </CardHeader>
               <CardContent>
                 {job.status !== "OPEN" ? (
@@ -97,6 +112,7 @@ export function ArtisanJobDetail({ jobId }: ArtisanJobDetailProps) {
                   <ProposalSubmissionForm 
                     jobId={job.id} 
                     minBudget={job.budget || 5} 
+                    initialProposal={myProposal}
                   />
                 )}
               </CardContent>

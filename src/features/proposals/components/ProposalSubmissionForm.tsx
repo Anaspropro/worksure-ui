@@ -13,15 +13,16 @@ import { z } from 'zod';
 interface ProposalSubmissionFormProps {
   jobId: string;
   minBudget: number;
+  initialProposal?: any;
 }
 
-export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionFormProps) {
+export function ProposalSubmissionForm({ jobId, minBudget, initialProposal }: ProposalSubmissionFormProps) {
   const [formData, setFormData] = useState<Partial<CreateProposalInput>>({
     jobId,
-    amount: minBudget || 5,
-    message: '',
-    estimatedDuration: '',
-    attachments: [],
+    amount: initialProposal?.amount || minBudget || 5,
+    message: initialProposal?.message || '',
+    estimatedDuration: initialProposal?.estimatedDuration || '',
+    attachments: initialProposal?.attachments || [],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSavingDraft, setIsSavingDraft] = useState(false);
