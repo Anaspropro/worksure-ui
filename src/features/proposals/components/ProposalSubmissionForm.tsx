@@ -1,33 +1,78 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCreateProposal } from '../api/useProposals';
 import { createProposalSchema, CreateProposalInput } from '../schemas/proposal-schemas';
 import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import { toast } from 'sonner';
-import { ArrowRight, Paperclip, X, Save, Send, Loader2 } from 'lucide-react';
+import { ArrowRight, Paperclip, X, Save, Send, Loader2, RefreshCw } from 'lucide-react';
 import { z } from 'zod';
 
 interface ProposalSubmissionFormProps {
   jobId: string;
   minBudget: number;
+  initialProposal?: any;
 }
 
-export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionFormProps) {
+export function ProposalSubmissionForm({ jobId, minBudget, initialProposal }: ProposalSubmissionFormProps) {
+  const DRAFT_KEY = `worksure_proposal_draft_${jobId}`;
+
   const [formData, setFormData] = useState<Partial<CreateProposalInput>>({
     jobId,
-    amount: minBudget || 5,
-    message: '',
-    estimatedDuration: '',
-    attachments: [],
+    amount: initialProposal?.amount || initialProposal?.bidAmount || minBudget || 5,
+    message: initialProposal?.message || '',
+    estimatedDuration: initialProposal?.estimatedDuration || '',
+    attachments: initialProposal?.attachments || [],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSavingDraft, setIsSavingDraft] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   
   const createProposal = useCreateProposal();
+
+  // Sync state when initialProposal finishes loading from server or load from localStorage
+  useEffect(() => {
+    if (initialProposal) {
+      setFormData((prev) => ({
+        jobId,
+        amount: initialProposal.amount ?? initialProposal.bidAmount ?? prev.amount ?? minBudget ?? 5,
+        message: initialProposal.message || prev.message || '',
+        estimatedDuration: initialProposal.estimatedDuration || prev.estimatedDuration || '',
+        attachments: initialProposal.attachments || prev.attachments || [],
+      }));
+    } else {
+      try {
+        const savedLocal = localStorage.getItem(DRAFT_KEY);
+        if (savedLocal) {
+          const parsed = JSON.parse(savedLocal);
+          setFormData((prev) => ({
+            ...prev,
+            ...parsed,
+            jobId,
+          }));
+        }
+      } catch (e) {
+        // Ignore localStorage read errors
+      }
+    }
+  }, [initialProposal, jobId, minBudget, DRAFT_KEY]);
+
+  // Auto-save form inputs to localStorage while typing
+  useEffect(() => {
+    if (formData.message || formData.amount || formData.estimatedDuration) {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({
+          amount: formData.amount,
+          message: formData.message,
+          estimatedDuration: formData.estimatedDuration,
+        }));
+      } catch (e) {
+        // Ignore localStorage write errors
+      }
+    }
+  }, [formData, DRAFT_KEY]);
 
   const handleValidation = () => {
     try {
@@ -65,6 +110,9 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         attachments: formData.attachments,
         isDraft,
       });
+      try {
+        localStorage.removeItem(DRAFT_KEY);
+      } catch (e) {}
       toast.success(isDraft ? "Draft saved successfully!" : "Proposal submitted successfully!");
     } catch (err: any) {
       const backendMessage =

@@ -25,8 +25,8 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
     try {
       await acceptProposal.mutateAsync(proposal.id);
       toast.success("Proposal accepted! You can now create a contract.");
-    } catch (error) {
-      toast.error("Failed to accept proposal");
+    } catch (error: any) {
+      toast.error(error?.message || error?.error?.message || "Failed to accept proposal");
     }
   };
 
@@ -34,8 +34,8 @@ export function ProposalActions({ proposal }: ProposalActionsProps) {
     try {
       await rejectProposal.mutateAsync(proposal.id);
       toast.success("Proposal rejected");
-    } catch (error) {
-      toast.error("Failed to reject proposal");
+    } catch (error: any) {
+      toast.error(error?.message || error?.error?.message || "Failed to reject proposal");
     }
   };
 

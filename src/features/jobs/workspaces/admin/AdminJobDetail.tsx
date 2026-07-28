@@ -30,8 +30,8 @@ export function AdminJobDetail({ jobId }: AdminJobDetailProps) {
     try {
       await updateStatus.mutateAsync({ id: job.id, status: "OPEN" });
       toast.success("Job approved and published.");
-    } catch (err) {
-      toast.error("Failed to approve job.");
+    } catch (err: any) {
+      toast.error(err?.message || err?.error?.message || "Failed to approve job.");
     }
   };
 
@@ -39,8 +39,8 @@ export function AdminJobDetail({ jobId }: AdminJobDetailProps) {
     try {
       await updateStatus.mutateAsync({ id: job.id, status: "CANCELLED" });
       toast.success("Job cancelled and removed from marketplace.");
-    } catch (err) {
-      toast.error("Failed to cancel job.");
+    } catch (err: any) {
+      toast.error(err?.message || err?.error?.message || "Failed to cancel job.");
     }
   };
 

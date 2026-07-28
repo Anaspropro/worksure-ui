@@ -29,7 +29,7 @@ export default function AdminTaxonomyPage() {
       queryClient.invalidateQueries({ queryKey: ["category-suggestions"] });
       toast.success("Category approved");
     },
-    onError: () => toast.error("Failed to approve category")
+    onError: (err: any) => toast.error(err?.message || err?.error?.message || "Failed to approve category")
   });
 
   const rejectMutation = useMutation({
@@ -43,7 +43,7 @@ export default function AdminTaxonomyPage() {
       queryClient.invalidateQueries({ queryKey: ["category-suggestions"] });
       toast.success("Category rejected");
     },
-    onError: () => toast.error("Failed to reject category")
+    onError: (err: any) => toast.error(err?.message || err?.error?.message || "Failed to reject category")
   });
 
   if (isLoading) return <div>Loading...</div>;
