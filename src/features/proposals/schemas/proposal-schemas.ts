@@ -19,7 +19,7 @@ export const proposalAttachmentSchema = z.object({
 });
 
 export const createProposalSchema = z.object({
-  jobId: z.string().uuid(),
+  jobId: z.string().min(1, 'Job ID is required'),
   amount: z.number().positive(),
   message: z.string().min(10, 'Cover letter must be at least 10 characters.'),
   estimatedDuration: z.string().optional(),

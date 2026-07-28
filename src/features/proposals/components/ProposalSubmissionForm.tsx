@@ -7,7 +7,7 @@ import { Input } from '@/shared/components/ui/input';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Button } from '@/shared/components/ui/button';
 import { toast } from 'sonner';
-import { ArrowRight, Paperclip, X } from 'lucide-react';
+import { ArrowRight, Paperclip, X, Save, Send, Loader2 } from 'lucide-react';
 import { z } from 'zod';
 
 interface ProposalSubmissionFormProps {
@@ -24,6 +24,8 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
     attachments: [],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isSavingDraft, setIsSavingDraft] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const createProposal = useCreateProposal();
 
@@ -48,6 +50,12 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
     e.preventDefault();
     if (!handleValidation()) return;
 
+    if (isDraft) {
+      setIsSavingDraft(true);
+    } else {
+      setIsSubmitting(true);
+    }
+
     try {
       await createProposal.mutateAsync({
         jobId,
@@ -58,8 +66,16 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         isDraft,
       });
       toast.success(isDraft ? "Draft saved successfully!" : "Proposal submitted successfully!");
-    } catch (err) {
-      toast.error("Failed to submit proposal");
+    } catch (err: any) {
+      const backendMessage =
+        err?.message ||
+        err?.error?.message ||
+        err?.response?.data?.message ||
+        (typeof err === 'string' ? err : 'Failed to submit proposal');
+      toast.error(backendMessage);
+    } finally {
+      setIsSavingDraft(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -150,19 +166,33 @@ export function ProposalSubmissionForm({ jobId, minBudget }: ProposalSubmissionF
         <Button 
           type="button" 
           variant="outline"
-          className="w-full"
+          className="w-full border-border hover:bg-muted"
           onClick={(e) => handleSubmit(e, true)}
-          disabled={createProposal.isPending}
+          disabled={isSavingDraft || isSubmitting}
         >
-          Save as Draft
+          {isSavingDraft ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Saving Draft...
+            </>
+          ) : (
+            <>
+              <Save className="mr-2 h-4 w-4" /> Save as Draft
+            </>
+          )}
         </Button>
         <Button 
           type="submit" 
           className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
-          disabled={createProposal.isPending}
+          disabled={isSavingDraft || isSubmitting}
         >
-          {createProposal.isPending ? "Submitting..." : (
-            <>Submit Proposal <ArrowRight className="ml-2 h-4 w-4" /></>
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...
+            </>
+          ) : (
+            <>
+              <Send className="mr-2 h-4 w-4" /> Submit Proposal
+            </>
           )}
         </Button>
       </div>
