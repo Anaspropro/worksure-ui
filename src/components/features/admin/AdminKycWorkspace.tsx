@@ -248,7 +248,7 @@ export default function AdminKycWorkspace() {
                               const toastId = toast.loading("Suspending account...");
                               banUserMutation.mutate(artisan.id, {
                                 onSuccess: () => toast.success("Account suspended", { id: toastId }),
-                                onError: () => toast.error("Failed to suspend account", { id: toastId })
+                                onError: (err: any) => toast.error(err?.message || err?.error?.message || "Failed to suspend account", { id: toastId })
                               });
                             }}
                           >

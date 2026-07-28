@@ -26,8 +26,8 @@ export function ClientFinanceWorkspace() {
             // Clean up the URL
             window.history.replaceState({}, document.title, window.location.pathname);
           },
-          onError: () => {
-            toast.error("Failed to verify payment.", { id: toastId });
+          onError: (err: any) => {
+            toast.error(err?.message || err?.error?.message || "Failed to verify payment.", { id: toastId });
           },
         }
       );

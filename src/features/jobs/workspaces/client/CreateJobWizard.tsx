@@ -52,8 +52,8 @@ export function CreateJobWizard() {
       const newJob = await createJob.mutateAsync(payload as any);
       toast.success("Job posted successfully!");
       router.push(`/jobs/${newJob.id}`);
-    } catch (error) {
-      toast.error("Failed to post job");
+    } catch (error: any) {
+      toast.error(error?.message || error?.error?.message || "Failed to post job");
     }
   };
 
