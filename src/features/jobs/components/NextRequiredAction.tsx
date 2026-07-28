@@ -65,18 +65,7 @@ export function NextRequiredAction({ job }: NextRequiredActionProps) {
 
   // Artisan Actions
   if (role === "ARTISAN") {
-    if (job.status === "OPEN") {
-      return (
-        <Alert className="bg-emerald-50 border-emerald-200 text-emerald-800 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20">
-          <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-          <AlertTitle>Job is Open</AlertTitle>
-          <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-2">
-            <span>This job matches your skills! Submit a proposal before the deadline.</span>
-            <Button size="sm" className="bg-emerald-600 hover:bg-emerald-700 text-white dark:bg-emerald-600 dark:hover:bg-emerald-700">Submit Proposal <ArrowRight className="ml-2 h-4 w-4" /></Button>
-          </AlertDescription>
-        </Alert>
-      );
-    }
+    return null;
   }
 
   return null;

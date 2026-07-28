@@ -210,11 +210,11 @@ export function ProposalSubmissionForm({ jobId, minBudget, initialProposal }: Pr
         )}
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-4 pt-4">
+      <div className="flex flex-col sm:flex-row items-center justify-end gap-3 pt-6 border-t mt-6">
         <Button 
           type="button" 
           variant="outline"
-          className="w-full border-border hover:bg-muted"
+          className="w-full sm:w-auto px-6 border-border hover:bg-muted font-medium"
           onClick={(e) => handleSubmit(e, true)}
           disabled={isSavingDraft || isSubmitting}
         >
@@ -224,22 +224,24 @@ export function ProposalSubmissionForm({ jobId, minBudget, initialProposal }: Pr
             </>
           ) : (
             <>
-              <Save className="mr-2 h-4 w-4" /> Save as Draft
+              <Save className="mr-2 h-4 w-4 text-muted-foreground" /> Save as Draft
             </>
           )}
         </Button>
+        
         <Button 
           type="submit" 
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+          size="lg"
+          className="w-full sm:w-auto px-8 bg-emerald-600 hover:bg-emerald-700 text-white font-semibold shadow-md transition-all"
           disabled={isSavingDraft || isSubmitting}
         >
           {isSubmitting ? (
             <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Submitting...
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" /> Submitting Proposal...
             </>
           ) : (
             <>
-              <Send className="mr-2 h-4 w-4" /> Submit Proposal
+              <Send className="mr-2 h-5 w-5" /> Submit Proposal
             </>
           )}
         </Button>
