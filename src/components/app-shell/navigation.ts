@@ -64,6 +64,7 @@ export function getDashboardLinks(user: User) {
         ...(hasRole('DISPUTE_ADMIN') ? [{ href: "/admin/disputes", label: "Disputes", icon: ShieldPlus }] : []),
         ...(hasRole('FINANCE_ADMIN') ? [{ href: "/admin/financial-operations", label: "Finances", icon: CreditCard }] : []),
         ...(hasRole('ANALYTICS_ADMIN') ? [{ href: "/admin/analytics", label: "Analytics", icon: BarChart }] : []),
+        ...(hasRole('OPERATIONS_MANAGER') ? [{ href: "/admin/taxonomy", label: "Taxonomy & Categories", icon: Scale }] : []),
         ...(hasRole('OPERATIONS_MANAGER') ? [{ href: "/admin/audit", label: "Audit Trail", icon: History }] : []),
       ],
     }[role] ?? []
