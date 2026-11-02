@@ -129,6 +129,28 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
           maxAge: SESSION_MAX_AGE,
         });
       }
+      const userMeta = payload?.data?.user ?? payload?.user;
+      if (userMeta) {
+        response.cookies.set(
+          "user_session",
+          encodeURIComponent(
+            JSON.stringify({
+              id: userMeta.id,
+              role: userMeta.role,
+              name: userMeta.name,
+              email: userMeta.email,
+              avatarUrl: userMeta.avatarUrl,
+            }),
+          ),
+          {
+            httpOnly: false,
+            secure: isSecureCookie,
+            sameSite: "lax",
+            path: "/",
+            maxAge: SESSION_MAX_AGE,
+          },
+        );
+      }
     }
   }
 
@@ -141,6 +163,13 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
       maxAge: 0,
     });
     response.cookies.set(SESSION_HINT_KEY, "", {
+      httpOnly: false,
+      secure: isSecureCookie,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set("user_session", "", {
       httpOnly: false,
       secure: isSecureCookie,
       sameSite: "lax",
