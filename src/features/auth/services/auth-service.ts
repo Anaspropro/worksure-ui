@@ -8,7 +8,19 @@ export async function login(email: string, password: string): Promise<AuthSucces
       body: { email, password }
     });
     if (error) {
-      throw new ApiError((error as { message?: string })?.message || "Invalid credentials provided. Please check your email and password.", response?.status || 401);
+      const serverMessage = (error as { message?: string })?.message;
+      if (response?.status === 404) {
+        throw new ApiError(
+          serverMessage ||
+            "Authentication endpoint not found (404). Please ensure worksure-server is running on port 8000.",
+          404,
+        );
+      }
+      throw new ApiError(
+        serverMessage ||
+          "Invalid credentials provided. Please check your email and password.",
+        response?.status || 401,
+      );
     }
     if (!data || !(data as { data?: { user?: unknown } })?.data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
