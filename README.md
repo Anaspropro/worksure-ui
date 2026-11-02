@@ -67,7 +67,7 @@ The frontend handles:
 ## ⚙️ Quick Start
 
 ### Prerequisites
-* Node.js  20
+* Node.js ≥ 22
 * Backend server running locally (or deployed)
 
 ### Install Dependencies
@@ -78,9 +78,18 @@ npm install
 ### Environment Variables
 Create a `.env.local` file:
 ```env
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
+# Backend server URL for server-side Next.js BFF proxy
+API_URL=http://localhost:8000
+NEXT_PUBLIC_API_URL=http://localhost:8000
 ```
-*(Never commit `.env` files. Secret scanning runs in CI with Gitleaks.)*
+*(Never commit `.env` or `.env.local` files. Secret scanning runs in CI with Gitleaks.)*
+
+### Backend-for-Frontend (BFF) Proxy Architecture
+Client-side components make API requests to `/api/proxy/...` on the Next.js server. The Next.js BFF proxy handler (`src/app/api/proxy/[...path]/route.ts`):
+- Reads the secure `HttpOnly` JWT cookie (`token`) and injects it as an `Authorization: Bearer <token>` header to the upstream backend.
+- Prevents JavaScript token access (XSS mitigation).
+- Sets `HttpOnly`, `SameSite=Lax`, and `Secure` cookies on authentication endpoints (`auth/login`, `auth/register`, `auth/logout`).
+- Enforces an upstream payload limit of 3MB.
 
 ### Run Development Server
 ```bash

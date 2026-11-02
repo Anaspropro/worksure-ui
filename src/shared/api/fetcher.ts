@@ -43,6 +43,26 @@ export function clearSessionHint(): void {
   }
 
   document.cookie = `${SESSION_HINT_KEY}=; path=/; max-age=0; samesite=lax`;
+  document.cookie = "user_session=; path=/; max-age=0; samesite=lax";
+  document.cookie = "user_role=; path=/; max-age=0; samesite=lax";
+}
+
+export function getStoredUserSession(): any | undefined {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+
+  const match = document.cookie
+    .split("; ")
+    .find((entry) => entry.startsWith("user_session="));
+
+  if (!match) return undefined;
+  try {
+    const raw = match.split("=").slice(1).join("=");
+    return JSON.parse(decodeURIComponent(raw));
+  } catch {
+    return undefined;
+  }
 }
 
 

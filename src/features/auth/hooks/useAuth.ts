@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { del } from "idb-keyval";
 import {
   clearSessionHint,
   hasSessionHint,
   markSessionHint,
+  getStoredUserSession,
 } from "@/shared/api/fetcher";
 import {
   login,
@@ -31,6 +33,7 @@ export function useUser() {
     enabled: hasToken,
     retry: false,
     staleTime: 1000 * 60 * 5,
+    placeholderData: getStoredUserSession,
   });
 
   const isAuthLoading = !isHydrated || (hasToken && query.isPending);
@@ -77,6 +80,7 @@ export function useLogout() {
     onSettled() {
       clearSessionHint();
       queryClient.clear();
+      void del("reactQuery");
     },
   });
 }
