@@ -115,7 +115,11 @@ export async function verifyEmail(email: string, code: string): Promise<void> {
     body: { email, token: code } as any
   });
   if (error) {
-    throw new ApiError("Failed to verify email", (response as Response).status);
+    const serverMessage = (error as { message?: string })?.message;
+    throw new ApiError(
+      serverMessage || "Failed to verify email. Please check your verification code.",
+      (response as Response)?.status || 400,
+    );
   }
 }
 
@@ -124,6 +128,10 @@ export async function resendVerification(email: string): Promise<void> {
     body: { email } as any
   });
   if (error) {
-    throw new ApiError("Failed to resend verification", (response as Response).status);
+    const serverMessage = (error as { message?: string })?.message;
+    throw new ApiError(
+      serverMessage || "Failed to resend verification code. Please try again later.",
+      (response as Response)?.status || 400,
+    );
   }
 }
