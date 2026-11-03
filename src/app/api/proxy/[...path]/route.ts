@@ -1,8 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const API_URL =
-  process.env.API_URL?.replace(/\/$/, "") ??
-  process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "");
+function resolveApiUrl(): string {
+  const envVal =
+    process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "";
+  const candidates = envVal
+    .split(",")
+    .map((s) => s.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+
+  if (candidates.length === 0) {
+    return "http://localhost:8000";
+  }
+
+  // If in production or an HTTPS remote URL is present, prefer HTTPS
+  const httpsCandidate = candidates.find((c) => c.startsWith("https://"));
+  if (httpsCandidate) {
+    return httpsCandidate;
+  }
+
+  return candidates[0];
+}
 
 const TOKEN_KEY = "token";
 const SESSION_HINT_KEY = "auth_present";
@@ -16,12 +33,9 @@ type RouteContext = {
 };
 
 function buildUpstreamUrl(pathSegments: string[], request: NextRequest) {
-  if (!API_URL) {
-    throw new Error("API_URL environment variable is not configured");
-  }
-
+  const baseUrl = resolveApiUrl();
   const upstreamPath = pathSegments.join("/");
-  return `${API_URL}/${upstreamPath}${request.nextUrl.search}`;
+  return `${baseUrl}/${upstreamPath}${request.nextUrl.search}`;
 }
 
 async function forwardRequest(request: NextRequest, context: RouteContext) {
@@ -61,15 +75,27 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     headers.set("Authorization", `Bearer ${token}`);
   }
 
-  const upstreamResponse = await fetch(url, {
-    method: request.method,
-    headers,
-    body:
-      request.method === "GET" || request.method === "HEAD"
-        ? undefined
-        : Buffer.from(await request.arrayBuffer()),
-    cache: "no-store",
-  });
+  let upstreamResponse: Response;
+  try {
+    upstreamResponse = await fetch(url, {
+      method: request.method,
+      headers,
+      body:
+        request.method === "GET" || request.method === "HEAD"
+          ? undefined
+          : Buffer.from(await request.arrayBuffer()),
+      cache: "no-store",
+    });
+  } catch (error: any) {
+    console.error(`[API Proxy Error] Failed to reach upstream ${url}:`, error?.message || error);
+    return NextResponse.json(
+      {
+        statusCode: 502,
+        message: `Unable to reach backend server (${resolveApiUrl()}). Please ensure the backend is running.`,
+      },
+      { status: 502 },
+    );
+  }
 
   const contentType = upstreamResponse.headers.get("content-type");
   const body = await upstreamResponse.arrayBuffer();

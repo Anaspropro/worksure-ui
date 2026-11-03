@@ -135,7 +135,15 @@ export default function AuthForm({ mode }: { mode: AuthMode }) {
             window.location.replace(getDashboardPathForRole(user.role));
           },
           onError: (error) => {
-            toast.error(error.message || "Login failed.", { id: toastId });
+            const message = error.message || "Login failed.";
+            toast.error(message, { id: toastId });
+            if (message.toLowerCase().includes("verify your email")) {
+              setTimeout(() => {
+                window.location.replace(
+                  `/auth/verify-email?email=${encodeURIComponent(normalizedEmail)}`,
+                );
+              }, 1200);
+            }
           },
         },
       );
