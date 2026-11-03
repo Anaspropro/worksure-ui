@@ -6,15 +6,45 @@ import { Users, Briefcase, ShieldAlert, CreditCard, Wallet, AlertCircle } from "
 import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export function GlobalDashboard() {
-  const { data: overview, isLoading: isOverviewLoading } = useAdminOverview();
-  const { data: contractStats, isLoading: isContractLoading } = useAdminContractStats();
+  const {
+    data: overview,
+    isLoading: isOverviewLoading,
+    error: overviewError,
+    refetch: refetchOverview,
+  } = useAdminOverview();
+  const {
+    data: contractStats,
+    isLoading: isContractLoading,
+    error: contractError,
+    refetch: refetchContractStats,
+  } = useAdminContractStats();
 
   if (isOverviewLoading || isContractLoading) {
     return <DashboardLoadingState />;
   }
 
   if (!overview || !contractStats) {
-    return <div>Failed to load dashboard data.</div>;
+    const errorMessage =
+      (overviewError as any)?.message ||
+      (contractError as any)?.message ||
+      "Failed to load dashboard data.";
+
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center border rounded-lg bg-card text-card-foreground">
+        <AlertCircle className="w-10 h-10 text-destructive mb-3" />
+        <h3 className="text-lg font-semibold mb-1">Failed to load dashboard data</h3>
+        <p className="text-sm text-muted-foreground mb-4 max-w-md">{errorMessage}</p>
+        <button
+          onClick={() => {
+            refetchOverview();
+            refetchContractStats();
+          }}
+          className="px-4 py-2 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+        >
+          Try Again
+        </button>
+      </div>
+    );
   }
 
   const formatCurrency = (amount: number) => {
