@@ -8,13 +8,24 @@ import { ServerToClientEvents, ClientToServerEvents, Message, Conversation } fro
 
 type ChatSocket = ReturnType<typeof io>;
 
+function resolveChatSocketUrl(): string {
+  const envVal = process.env.NEXT_PUBLIC_API_URL || "";
+  const candidates = envVal
+    .split(",")
+    .map((s) => s.trim().replace(/\/$/, ""))
+    .filter(Boolean);
+  const httpsCandidate = candidates.find((c) => c.startsWith("https://"));
+  const baseUrl = httpsCandidate || candidates[0] || "http://localhost:8000";
+  return `${baseUrl}/chat`;
+}
+
 export function useChatSocket() {
   const queryClient = useQueryClient();
   const socketRef = useRef<ChatSocket | null>(null);
 
   useEffect(() => {
     // Connect to the WebSocket namespace
-    const socket = io(process.env.NEXT_PUBLIC_API_URL + "/chat", {
+    const socket = io(resolveChatSocketUrl(), {
       autoConnect: true,
       reconnection: true,
     });

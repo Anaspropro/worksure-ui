@@ -9,18 +9,29 @@ export async function login(email: string, password: string): Promise<AuthSucces
     });
     if (error) {
       const serverMessage = (error as { message?: string })?.message;
-      if (response?.status === 404) {
+      const status = response?.status || 401;
+      if (status >= 500) {
         throw new ApiError(
           serverMessage ||
-            "Authentication endpoint not found (404). Please ensure worksure-server is running on port 8000.",
+            "Backend server is currently unavailable. Please try again later.",
+          status,
+        );
+      }
+      if (status === 404) {
+        throw new ApiError(
+          serverMessage ||
+            "Authentication endpoint not found (404). Please ensure the backend server is reachable.",
           404,
         );
       }
-      throw new ApiError(
-        serverMessage ||
-          "Invalid credentials provided. Please check your email and password.",
-        response?.status || 401,
-      );
+      if (status === 401) {
+        throw new ApiError(
+          serverMessage ||
+            "Invalid credentials provided. Please check your email and password.",
+          401,
+        );
+      }
+      throw new ApiError(serverMessage || "Login failed. Please try again.", status);
     }
     if (!data || !(data as { data?: { user?: unknown } })?.data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
@@ -43,7 +54,31 @@ export async function register(
       body: { name, email, password, role }
     });
     if (error) {
-      throw new ApiError((error as { message?: string })?.message || "Registration failed. This email might already be in use.", (response as unknown as { status?: number })?.status || 400);
+      const serverMessage = (error as { message?: string })?.message;
+      const status = (response as unknown as { status?: number })?.status || 400;
+      if (status >= 500) {
+        throw new ApiError(
+          serverMessage ||
+            "Backend server is currently unavailable. Please try again later.",
+          status,
+        );
+      }
+      if (status === 404) {
+        throw new ApiError(
+          serverMessage || "Registration endpoint not found (404).",
+          404,
+        );
+      }
+      if (status === 409) {
+        throw new ApiError(
+          serverMessage || "An account with this email already exists.",
+          409,
+        );
+      }
+      throw new ApiError(
+        serverMessage || "Registration failed. Please check your details and try again.",
+        status,
+      );
     }
     if (!data || !(data as { data?: { user?: unknown } })?.data?.user) {
       throw new ApiError("Server not available. Please try again later.", 503);
