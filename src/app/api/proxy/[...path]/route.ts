@@ -51,7 +51,14 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
   }
 
   const headers = new Headers();
-  const token = request.cookies.get(TOKEN_KEY)?.value;
+  const tokenFromCookie =
+    request.cookies.get(TOKEN_KEY)?.value ||
+    request.cookies.get("auth_token")?.value;
+  const incomingAuth = request.headers.get("authorization");
+  const tokenFromHeader = incomingAuth?.startsWith("Bearer ")
+    ? incomingAuth.slice(7).trim()
+    : incomingAuth?.trim();
+  const token = tokenFromCookie || tokenFromHeader;
 
   request.headers.forEach((value, key) => {
     const normalizedKey = key.toLowerCase();
@@ -114,15 +121,18 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     headers: responseHeaders,
   });
 
+  const host = request.headers.get("host") || "";
+  const isLocalhost = host.startsWith("localhost") || host.startsWith("127.0.0.1");
   const isHttps = request.headers.get("x-forwarded-proto") === "https" || request.nextUrl.protocol === "https:";
-  const isSecureCookie = process.env.NODE_ENV === "production" && isHttps;
+  const isSecureCookie = !isLocalhost && process.env.NODE_ENV === "production" && isHttps;
 
   const shouldPersistSession =
     upstreamResponse.ok &&
     path[0] === "auth" &&
     (path[1] === "login" || path[1] === "register");
   const shouldClearSession =
-    upstreamResponse.status === 401 || (path[0] === "auth" && path[1] === "logout");
+    (upstreamResponse.status === 401 && path[0] === "auth" && path[1] === "me") ||
+    (path[0] === "auth" && path[1] === "logout");
 
   if (shouldPersistSession) {
     const payload = body.byteLength
@@ -134,6 +144,13 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
     if (accessToken) {
       response.cookies.set(TOKEN_KEY, accessToken, {
         httpOnly: true,
+        secure: isSecureCookie,
+        sameSite: "lax",
+        path: "/",
+        maxAge: SESSION_MAX_AGE,
+      });
+      response.cookies.set("auth_token", accessToken, {
+        httpOnly: false,
         secure: isSecureCookie,
         sameSite: "lax",
         path: "/",
@@ -183,6 +200,13 @@ async function forwardRequest(request: NextRequest, context: RouteContext) {
   if (shouldClearSession) {
     response.cookies.set(TOKEN_KEY, "", {
       httpOnly: true,
+      secure: isSecureCookie,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 0,
+    });
+    response.cookies.set("auth_token", "", {
+      httpOnly: false,
       secure: isSecureCookie,
       sameSite: "lax",
       path: "/",

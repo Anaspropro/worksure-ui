@@ -43,6 +43,7 @@ export function clearSessionHint(): void {
   }
 
   document.cookie = `${SESSION_HINT_KEY}=; path=/; max-age=0; samesite=lax`;
+  document.cookie = "auth_token=; path=/; max-age=0; samesite=lax";
   document.cookie = "user_session=; path=/; max-age=0; samesite=lax";
   document.cookie = "user_role=; path=/; max-age=0; samesite=lax";
 }
