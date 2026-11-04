@@ -53,6 +53,9 @@ export function useLogin() {
     mutationFn: async ({ email, password }: { email: string; password: string }) =>
       login(email, password),
     onSuccess(data) {
+      if (typeof document !== "undefined" && data.accessToken) {
+        document.cookie = `auth_token=${encodeURIComponent(data.accessToken)}; path=/; max-age=${60 * 60 * 24 * 30}; samesite=lax`;
+      }
       markSessionHint();
       queryClient.setQueryData(authKeys.user(), data.user);
       queryClient.invalidateQueries({ queryKey: authKeys.user() });

@@ -18,7 +18,9 @@ function getDashboardPathForRole(role: string): string {
 }
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get(TOKEN_KEY)?.value;
+  const token =
+    request.cookies.get(TOKEN_KEY)?.value ||
+    request.cookies.get("auth_token")?.value;
   const role = request.cookies.get(ROLE_KEY)?.value;
   const pathname = request.nextUrl.pathname;
 
