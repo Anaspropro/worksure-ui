@@ -184,9 +184,9 @@ export default function ProfileWorkspace() {
 
                       <Button
                         className="w-full shadow-sm hover:shadow-md transition-shadow"
-                        onClick={() => window.location.href = "/kyc/submit"}
+                        onClick={() => window.location.href = "/verification"}
                       >
-                        Start KYC Verification
+                        Start Verification
                       </Button>
                     </div>
                   )}
