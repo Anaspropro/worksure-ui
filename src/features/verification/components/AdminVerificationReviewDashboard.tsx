@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient } from '@/shared/api/client';
 import { format } from 'date-fns';
+import DashboardLoadingState from '@/components/dashboard/DashboardLoadingState';
 
 export const AdminVerificationReviewDashboard = () => {
   const queryClient = useQueryClient();
@@ -45,7 +46,7 @@ export const AdminVerificationReviewDashboard = () => {
     }
   });
 
-  if (isLoading) return <div>Loading pending verifications...</div>;
+  if (isLoading) return <DashboardLoadingState message="Loading verification queue" fullScreen={false} />;
 
   return (
     <div className="space-y-6">

@@ -6,7 +6,8 @@ import { SidebarList } from "../components/layout/SidebarList";
 import { ChatWindow } from "../components/layout/ChatWindow";
 import { useUser } from "@/features/auth/hooks/useAuth";
 import { ConversationContext } from "../types";
-import { Loader2, MessageSquareText } from "lucide-react";
+import { MessageSquareText } from "lucide-react";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 interface ChatWorkspaceProps {
   contextFilter?: ConversationContext;
@@ -20,11 +21,7 @@ export function ChatWorkspace({ contextFilter }: ChatWorkspaceProps) {
   const { data: selectedConversation, isLoading: isConversationLoading } = useConversation(selectedConversationId || "");
 
   if (isLoading || !user) {
-    return (
-      <div className="flex h-full items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <DashboardLoadingState message="Loading conversations" fullScreen={false} />;
   }
 
   return (

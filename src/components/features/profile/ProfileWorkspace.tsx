@@ -17,6 +17,7 @@ import { useReviewStats } from "@/features/reviews/api";
 import { useKycStatus } from "@/features/kyc/api/useKyc";
 import { ShieldCheck, Info, User as UserIcon, Briefcase, Star, CheckCircle2 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 
 
@@ -38,7 +39,9 @@ export default function ProfileWorkspace() {
   const [experience, setExperience] = useState<string | null>(null);
   const kycStatusQuery = useKycStatus();
 
-  if (!user) return null;
+  if (userQuery.isLoading || !user || profileQuery.isLoading) {
+    return <DashboardLoadingState message="Loading profile" />;
+  }
 
   const initialSkills = Array.isArray(artisanProfileQuery.data?.skills)
     ? artisanProfileQuery.data.skills.join(", ")

@@ -18,13 +18,18 @@ import { ContractRow } from "@/features/contracts/components/ContractRow";
 import { ActivityItem } from "@/features/dashboard/components/ActivityItem";
 import { JobRow } from "@/features/jobs/components/JobRow";
 import { formatCurrency } from "@/lib/formatters";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export default function ClientDashboard({ user }: { user: User }) {
   const [contractSearch, setContractSearch] = useState("");
 
-  const { data: jobsResponse } = useJobs();
-  const { data: proposalsResponse } = useProposals({ userId: user.id, role: "CLIENT" });
-  const { data: contractsResponse } = useContracts();
+  const { data: jobsResponse, isLoading: isJobsLoading } = useJobs();
+  const { data: proposalsResponse, isLoading: isProposalsLoading } = useProposals({ userId: user.id, role: "CLIENT" });
+  const { data: contractsResponse, isLoading: isContractsLoading } = useContracts();
+
+  if (isJobsLoading || isProposalsLoading || isContractsLoading) {
+    return <DashboardLoadingState message="Loading client dashboard" />;
+  }
 
   const jobs = (Array.isArray(jobsResponse?.jobs) ? jobsResponse.jobs : []).filter((j) => j.client?.id === user.id);
   const contracts = (Array.isArray(contractsResponse?.data) ? contractsResponse.data : []).filter((c) => c.clientId === user.id);

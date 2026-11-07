@@ -9,6 +9,7 @@ import { ReviewCard } from "../components/ReviewCard";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/ui/tabs";
 import { Star, Clock } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export function ReviewManagementWorkspace() {
   const { data: eligibleReviews, isLoading: loadingEligible } = useEligibleReviews();
@@ -21,6 +22,10 @@ export function ReviewManagementWorkspace() {
     setSelectedContractId(contractId);
     setSelectedTargetId(targetId);
   };
+
+  if (loadingEligible && loadingPast) {
+    return <DashboardLoadingState message="Loading reviews" />;
+  }
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">

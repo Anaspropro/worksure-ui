@@ -11,6 +11,7 @@ import {
   useNotificationStats,
 } from "@/features/notifications/api/useNotifications";
 import { formatDate } from "@/lib/formatters";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export default function NotificationsWorkspace() {
   const userQuery = useUser();
@@ -19,8 +20,8 @@ export default function NotificationsWorkspace() {
   const notificationStatsQuery = useNotificationStats();
   const deleteNotificationMutation = useDeleteNotification();
 
-  if (!user) {
-    return null;
+  if (userQuery.isLoading || !user || notificationsQuery.isLoading) {
+    return <DashboardLoadingState message="Loading notifications" />;
   }
 
   const notifications = notificationsQuery.data ?? [];

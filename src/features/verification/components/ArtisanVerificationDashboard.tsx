@@ -11,6 +11,7 @@ import {
   useSupportedBanks,
 } from '../api/queries';
 import { toast } from 'sonner';
+import DashboardLoadingState from '@/components/dashboard/DashboardLoadingState';
 import {
   CheckCircle2,
   Building2,
@@ -30,12 +31,7 @@ export const ArtisanVerificationDashboard = () => {
   const [accountNumber, setAccountNumber] = useState<string>('');
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[300px]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        <span className="ml-2 text-muted-foreground">Loading verification status...</span>
-      </div>
-    );
+    return <DashboardLoadingState message="Loading verification status" fullScreen={false} />;
   }
 
   const handleResolveBank = (e: React.FormEvent) => {

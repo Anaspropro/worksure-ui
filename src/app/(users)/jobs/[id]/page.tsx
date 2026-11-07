@@ -3,12 +3,15 @@
 import { use } from "react";
 import { useUser } from "@/features/auth";
 import { Workspaces } from "@/features/jobs";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export default function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const resolvedParams = use(params);
-  const { data: user } = useUser();
+  const { data: user, isLoading } = useUser();
 
-  if (!user) return null;
+  if (isLoading || !user) {
+    return <DashboardLoadingState message="Loading job details" />;
+  }
 
   if (user.role === "CLIENT") {
     return <Workspaces.ClientJobDetail jobId={resolvedParams.id} />;

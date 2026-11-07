@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import apiClient from "@/shared/api/client";
+import DashboardLoadingState from "@/components/dashboard/DashboardLoadingState";
 
 export default function AdminTaxonomyPage() {
   const queryClient = useQueryClient();
@@ -46,7 +47,7 @@ export default function AdminTaxonomyPage() {
     onError: (err: any) => toast.error(err?.message || err?.error?.message || "Failed to reject category")
   });
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <DashboardLoadingState message="Loading taxonomy suggestions" fullScreen={false} />;
 
   return (
     <div className="space-y-6">
